@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h4>Products</h4>
                     <ul>
                         <li><a data-link="products/device-inventory">Device Inventory</a></li>
-                        <li><a href="#">Equipment Manager</a></li>
+                        <li><a href="#">Security Review</a></li>
                         <li><a href="#">Fleet Tracker</a></li>
                     </ul>
                 </div>
