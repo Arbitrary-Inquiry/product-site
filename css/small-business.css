@@ -1,0 +1,29 @@
+/* Small Business Theme */
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --light: #eff6ff;
+}
+
+/* Custom hero gradient for small business */
+.page-hero {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+/* Small business-specific styling */
+.benefit-card {
+    border-color: #dbeafe;
+}
+
+.benefit-card:hover {
+    border-color: var(--primary);
+}
+
+.use-cases {
+    background: #eff6ff;
+}
+
+.testimonial-card {
+    background: #eff6ff;
+}

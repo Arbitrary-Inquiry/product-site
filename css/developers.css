@@ -1,0 +1,34 @@
+/* Developers Theme */
+
+:root {
+    --primary: #7c3aed;
+    --primary-dark: #6d28d9;
+    --light: #f5f3ff;
+}
+
+/* Custom hero gradient for developers */
+.page-hero {
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+}
+
+/* Developer-specific styling */
+.benefit-card {
+    border-color: #ede9fe;
+}
+
+.benefit-card:hover {
+    border-color: var(--primary);
+}
+
+.use-cases {
+    background: #f5f3ff;
+}
+
+.testimonial-card {
+    background: #f5f3ff;
+}
+
+/* Code-like aesthetic touches */
+.benefit-card h3 {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}

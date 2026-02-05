@@ -1,0 +1,29 @@
+/* Schools & Education Theme */
+
+:root {
+    --primary: #059669;
+    --primary-dark: #047857;
+    --light: #ecfdf5;
+}
+
+/* Custom hero gradient for education */
+.page-hero {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+/* Education-specific styling */
+.benefit-card {
+    border-color: #d1fae5;
+}
+
+.benefit-card:hover {
+    border-color: var(--primary);
+}
+
+.use-cases {
+    background: #ecfdf5;
+}
+
+.testimonial-card {
+    background: #ecfdf5;
+}
