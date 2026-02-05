@@ -21,10 +21,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="footer-col">
                     <h4>Solutions</h4>
                     <ul>
-                        <li><a data-link="enterprise">Enterprise</a></li>
+                        <li><a data-link="schools">Schools</a></li>
                         <li><a data-link="small-business">Small Business</a></li>
                         <li><a data-link="developers">Developers</a></li>
-                        <li><a data-link="agencies">Agencies</a></li>
+                        <li><a data-link="individuals">Individuals</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -44,10 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
 
     // Handle relative paths for subdomain pages
-    const isSubpage = window.location.pathname.includes('/enterprise/') ||
+    const isSubpage = window.location.pathname.includes('/schools/') ||
                       window.location.pathname.includes('/small-business/') ||
                       window.location.pathname.includes('/developers/') ||
-                      window.location.pathname.includes('/agencies/');
+                      window.location.pathname.includes('/individuals/');
 
     const prefix = isSubpage ? '../' : '';
 
