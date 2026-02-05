@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nRestructure for subdomain support\n\nMove customer landing pages into their own directories with index.html\nfiles, enabling future subdomain routing:\n- enterprise.arbinq.com -> enterprise/\n- small-business.arbinq.com -> small-business/\n- developers.arbinq.com -> developers/\n- agencies.arbinq.com -> agencies/\n\nUpdate all internal links to use directory-based paths.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /home/awright/Documents/ArbInqProductSite status)",
+      "Bash(git -C /home/awright/Documents/ArbInqProductSite add:*)",
+      "Bash(git -C /home/awright/Documents/ArbInqProductSite commit -m \"$\\(cat <<''EOF''\nAdd JS-injected sitewide footer\n\nReplace duplicate footer HTML in each page with a single JavaScript\nfile that injects the footer content. This makes footer updates a\nsingle-file change. The script handles relative paths automatically\nfor both main and subdomain pages.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C /home/awright/Documents/ArbInqProductSite commit -m \"$\\(cat <<''EOF''\nReplace enterprise with schools, agencies with individuals\n\nRename customer segments to better target education and personal users:\n- enterprise/ -> schools/ \\(K-12, higher ed, districts\\)\n- agencies/ -> individuals/ \\(freelancers, creators, personal use\\)\n\nUpdate all navigation links and footer.js accordingly.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
+    ]
+  }
+}
