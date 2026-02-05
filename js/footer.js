@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <ul>
                         <li><a data-link="products/device-inventory">Device Inventory</a></li>
                         <li><a href="#">Security Review</a></li>
-                        <li><a href="#">Fleet Tracker</a></li>
+                        <li><a href="#">AI Classes</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
