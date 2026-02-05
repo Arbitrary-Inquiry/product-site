@@ -47,7 +47,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const path = window.location.pathname;
     let prefix = '';
 
-    if (path.includes('/products/device-inventory/')) {
+    // Two levels deep: products/device-inventory or subdomain/device-inventory
+    if (path.includes('/products/device-inventory/') ||
+        path.includes('/public-schools/device-inventory/') ||
+        path.includes('/christian-schools/device-inventory/') ||
+        path.includes('/small-business/device-inventory/') ||
+        path.includes('/developers/device-inventory/') ||
+        path.includes('/individuals/device-inventory/')) {
         prefix = '../../';
     } else if (path.includes('/public-schools/') ||
                path.includes('/christian-schools/') ||

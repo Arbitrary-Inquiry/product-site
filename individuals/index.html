@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Device Inventory - ArbInq</title>
+    <title>ArbInq for Individuals - Personal Technology Management</title>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/individuals.css">
 </head>
@@ -12,8 +12,8 @@
         <nav class="nav container">
             <a href="../" class="logo">ArbInq</a>
             <ul class="nav-links">
-                <li><a href="../products/device-inventory/">Product</a></li>
-                <li><a href="../products/device-inventory/#pricing">Pricing</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#about">About</a></li>
                 <li class="dropdown">
                     <a href="#">Solutions</a>
                     <ul class="dropdown-menu">
@@ -31,69 +31,97 @@
     </header>
 
     <main>
-        <section class="page-hero">
+        <section class="hero">
             <div class="container">
-                <h1>Your Personal Device Inventory</h1>
-                <p>Keep track of all your laptops, phones, smart watches, and more in one place. Know what you own and what's running on it.</p>
-                <a href="#" class="btn btn-primary btn-lg">Start Free</a>
+                <h1>Organize Your Personal Tech</h1>
+                <p>Keep track of all your devices, software, and serial numbers in one place. Perfect for tech enthusiasts, large families, and anyone who owns more than one screen.</p>
+                <div class="hero-cta">
+                    <a href="#products" class="btn btn-primary btn-lg">Explore Products</a>
+                    <a href="../#contact" class="btn btn-secondary btn-lg">Contact Us</a>
+                </div>
             </div>
         </section>
 
-        <section class="benefits">
+        <section id="products" class="products">
             <div class="container">
-                <h2 class="section-title">Finally, Organization for Your Tech</h2>
-                <p class="section-subtitle">Simple tools to track your devices</p>
+                <h2 class="section-title">Our Products for Individuals</h2>
+                <p class="section-subtitle">Professional quality, personal simplicity</p>
 
-                <div class="benefit-grid">
-                    <div class="benefit-card">
-                        <h3>Easy to Understand</h3>
-                        <p>Professional quality device tracking, without needing to be a professional to understand it.</p>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <div class="product-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                <line x1="8" y1="21" x2="16" y2="21"/>
+                                <line x1="12" y1="17" x2="12" y2="21"/>
+                            </svg>
+                        </div>
+                        <h3>SimpleSight Device Inventory</h3>
+                        <p>Track all your laptops, phones, tablets, and smart devices. Know what you own, what software is where, and export records when you need them.</p>
+                        <ul class="product-features">
+                            <li>Track all your devices</li>
+                            <li>Software inventory</li>
+                            <li>CSV export for records</li>
+                        </ul>
+                        <a href="device-inventory/" class="btn btn-outline">Learn More</a>
                     </div>
-                    <div class="benefit-card">
-                        <h3>No Thought Required</h3>
-                        <p>Simply put in your device, and it's tracked. No more digging through drawers when you're wondering what model that old cell was.</p>
+
+                    <div class="product-card">
+                        <div class="product-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <path d="M9 12l2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <h3>Security Review</h3>
+                        <p>Building personal projects or side hustles? Check your code for security issues before you ship.</p>
+                        <ul class="product-features">
+                            <li>Vulnerability scanning</li>
+                            <li>Dependency checks</li>
+                            <li>Peace of mind</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline">Coming Soon</a>
                     </div>
-                    <div class="benefit-card">
-                        <h3>Optional Software Tracking</h3>
-                        <p>Can't remember if you last did your taxes on your desktop, Chromebook, or iMac? See at a glance without having to log into everything.</p>
+
+                    <div class="product-card">
+                        <div class="product-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                        </div>
+                        <h3>AI Implementation Classes</h3>
+                        <p>Learn to use AI tools effectively in your personal projects and daily life. Practical, hands-on training.</p>
+                        <ul class="product-features">
+                            <li>AI tool basics</li>
+                            <li>Practical applications</li>
+                            <li>Self-paced learning</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline">Coming Soon</a>
                     </div>
-                    <div class="benefit-card">
-                        <h3>Family Sharing</h3>
-                        <p>Share your devices with family members. Keep track for the whole household in one account.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="features">
+            <div class="container">
+                <h2 class="section-title">Why Choose ArbInq</h2>
+                <div class="feature-grid">
+                    <div class="feature">
+                        <h3>Simple & Free to Start</h3>
+                        <p>Get started with a free trial. Full version is just $20, once, forever.</p>
                     </div>
-                    <div class="benefit-card">
+                    <div class="feature">
+                        <h3>No Tech Skills Needed</h3>
+                        <p>Professional quality without needing to be a professional. Easy to use from day one.</p>
+                    </div>
+                    <div class="feature">
                         <h3>Insurance Ready</h3>
-                        <p>Export a complete inventory report for your home insurance. Document everything before you need it.</p>
+                        <p>Export complete inventory reports with serial numbers for home insurance claims.</p>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="use-cases">
-            <div class="container">
-                <h2 class="section-title">Perfect For</h2>
-                <div class="use-case-list">
-                    <div class="use-case-item">
-                        <h3>Tech Enthusiasts</h3>
-                        <p>You've got phones, tablets, laptops, smart home devices, cameras, and more. Keep track of what you own and what's on it. Sure, "it works on my machine", but which one?</p>
+                    <div class="feature">
+                        <h3>Historical Records</h3>
+                        <p>Never lose data. Every snapshot is saved so you can see your full device history.</p>
                     </div>
-                    <div class="use-case-item">
-                        <h3>Home Insurance Documentation</h3>
-                        <p>If disaster strikes, you'll need serial numbers and proof of ownership for insurance claims. ArbInq keeps everything documented and ready to export.</p>
-                    </div>
-                    <div class="use-case-item">
-                        <h3>Large Families</h3>
-                        <p>Your kids arguing over whose phone is whose? Buying everyone a tablet for Christmas, but forgot the youngest? Keep track with SimpleSight!</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="testimonial">
-            <div class="container">
-                <div class="testimonial-card">
-                    <blockquote>"I got 10 chromebooks for cheap when a school closed, but only started using one. I would have had to boot them all to see where my software was, if I didn't have SimpleSight to track the serial numbers and manage device names."</blockquote>
-                    <cite>- Reel Pherson, Chromebook Enthusiasts</cite>
                 </div>
             </div>
         </section>
@@ -101,7 +129,7 @@
         <section class="cta">
             <div class="container">
                 <h2>Start Tracking Your Devices Today</h2>
-                <p>Free trials available!</p>
+                <p>Free trials available</p>
                 <a href="#" class="btn btn-primary btn-lg">See What SimpleSight's About</a>
             </div>
         </section>

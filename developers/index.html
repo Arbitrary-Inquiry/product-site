@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Device Inventory API for Developers - ArbInq</title>
+    <title>ArbInq for Developers - Simple Tools That Just Work</title>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/developers.css">
 </head>
@@ -12,8 +12,8 @@
         <nav class="nav container">
             <a href="../" class="logo">ArbInq</a>
             <ul class="nav-links">
-                <li><a href="../products/device-inventory/">Product</a></li>
-                <li><a href="../products/device-inventory/#pricing">Pricing</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#about">About</a></li>
                 <li class="dropdown">
                     <a href="#">Solutions</a>
                     <ul class="dropdown-menu">
@@ -26,70 +26,101 @@
                 </li>
                 <li><a href="../#contact">Contact</a></li>
             </ul>
+            <a href="#" class="btn btn-primary">Get Started</a>
         </nav>
     </header>
 
     <main>
-        <section class="page-hero">
+        <section class="hero">
             <div class="container">
-                <h1>Device Inventory</h1>
-                <p>It works on your machine, but you don't know where your machine is? Keep track with SimpleSight</p>
+                <h1>Tools Built for Developers</h1>
+                <p>Simple APIs, clean exports, and no enterprise bloat. Tools that work the way you think.</p>
+                <div class="hero-cta">
+                    <a href="#products" class="btn btn-primary btn-lg">Explore Products</a>
+                    <a href="../#contact" class="btn btn-secondary btn-lg">Contact Us</a>
+                </div>
             </div>
         </section>
 
-        <section class="benefits">
+        <section id="products" class="products">
             <div class="container">
-                <h2 class="section-title">Simplicity first.</h2>
-                <p class="section-subtitle">Are enterprise features really worth enterprise prices? We don't think so.</p>
+                <h2 class="section-title">Our Products for Developers</h2>
+                <p class="section-subtitle">Simplicity first. Enterprise features aren't worth enterprise prices.</p>
 
-                <div class="benefit-grid">
-                    <div class="benefit-card">
-                        <h3>Simple Structure</h3>
-                        <p>Tables that are easy to understand at a glance, and quick to filter or sort by exactly what you need.</p>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <div class="product-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                <line x1="8" y1="21" x2="16" y2="21"/>
+                                <line x1="12" y1="17" x2="12" y2="21"/>
+                            </svg>
+                        </div>
+                        <h3>SimpleSight Device Inventory</h3>
+                        <p>Track devices by UUID, not confusing hostnames. Simple JSON exports.</p>
+                        <ul class="product-features">
+                            <li>UUID-based tracking</li>
+                            <li>CSV & JSON export</li>
+                            <li>FastAPI backend, React frontend</li>
+                        </ul>
+                        <a href="device-inventory/" class="btn btn-outline">Learn More</a>
                     </div>
-                    <div class="benefit-card">
-                        <h3>Tracking by UUID</h3>
-                        <p>Hostnames can be confusing. All your devices named dev_2? No problem. We track by something actually unique.</p>
+
+                    <div class="product-card">
+                        <div class="product-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <path d="M9 12l2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <h3>Security Review</h3>
+                        <p>Static analysis for your codebase. Find vulnerabilities before they ship.</p>
+                        <ul class="product-features">
+                            <li>Static code analysis</li>
+                            <li>Dependency scanning</li>
+                            <li>Easy reporting exports</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline">Coming Soon</a>
                     </div>
-                    <div class="benefit-card">
-                        <h3>Software Tracking</h3>
-                        <p>Keep track of all the software on a device, without dealing with annoying whitelists.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <h3>SDKs & Libraries</h3>
-                        <p>Official libraries for Python, JavaScript, Ruby, and Go. Community libraries for other languages.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <h3>Highly Scalable</h3>
-                        <p>Have 100,000 devices you want to track? We don't charge by usage or require new licenses for every user. Run as many as you want, as much as you want.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <h3>One Time Payment</h3>
-                        <p>$20 and you own it. No price hikes, no contract renewal deadlines, no license revoking.</p>
+
+                    <div class="product-card">
+                        <div class="product-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                        </div>
+                        <h3>AI Implementation Classes</h3>
+                        <p>Hands-on training for integrating AI into your development workflow. LLM patterns, prompt engineering, and practical applications.</p>
+                        <ul class="product-features">
+                            <li>AI-assisted coding</li>
+                            <li>LLM integration patterns</li>
+                            <li>Prompt engineering</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline">Coming Soon</a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="use-cases">
+        <section id="about" class="features">
             <div class="container">
-                <h2 class="section-title">Developer Use Cases</h2>
-                <div class="use-case-list">
-                    <div class="use-case-item">
-                        <h3>Small Teams</h3>
-                        <p>Have a team constantly coming to you, asking where their devices went? Give the team lead the ability to track inventory without additional MDM licenses.</p>
+                <h2 class="section-title">Why Developers Choose ArbInq</h2>
+                <div class="feature-grid">
+                    <div class="feature">
+                        <h3>$20 and Done</h3>
+                        <p>One-time payment. No per-seat licensing, no usage fees, no contract renewals.</p>
                     </div>
-                    <div class="use-case-item">
-                        <h3>Non-Technical Supervisors</h3>
-                        <p>Your boss's boss's boss doesn't know how to use your MDM. But a quick glance at SimpleSight shows exactly what's where.</p>
+                    <div class="feature">
+                        <h3>Clean Stack</h3>
+                        <p>React + TypeScript frontend, FastAPI backend, SQLite DB. Self-hosted, no cloud dependency. CSV & JSON exports.</p>
                     </div>
-                    <div class="use-case-item">
-                        <h3>Easy Integration to Custom Scripts</h3>
-                        <p>Tired of managing complex MDM APIs and trying to understand their export formats? Export a simple json that actually reflects the table structure, so the data is stored how you see it.</p>
+                    <div class="feature">
+                        <h3>No Limits</h3>
+                        <p>100,000 devices? Go for it. We don't charge by usage or throttle you.</p>
                     </div>
-                    <div class="use-case-item">
-                        <h3>Still not convinced?</h3>
-                        <p>Use our free trial as a sanity check. Run it in parallel with your favorite MDM, and see where you have the better experience. We suspect by the end, you'll be coming to SimpleSight more often than not.</p>
+                    <div class="feature">
+                        <h3>Dev-Friendly Support</h3>
+                        <p>Talk to developers who understand your questions. Our distributed team covers multiple time zones—no support ticket runaround.</p>
                     </div>
                 </div>
             </div>
@@ -97,9 +128,9 @@
 
         <section class="cta">
             <div class="container">
-                <h2>Keep Up with Keeping Tack</h2>
-                <p>Try it out and see what simplifying inventory management feels like. Hint: it's a good feeling.</p>
-                <a href="#" class="btn btn-primary btn-lg">Schedule a trial today</a>
+                <h2>Keep Up with Keeping Track</h2>
+                <p>Try it out and see what simplifying feels like</p>
+                <a href="#" class="btn btn-primary btn-lg">Schedule a Trial Today</a>
             </div>
         </section>
     </main>

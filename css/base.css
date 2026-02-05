@@ -10,11 +10,15 @@
     --primary-dark: #1d4ed8;
     --secondary: #64748b;
     --dark: #1e293b;
-    --light: #f1f5f9;
-    --white: #f9fafb;
-    --border: #e2e8f0;
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    /* TODO: Replace color backgrounds with images */
+    --bg-base: #d4d8e0;        /* Main page background - soft blue-grey */
+    --bg-section: #c5cad4;     /* Alternating section background */
+    --bg-card: #e2e5eb;        /* Card backgrounds */
+    --bg-header: #cdd2dc;      /* Header/nav background */
+    --text-on-bg: #f8f9fa;     /* Text color for use on primary buttons etc */
+    --border: #b8bcc6;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.15);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.15);
 }
 
 html {
@@ -25,7 +29,8 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     line-height: 1.6;
     color: var(--dark);
-    background: var(--white);
+    background: var(--bg-base);
+    /* TODO: Add subtle background image/pattern */
 }
 
 /* Container */
@@ -72,7 +77,7 @@ ul {
 
 .btn-primary {
     background: var(--primary);
-    color: var(--white);
+    color: var(--text-on-bg);
 }
 
 .btn-primary:hover {
@@ -80,7 +85,7 @@ ul {
 }
 
 .btn-secondary {
-    background: var(--white);
+    background: var(--bg-card);
     color: var(--dark);
     border-color: var(--border);
 }
@@ -97,7 +102,7 @@ ul {
 
 .btn-outline:hover {
     background: var(--primary);
-    color: var(--white);
+    color: var(--text-on-bg);
 }
 
 .btn-lg {
@@ -106,12 +111,13 @@ ul {
 }
 
 /* Header */
+/* TODO: Consider header background image or gradient */
 .header {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    background: var(--white);
+    background: var(--bg-header);
     box-shadow: var(--shadow);
     z-index: 1000;
 }
@@ -153,7 +159,7 @@ ul {
     position: absolute;
     top: 100%;
     left: 0;
-    background: var(--white);
+    background: var(--bg-card);
     box-shadow: var(--shadow-lg);
     border-radius: 0.5rem;
     padding: 0.5rem 0;
@@ -176,7 +182,7 @@ ul {
 }
 
 .dropdown-menu li a:hover {
-    background: var(--light);
+    background: var(--bg-section);
 }
 
 /* Section Styles */
@@ -196,8 +202,9 @@ section {
 }
 
 /* Features Section */
+/* TODO: Add background image for features section */
 .features {
-    background: var(--light);
+    background: var(--bg-section);
 }
 
 .feature-grid {
@@ -216,14 +223,15 @@ section {
 }
 
 /* CTA Section */
+/* TODO: Add background image for CTA section */
 .cta {
     background: var(--primary);
-    color: var(--white);
+    color: var(--text-on-bg);
     text-align: center;
 }
 
 .cta h2 {
-    color: var(--white);
+    color: var(--text-on-bg);
 }
 
 .cta p {
@@ -233,18 +241,18 @@ section {
 }
 
 .cta .btn-primary {
-    background: var(--white);
+    background: var(--bg-card);
     color: var(--primary);
 }
 
 .cta .btn-primary:hover {
-    background: var(--light);
+    background: var(--bg-section);
 }
 
 /* Sitewide Footer */
 .site-footer {
     background: var(--dark);
-    color: var(--white);
+    color: var(--text-on-bg);
     padding: 4rem 0 2rem;
 }
 
@@ -274,7 +282,7 @@ section {
 }
 
 .footer-col a:hover {
-    color: var(--white);
+    color: var(--text-on-bg);
 }
 
 .footer-bottom {
@@ -289,15 +297,16 @@ section {
 }
 
 /* Subpage Common Styles */
+/* TODO: Add hero background images for subpages */
 .page-hero {
     padding: 8rem 0 4rem;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: var(--white);
+    color: var(--text-on-bg);
     text-align: center;
 }
 
 .page-hero h1 {
-    color: var(--white);
+    color: var(--text-on-bg);
 }
 
 .page-hero p {
@@ -313,8 +322,9 @@ section {
     justify-content: center;
 }
 
+/* TODO: Add background image for benefits section */
 .benefits {
-    background: var(--white);
+    background: var(--bg-card);
 }
 
 .benefit-grid {
@@ -333,8 +343,9 @@ section {
     color: var(--primary);
 }
 
+/* TODO: Add background image for use-cases section */
 .use-cases {
-    background: var(--light);
+    background: var(--bg-section);
 }
 
 .use-case-list {
@@ -343,7 +354,7 @@ section {
 }
 
 .use-case-item {
-    background: var(--white);
+    background: var(--bg-card);
     padding: 2rem;
     border-radius: 1rem;
     margin-bottom: 1.5rem;
@@ -355,8 +366,9 @@ section {
 }
 
 /* Testimonial */
+/* TODO: Add background image for testimonial section */
 .testimonial {
-    background: var(--white);
+    background: var(--bg-base);
 }
 
 .testimonial-card {
@@ -364,7 +376,7 @@ section {
     margin: 0 auto;
     text-align: center;
     padding: 3rem;
-    background: var(--light);
+    background: var(--bg-section);
     border-radius: 1rem;
 }
 

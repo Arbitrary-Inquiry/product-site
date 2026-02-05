@@ -1,9 +1,14 @@
 /* Christian Schools Theme */
+/* TODO: Add faith-themed background images */
 
 :root {
     --primary: #7c3aed;
     --primary-dark: #6d28d9;
-    --light: #f5f3ff;
+    --bg-base: #c9bde0;        /* Soft purple-grey */
+    --bg-section: #b5a6d4;     /* Medium purple */
+    --bg-card: #dbd3ec;        /* Light purple-grey */
+    --bg-header: #c0b3db;      /* Header purple */
+    --border: #a699c7;
 }
 
 /* Custom hero gradient */
@@ -13,7 +18,7 @@
 
 /* Theme-specific styling */
 .benefit-card {
-    border-color: #ede9fe;
+    border-color: #a699c7;
 }
 
 .benefit-card:hover {
@@ -21,11 +26,11 @@
 }
 
 .use-cases {
-    background: #f5f3ff;
+    background: var(--bg-section);
 }
 
 .testimonial-card {
-    background: #f5f3ff;
+    background: var(--bg-section);
 }
 
 /* Emphasize cost savings in comparison section */
@@ -42,23 +47,23 @@
 /* Highlight ArbInq pricing as better value */
 .features .feature:nth-child(3),
 .features .feature:nth-child(4) {
-    background: #ecfdf5;
+    background: #9dd4bb;
     border: 2px solid #059669;
 }
 
 .features .feature:nth-child(3) h3,
 .features .feature:nth-child(4) h3 {
-    color: #059669;
+    color: #047857;
 }
 
 /* Style enterprise options as expensive */
 .features .feature:nth-child(1),
 .features .feature:nth-child(2) {
-    background: #fef2f2;
-    border: 1px solid #fecaca;
+    background: #e8b0b0;
+    border: 1px solid #dc2626;
 }
 
 .features .feature:nth-child(1) h3,
 .features .feature:nth-child(2) h3 {
-    color: #dc2626;
+    color: #b91c1c;
 }

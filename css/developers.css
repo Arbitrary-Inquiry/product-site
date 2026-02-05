@@ -1,9 +1,14 @@
 /* Developers Theme */
+/* TODO: Add tech-themed background images */
 
 :root {
     --primary: #7c3aed;
     --primary-dark: #6d28d9;
-    --light: #f5f3ff;
+    --bg-base: #c9bde0;        /* Soft purple-grey */
+    --bg-section: #b5a6d4;     /* Medium purple */
+    --bg-card: #dbd3ec;        /* Light purple-grey */
+    --bg-header: #c0b3db;      /* Header purple */
+    --border: #a699c7;
 }
 
 /* Custom hero gradient for developers */
@@ -13,7 +18,7 @@
 
 /* Developer-specific styling */
 .benefit-card {
-    border-color: #ede9fe;
+    border-color: #a699c7;
 }
 
 .benefit-card:hover {
@@ -21,11 +26,11 @@
 }
 
 .use-cases {
-    background: #f5f3ff;
+    background: var(--bg-section);
 }
 
 .testimonial-card {
-    background: #f5f3ff;
+    background: var(--bg-section);
 }
 
 /* Code-like aesthetic touches */

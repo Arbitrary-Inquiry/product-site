@@ -1,10 +1,11 @@
 /* Main Landing Page Styles */
 
 /* Hero Section */
+/* TODO: Add hero background image */
 .hero {
     padding: 8rem 0 4rem;
     text-align: center;
-    background: linear-gradient(135deg, var(--light) 0%, var(--white) 100%);
+    background: linear-gradient(135deg, var(--bg-section) 0%, var(--bg-base) 100%);
 }
 
 .hero h1 {
@@ -26,7 +27,7 @@
 }
 
 .product-card {
-    background: var(--white);
+    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 1rem;
     padding: 2rem;
@@ -41,7 +42,7 @@
 .product-icon {
     width: 64px;
     height: 64px;
-    background: var(--light);
+    background: var(--bg-section);
     border-radius: 0.75rem;
     display: flex;
     align-items: center;
@@ -78,7 +79,7 @@
 }
 
 .pricing-card {
-    background: var(--white);
+    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 1rem;
     padding: 2rem;

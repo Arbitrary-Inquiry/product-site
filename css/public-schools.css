@@ -1,9 +1,14 @@
 /* Schools & Education Theme */
+/* TODO: Add education-themed background images */
 
 :root {
     --primary: #059669;
     --primary-dark: #047857;
-    --light: #ecfdf5;
+    --bg-base: #a8d5c2;        /* Soft green-grey */
+    --bg-section: #8fc4ad;     /* Medium green */
+    --bg-card: #c5e0d4;        /* Light green-grey */
+    --bg-header: #9dcbb8;      /* Header green */
+    --border: #7ab89e;
 }
 
 /* Custom hero gradient for education */
@@ -13,7 +18,7 @@
 
 /* Education-specific styling */
 .benefit-card {
-    border-color: #d1fae5;
+    border-color: #7ab89e;
 }
 
 .benefit-card:hover {
@@ -21,9 +26,9 @@
 }
 
 .use-cases {
-    background: #ecfdf5;
+    background: var(--bg-section);
 }
 
 .testimonial-card {
-    background: #ecfdf5;
+    background: var(--bg-section);
 }
