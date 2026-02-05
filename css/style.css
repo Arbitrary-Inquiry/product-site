@@ -372,8 +372,8 @@ section {
     background: var(--light);
 }
 
-/* Footer */
-.footer {
+/* Sitewide Footer */
+.site-footer {
     background: var(--dark);
     color: var(--white);
     padding: 4rem 0 2rem;
@@ -401,6 +401,7 @@ section {
 .footer-col a {
     color: rgba(255, 255, 255, 0.6);
     transition: color 0.2s;
+    cursor: pointer;
 }
 
 .footer-col a:hover {
