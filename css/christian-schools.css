@@ -1,0 +1,64 @@
+/* Christian Schools Theme */
+
+:root {
+    --primary: #7c3aed;
+    --primary-dark: #6d28d9;
+    --light: #f5f3ff;
+}
+
+/* Custom hero gradient */
+.page-hero {
+    background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+}
+
+/* Theme-specific styling */
+.benefit-card {
+    border-color: #ede9fe;
+}
+
+.benefit-card:hover {
+    border-color: var(--primary);
+}
+
+.use-cases {
+    background: #f5f3ff;
+}
+
+.testimonial-card {
+    background: #f5f3ff;
+}
+
+/* Emphasize cost savings in comparison section */
+.features .feature {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.features .feature h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Highlight ArbInq pricing as better value */
+.features .feature:nth-child(3),
+.features .feature:nth-child(4) {
+    background: #ecfdf5;
+    border: 2px solid #059669;
+}
+
+.features .feature:nth-child(3) h3,
+.features .feature:nth-child(4) h3 {
+    color: #059669;
+}
+
+/* Style enterprise options as expensive */
+.features .feature:nth-child(1),
+.features .feature:nth-child(2) {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.features .feature:nth-child(1) h3,
+.features .feature:nth-child(2) h3 {
+    color: #dc2626;
+}

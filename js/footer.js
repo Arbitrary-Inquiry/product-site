@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h4>Solutions</h4>
                     <ul>
                         <li><a data-link="schools">Schools</a></li>
+                        <li><a data-link="christian-schools">Christian Schools</a></li>
                         <li><a data-link="small-business">Small Business</a></li>
                         <li><a data-link="developers">Developers</a></li>
                         <li><a data-link="individuals">Individuals</a></li>
@@ -49,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (path.includes('/products/device-inventory/')) {
         prefix = '../../';
     } else if (path.includes('/schools/') ||
+               path.includes('/christian-schools/') ||
                path.includes('/small-business/') ||
                path.includes('/developers/') ||
                path.includes('/individuals/')) {
