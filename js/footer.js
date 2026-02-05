@@ -7,15 +7,14 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="footer-grid">
                 <div class="footer-col">
                     <h4>ArbInq</h4>
-                    <p>Empowering businesses with innovative solutions.</p>
+                    <p>Asset management solutions for organizations of all sizes.</p>
                 </div>
                 <div class="footer-col">
                     <h4>Products</h4>
                     <ul>
-                        <li><a href="#">Product One</a></li>
-                        <li><a href="#">Product Two</a></li>
-                        <li><a href="#">Product Three</a></li>
-                        <li><a href="#">Product Four</a></li>
+                        <li><a data-link="products/device-inventory">Device Inventory</a></li>
+                        <li><a href="#">Equipment Manager</a></li>
+                        <li><a href="#">Fleet Tracker</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -43,13 +42,18 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     `;
 
-    // Handle relative paths for subdomain pages
-    const isSubpage = window.location.pathname.includes('/schools/') ||
-                      window.location.pathname.includes('/small-business/') ||
-                      window.location.pathname.includes('/developers/') ||
-                      window.location.pathname.includes('/individuals/');
+    // Calculate path prefix based on current location
+    const path = window.location.pathname;
+    let prefix = '';
 
-    const prefix = isSubpage ? '../' : '';
+    if (path.includes('/products/device-inventory/')) {
+        prefix = '../../';
+    } else if (path.includes('/schools/') ||
+               path.includes('/small-business/') ||
+               path.includes('/developers/') ||
+               path.includes('/individuals/')) {
+        prefix = '../';
+    }
 
     footer.querySelectorAll('a[data-link]').forEach(link => {
         link.href = prefix + link.dataset.link + '/';
