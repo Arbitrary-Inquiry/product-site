@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Developer Platform - ArbInq</title>
+    <title>Device Inventory API for Developers - ArbInq</title>
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/developers.css">
 </head>
@@ -12,8 +12,8 @@
         <nav class="nav container">
             <a href="../" class="logo">ArbInq</a>
             <ul class="nav-links">
-                <li><a href="../#products">Products</a></li>
                 <li><a href="../#features">Features</a></li>
+                <li><a href="../#how-it-works">How It Works</a></li>
                 <li><a href="../#pricing">Pricing</a></li>
                 <li class="dropdown">
                     <a href="#">Solutions</a>
@@ -33,44 +33,44 @@
     <main>
         <section class="page-hero">
             <div class="container">
-                <h1>Built for Developers</h1>
-                <p>Powerful APIs, comprehensive documentation, and developer tools that make integration a breeze</p>
+                <h1>Device Inventory API</h1>
+                <p>Build custom integrations, automate workflows, and extend ArbInq with our comprehensive REST API</p>
                 <div class="hero-cta">
-                    <a href="#" class="btn btn-primary btn-lg">View Documentation</a>
-                    <a href="#" class="btn btn-secondary btn-lg">API Reference</a>
+                    <a href="#" class="btn btn-primary btn-lg">View API Docs</a>
+                    <a href="#" class="btn btn-secondary btn-lg">Get API Key</a>
                 </div>
             </div>
         </section>
 
         <section class="benefits">
             <div class="container">
-                <h2 class="section-title">Developer-First Platform</h2>
-                <p class="section-subtitle">Everything you need to build amazing integrations</p>
+                <h2 class="section-title">Built for Integration</h2>
+                <p class="section-subtitle">Everything you need to connect ArbInq to your existing systems</p>
 
                 <div class="benefit-grid">
                     <div class="benefit-card">
                         <h3>RESTful API</h3>
-                        <p>Clean, well-documented REST APIs with predictable resource-oriented URLs and standard HTTP methods.</p>
-                    </div>
-                    <div class="benefit-card">
-                        <h3>SDKs & Libraries</h3>
-                        <p>Official SDKs for JavaScript, Python, Ruby, Go, Java, and PHP. Get started in your language of choice.</p>
+                        <p>Clean, predictable endpoints following REST conventions. JSON responses, standard HTTP methods, and comprehensive error handling.</p>
                     </div>
                     <div class="benefit-card">
                         <h3>Webhooks</h3>
-                        <p>Real-time event notifications with retry logic, signature verification, and comprehensive event types.</p>
+                        <p>Get real-time notifications when devices are checked out, returned, or updated. Build reactive integrations without polling.</p>
                     </div>
                     <div class="benefit-card">
-                        <h3>Sandbox Environment</h3>
-                        <p>Test your integration with our full-featured sandbox. No risk, no cost, unlimited testing.</p>
+                        <h3>Bulk Operations</h3>
+                        <p>Import thousands of devices, update assignments in batch, or export your entire inventory programmatically.</p>
                     </div>
                     <div class="benefit-card">
-                        <h3>GraphQL Support</h3>
-                        <p>Query exactly what you need with our GraphQL API. Reduce over-fetching and improve performance.</p>
+                        <h3>SDKs & Libraries</h3>
+                        <p>Official libraries for Python, JavaScript, Ruby, and Go. Community libraries for other languages.</p>
                     </div>
                     <div class="benefit-card">
-                        <h3>CLI Tools</h3>
-                        <p>Manage resources, test APIs, and automate workflows with our powerful command-line interface.</p>
+                        <h3>OAuth 2.0</h3>
+                        <p>Secure authentication with OAuth 2.0. Support for service accounts, API keys, and user-delegated access.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <h3>Rate Limiting</h3>
+                        <p>Generous rate limits with clear headers. Burst allowances for batch operations and dedicated limits for enterprise plans.</p>
                     </div>
                 </div>
             </div>
@@ -78,19 +78,23 @@
 
         <section class="use-cases">
             <div class="container">
-                <h2 class="section-title">What You Can Build</h2>
+                <h2 class="section-title">Developer Use Cases</h2>
                 <div class="use-case-list">
                     <div class="use-case-item">
-                        <h3>Custom Integrations</h3>
-                        <p>Connect ArbInq with your existing systems, internal tools, or third-party applications using our flexible APIs.</p>
+                        <h3>MDM Integration</h3>
+                        <p>Sync device data between ArbInq and your MDM solution (Jamf, Intune, Mosyle). When a device enrolls in MDM, automatically create it in ArbInq. Keep serial numbers, OS versions, and compliance status in sync.</p>
                     </div>
                     <div class="use-case-item">
-                        <h3>Embedded Solutions</h3>
-                        <p>White-label our features into your own product with customizable UI components and embedded workflows.</p>
+                        <h3>HR System Automation</h3>
+                        <p>Connect to Workday, BambooHR, or your HRIS. When a new employee is created, trigger a workflow to assign available equipment. When they're terminated, automatically flag their devices for collection.</p>
                     </div>
                     <div class="use-case-item">
-                        <h3>Automation Pipelines</h3>
-                        <p>Build sophisticated automation workflows that trigger actions based on events across multiple systems.</p>
+                        <h3>Help Desk Integration</h3>
+                        <p>Link ArbInq to Zendesk, ServiceNow, or Jira. When a support ticket mentions a device, automatically pull up its history, warranty status, and assigned user. Create repair tickets directly from the API.</p>
+                    </div>
+                    <div class="use-case-item">
+                        <h3>Custom Reporting Dashboards</h3>
+                        <p>Pull inventory data into your BI tools. Build custom dashboards in Tableau, Grafana, or your own application. Query device counts, utilization metrics, and cost data through the API.</p>
                     </div>
                 </div>
             </div>
@@ -102,19 +106,19 @@
                 <div class="feature-grid">
                     <div class="feature">
                         <h3>Interactive Docs</h3>
-                        <p>Try API calls directly from the documentation with pre-filled examples and live responses.</p>
+                        <p>Try API calls directly in the browser with our interactive documentation.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Sandbox Environment</h3>
+                        <p>Test your integration against sample data without affecting production.</p>
                     </div>
                     <div class="feature">
                         <h3>Code Examples</h3>
-                        <p>Hundreds of code snippets and full application examples in multiple languages.</p>
+                        <p>Copy-paste examples for common operations in multiple languages.</p>
                     </div>
                     <div class="feature">
-                        <h3>Community Forum</h3>
-                        <p>Connect with other developers, share solutions, and get help from the community.</p>
-                    </div>
-                    <div class="feature">
-                        <h3>Developer Support</h3>
-                        <p>Priority support channel for developers with technical questions and integration help.</p>
+                        <h3>Developer Slack</h3>
+                        <p>Join our developer community to ask questions and share integrations.</p>
                     </div>
                 </div>
             </div>
@@ -123,8 +127,8 @@
         <section class="cta">
             <div class="container">
                 <h2>Start Building Today</h2>
-                <p>Get your free API key and access to our sandbox environment</p>
-                <a href="#" class="btn btn-primary btn-lg">Get Started for Free</a>
+                <p>Get your free API key and access to the sandbox environment</p>
+                <a href="#" class="btn btn-primary btn-lg">Get API Access</a>
             </div>
         </section>
     </main>
