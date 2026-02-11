@@ -19,7 +19,7 @@
                     {% endfor %}
                 </ul>
             </li>
-            <li><a href="mailto:andrew@arbinquiry.com">Contact</a></li>
+            <li><a href="{{ "/contact/" | url }}">Contact</a></li>
         </ul>
         {% if icp.nav.cta_text and not (navType == "device-inventory" and icp.nav.di_no_cta) %}
         <a href="{{ icp.nav.cta_href }}" class="btn btn-primary">{{ icp.nav.cta_text }}</a>

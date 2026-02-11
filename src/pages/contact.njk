@@ -1,0 +1,96 @@
+---
+permalink: /contact/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - ArbInq</title>
+    <meta name="description" content="Get in touch with the ArbInq team.">
+    <link rel="stylesheet" href="{{ "/css/base.css" | url }}">
+    <link rel="stylesheet" href="{{ "/css/main.css" | url }}">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="{{ "/" | url }}" class="logo">ArbInq</a>
+            <ul class="nav-links">
+                <li><a href="{{ "/" | url }}#products">Products</a></li>
+                <li><a href="{{ "/about/" | url }}">About</a></li>
+                <li><a href="{{ "/blog/" | url }}">Blog</a></li>
+                <li class="dropdown">
+                    <a href="#">Solutions</a>
+                    <ul class="dropdown-menu">
+                        {% for icpItem in site.icps %}
+                        {% set slugPath = "/" + icpItem.slug + "/" %}
+                        <li><a href="{{ slugPath | url }}">{{ icpItem.label }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li><a href="{{ "/contact/" | url }}">Contact</a></li>
+            </ul>
+            <a href="{{ "/code-audit/" | url }}" class="btn btn-primary">Get Started</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Get in Touch</h1>
+                <p>Questions about an audit, a product, or just want to say hello — here's where to find us.</p>
+            </div>
+        </section>
+
+        <section class="benefits">
+            <div class="container">
+                <div class="benefit-grid">
+
+                    <div class="benefit-card contact-card">
+                        <div class="contact-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </div>
+                        <h3>Email</h3>
+                        <p>The best way to reach us for project inquiries, audit questions, or anything else.</p>
+                        <a href="mailto:andrew@arbinquiry.com" class="contact-link">andrew@arbinquiry.com</a>
+                    </div>
+
+                    <div class="benefit-card contact-card">
+                        <div class="contact-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </div>
+                        <h3>LinkedIn</h3>
+                        <p>Follow us for updates on what we're working on and occasional thoughts on software.</p>
+                        <a href="https://www.linkedin.com/company/arbinquiry/" target="_blank" rel="noopener" class="contact-link">Arbitrary Inquiry</a>
+                    </div>
+
+                    <div class="benefit-card contact-card">
+                        <div class="contact-icon">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </div>
+                        <h3>Book a Call</h3>
+                        <p>Ready to scope an audit or want to talk through what we'd look at? Grab 30 minutes.</p>
+                        <a href="https://cal.com/ateesdalejr/init" target="_blank" rel="noopener" class="contact-link">Schedule on Cal.com</a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer"></footer>
+    <script src="{{ "/js/footer.js" | url }}"></script>
+</body>
+</html>

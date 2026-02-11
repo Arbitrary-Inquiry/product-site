@@ -274,6 +274,39 @@
     }
 }
 
+/* Contact Page */
+.contact-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--bg-section);
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.contact-link {
+    display: inline-block;
+    margin-top: auto;
+    padding-top: 1rem;
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.contact-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
 /* Blog */
 .blog-list {
     max-width: 760px;

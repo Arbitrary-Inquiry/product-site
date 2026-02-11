@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li><a data-link="about">About</a></li>
                         <li><a data-link="blog">Blog</a></li>
                         <li><a href="#">Careers</a></li>
-                        <li><a href="mailto:andrew@arbinquiry.com">Contact</a></li>
+                        <li><a data-link="contact">Contact</a></li>
                     </ul>
                 </div>
             </div>
