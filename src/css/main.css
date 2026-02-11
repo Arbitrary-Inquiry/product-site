@@ -274,6 +274,72 @@
     }
 }
 
+/* Page Sidebar */
+.sidebar-layout {
+    display: flex;
+    align-items: flex-start;
+}
+
+.page-sidebar {
+    position: sticky;
+    top: 5rem;
+    width: 180px;
+    min-width: 180px;
+    flex-shrink: 0;
+    align-self: flex-start;
+    padding: 2.5rem 0 2rem 1.5rem;
+    background: var(--bg-base);
+}
+
+.sidebar-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--secondary);
+    margin-bottom: 0.75rem;
+}
+
+.page-sidebar nav ul {
+    border-left: 2px solid var(--border);
+}
+
+.page-sidebar nav a {
+    display: block;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--secondary);
+    font-weight: 500;
+    border-left: 2px solid transparent;
+    margin-left: -2px;
+    transition: all 0.2s;
+}
+
+.page-sidebar nav a:hover {
+    color: var(--dark);
+}
+
+.page-sidebar nav a.active {
+    color: var(--primary);
+    border-left-color: var(--primary);
+    font-weight: 600;
+}
+
+.sidebar-content {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 900px) {
+    .sidebar-layout {
+        display: block;
+    }
+
+    .page-sidebar {
+        display: none;
+    }
+}
+
 /* Contact Page */
 .contact-card {
     display: flex;
