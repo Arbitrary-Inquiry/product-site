@@ -8,7 +8,7 @@ meta:
 
 nav:
   cta_text: "Get Education Pricing"
-  cta_href: "#"
+  cta_href: "/products/device-inventory/#pricing"
 
 landing:
   hero:
@@ -17,7 +17,7 @@ landing:
     primary_cta_text: "Explore Products"
     primary_cta_href: "#products"
     secondary_cta_text: "Request Demo"
-    secondary_cta_href: "/#contact"
+    secondary_cta_href: "mailto:andrew@arbinquiry.com"
   products_section:
     title: "Our Products for Public Schools"
     subtitle: "Solutions designed for district IT teams and administrators"
@@ -40,7 +40,7 @@ landing:
           - "Vulnerability detection"
           - "Security reporting"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/security-review/"
         cta_style: outline
       - name: "AI Implementation Classes"
         description: "Train your IT staff and teachers on using AI tools effectively and responsibly in educational settings."
@@ -50,7 +50,7 @@ landing:
           - "Tool integration training"
           - "Policy development support"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/ai-classes/"
         cta_style: outline
   extra_features_section:
     enabled: false
@@ -69,7 +69,7 @@ landing:
     h2: "Ready to Simplify District Technology Management?"
     p: "See how ArbInq can help your schools"
     button_text: "Request a Demo"
-    button_href: "/#contact"
+    button_href: "mailto:andrew@arbinquiry.com"
   include_config_js: false
 
 device_inventory:
@@ -78,7 +78,7 @@ device_inventory:
     p: "Track every Chromebook, tablet, and laptop across your district. Simplify device checkout for students and staff."
     show_cta: true
     cta_text: "Request Education Demo"
-    cta_href: "#"
+    cta_href: "mailto:andrew@arbinquiry.com"
   benefits:
     title: "Built for Public School Districts"
     subtitle: "Everything you need to manage your district's technology assets"
@@ -116,5 +116,5 @@ device_inventory:
     h2: "Ready to Simplify District Device Management?"
     p: "Special pricing for K-12 public school districts"
     button_text: "Get Your Free Education Quote"
-    button_href: "#"
+    button_href: "mailto:andrew@arbinquiry.com"
   include_config_js: false

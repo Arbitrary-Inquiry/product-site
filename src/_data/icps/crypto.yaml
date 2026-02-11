@@ -8,7 +8,7 @@ meta:
 
 nav:
   cta_text: "Start Free Trial"
-  cta_href: "#"
+  cta_href: "/products/device-inventory/#pricing"
 
 landing:
   hero:
@@ -17,7 +17,7 @@ landing:
     primary_cta_text: "Explore Products"
     primary_cta_href: "#products"
     secondary_cta_text: "Contact Us"
-    secondary_cta_href: "/#contact"
+    secondary_cta_href: "mailto:andrew@arbinquiry.com"
   products_section:
     title: "Our Products for Crypto Traders &amp; Holders"
     subtitle: "Know your hardware. Control your security."
@@ -40,7 +40,7 @@ landing:
           - "Dependency checks"
           - "Smart contract review"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/security-review/"
         cta_style: outline
       - name: "AI Implementation Classes"
         description: "Learn to apply AI tools to on-chain data analysis, trading research, and pattern recognition. Practical training for serious market participants."
@@ -50,7 +50,7 @@ landing:
           - "AI-assisted research"
           - "Self-paced learning"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/ai-classes/"
         cta_style: outline
   extra_features_section:
     enabled: false
@@ -69,7 +69,7 @@ landing:
     h2: "Document Your Hardware Stack Today"
     p: "Free trials available"
     button_text: "Start Free Trial"
-    button_href: "#"
+    button_href: "/products/device-inventory/#pricing"
   include_config_js: true
 
 device_inventory:
@@ -78,7 +78,7 @@ device_inventory:
     p: "Document every device that touches your crypto—hardware wallets, trading machines, nodes, and signing devices. Know exactly what's on each one."
     show_cta: true
     cta_text: "Start Free Trial"
-    cta_href: "#"
+    cta_href: "/products/device-inventory/#pricing"
   benefits:
     title: "Total Visibility Over Your Hardware"
     subtitle: "Because \"not your keys, not your coins\" starts with knowing what's on your devices"
@@ -114,5 +114,5 @@ device_inventory:
     h2: "Document Your Hardware Stack Today"
     p: "Free trials available. One-time payment, no subscriptions."
     button_text: "Start Free Trial"
-    button_href: "#"
+    button_href: "/products/device-inventory/#pricing"
   include_config_js: true

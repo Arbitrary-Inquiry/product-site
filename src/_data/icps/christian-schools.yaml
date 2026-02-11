@@ -8,7 +8,7 @@ meta:
 
 nav:
   cta_text: "Get Free Quote"
-  cta_href: "#"
+  cta_href: "/products/device-inventory/#pricing"
 
 landing:
   hero:
@@ -17,7 +17,7 @@ landing:
     primary_cta_text: "Explore Products"
     primary_cta_href: "#products"
     secondary_cta_text: "Request Demo"
-    secondary_cta_href: "/#contact"
+    secondary_cta_href: "mailto:andrew@arbinquiry.com"
   products_section:
     title: "Our Products for Christian Schools"
     subtitle: "Powerful tools without the enterprise price tag"
@@ -40,7 +40,7 @@ landing:
           - "Vulnerability scanning"
           - "Peace of mind"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/security-review/"
         cta_style: outline
       - name: "AI Implementation Classes"
         description: "Train your staff on using AI tools responsibly and effectively in a faith-based educational environment."
@@ -50,7 +50,7 @@ landing:
           - "Practical training"
           - "Educational applications"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/ai-classes/"
         cta_style: outline
   extra_features_section:
     enabled: true
@@ -83,7 +83,7 @@ landing:
     h2: "Good Stewardship Starts Here"
     p: "See why Christian schools trust ArbInq with their technology"
     button_text: "Get Your Free Quote"
-    button_href: "/#contact"
+    button_href: "mailto:andrew@arbinquiry.com"
   include_config_js: true
 
 device_inventory:
@@ -92,7 +92,7 @@ device_inventory:
     p: "Enterprise-quality asset tracking at a price that respects your ministry's budget. Steward your technology resources wisely."
     show_cta: true
     cta_text: "See Our Pricing"
-    cta_href: "#"
+    cta_href: "/products/device-inventory/#pricing"
   benefits:
     title: "Built for Faith-Based Education"
     subtitle: "Powerful tools without the enterprise price tag"
@@ -138,5 +138,5 @@ device_inventory:
     h2: "Good Stewardship Starts Here"
     p: "See why Christian schools trust ArbInq with their technology assets"
     button_text: "Start Your Free Trial"
-    button_href: "#"
+    button_href: "/products/device-inventory/#pricing"
   include_config_js: true

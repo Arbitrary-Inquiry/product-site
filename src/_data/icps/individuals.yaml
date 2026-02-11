@@ -8,7 +8,7 @@ meta:
 
 nav:
   cta_text: "Sign Up Free"
-  cta_href: "#"
+  cta_href: "/products/device-inventory/#pricing"
 
 landing:
   hero:
@@ -17,7 +17,7 @@ landing:
     primary_cta_text: "Explore Products"
     primary_cta_href: "#products"
     secondary_cta_text: "Contact Us"
-    secondary_cta_href: "/#contact"
+    secondary_cta_href: "mailto:andrew@arbinquiry.com"
   products_section:
     title: "Our Products for Individuals"
     subtitle: "Professional quality, personal simplicity"
@@ -40,7 +40,7 @@ landing:
           - "Dependency checks"
           - "Peace of mind"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/security-review/"
         cta_style: outline
       - name: "AI Implementation Classes"
         description: "Learn to use AI tools effectively in your personal projects and daily life. Practical, hands-on training."
@@ -50,7 +50,7 @@ landing:
           - "Practical applications"
           - "Self-paced learning"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/ai-classes/"
         cta_style: outline
   extra_features_section:
     enabled: false
@@ -69,7 +69,7 @@ landing:
     h2: "Start Tracking Your Devices Today"
     p: "Free trials available"
     button_text: "See What SimpleSight's About"
-    button_href: "#"
+    button_href: "/products/device-inventory/"
   include_config_js: true
 
 device_inventory:
@@ -78,7 +78,7 @@ device_inventory:
     p: "Keep track of all your laptops, phones, smart watches, and more in one place. Know what you own and what's running on it."
     show_cta: true
     cta_text: "Start Free"
-    cta_href: "#"
+    cta_href: "/products/device-inventory/#pricing"
   benefits:
     title: "Finally, Organization for Your Tech"
     subtitle: "Simple tools to track your devices"
@@ -112,5 +112,5 @@ device_inventory:
     h2: "Start Tracking Your Devices Today"
     p: "Free trials available!"
     button_text: "See What SimpleSight's About"
-    button_href: "#"
+    button_href: "/products/device-inventory/"
   include_config_js: false

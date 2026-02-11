@@ -8,7 +8,7 @@ meta:
 
 nav:
   cta_text: "Get Started"
-  cta_href: "#"
+  cta_href: "/products/device-inventory/#pricing"
   di_no_cta: true
 
 landing:
@@ -18,7 +18,7 @@ landing:
     primary_cta_text: "Explore Products"
     primary_cta_href: "#products"
     secondary_cta_text: "Contact Us"
-    secondary_cta_href: "/#contact"
+    secondary_cta_href: "mailto:andrew@arbinquiry.com"
   products_section:
     title: "Our Products for Developers"
     subtitle: "Simplicity first. Enterprise features aren't worth enterprise prices."
@@ -41,7 +41,7 @@ landing:
           - "Dependency scanning"
           - "Easy reporting exports"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/security-review/"
         cta_style: outline
       - name: "AI Implementation Classes"
         description: "Hands-on training for integrating AI into your development workflow. LLM patterns, prompt engineering, and practical applications."
@@ -51,7 +51,7 @@ landing:
           - "LLM integration patterns"
           - "Prompt engineering"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/ai-classes/"
         cta_style: outline
   extra_features_section:
     enabled: false
@@ -70,7 +70,7 @@ landing:
     h2: "Keep Up with Keeping Track"
     p: "Try it out and see what simplifying feels like"
     button_text: "Schedule a Trial Today"
-    button_href: "#"
+    button_href: "mailto:andrew@arbinquiry.com"
   include_config_js: true
 
 device_inventory:
@@ -113,5 +113,5 @@ device_inventory:
     h2: "Keep Up with Keeping Tack"
     p: "Try it out and see what simplifying inventory management feels like. Hint: it's a good feeling."
     button_text: "Schedule a trial today"
-    button_href: "#"
+    button_href: "mailto:andrew@arbinquiry.com"
   include_config_js: true

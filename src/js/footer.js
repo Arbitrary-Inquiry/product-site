@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h4>Products</h4>
                     <ul>
                         <li><a data-link="products/device-inventory">Device Inventory</a></li>
-                        <li><a href="#">Security Review</a></li>
-                        <li><a href="#">AI Classes</a></li>
+                        <li><a data-link="security-review">Security Review</a></li>
+                        <li><a data-link="ai-classes">AI Classes</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -31,10 +31,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="footer-col">
                     <h4>Company</h4>
                     <ul>
-                        <li><a href="#">About</a></li>
+                        <li><a data-root-link="#about">About</a></li>
                         <li><a href="#">Careers</a></li>
                         <li><a href="#">Blog</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="mailto:andrew@arbinquiry.com">Contact</a></li>
                     </ul>
                 </div>
             </div>
@@ -68,5 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     footer.querySelectorAll('a[data-link]').forEach(link => {
         link.href = prefix + link.dataset.link + '/';
+    });
+
+    footer.querySelectorAll('a[data-root-link]').forEach(link => {
+        link.href = prefix + link.dataset.rootLink;
     });
 });

@@ -8,7 +8,7 @@ meta:
 
 nav:
   cta_text: "Start Free Trial"
-  cta_href: "#"
+  cta_href: "/products/device-inventory/#pricing"
 
 landing:
   hero:
@@ -17,7 +17,7 @@ landing:
     primary_cta_text: "Explore Products"
     primary_cta_href: "#products"
     secondary_cta_text: "Contact Us"
-    secondary_cta_href: "/#contact"
+    secondary_cta_href: "mailto:andrew@arbinquiry.com"
   products_section:
     title: "Our Products for Small Business"
     subtitle: "All the features you need, none of the complexity you don't"
@@ -40,7 +40,7 @@ landing:
           - "Dependency checks"
           - "Compliance reporting"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/security-review/"
         cta_style: outline
       - name: "AI Implementation Classes"
         description: "Train your team on leveraging AI tools to boost productivity. Practical, hands-on training for real business applications."
@@ -50,7 +50,7 @@ landing:
           - "Productivity tools"
           - "Team training"
         cta_text: "Coming Soon"
-        cta_href: "#"
+        cta_href: "/ai-classes/"
         cta_style: outline
   extra_features_section:
     enabled: false
@@ -69,7 +69,7 @@ landing:
     h2: "Ready to Simplify Your Business Technology?"
     p: "Start with a free trial and see the difference"
     button_text: "Start Your Free Trial"
-    button_href: "#"
+    button_href: "/products/device-inventory/#pricing"
   include_config_js: false
 
 device_inventory:
@@ -78,7 +78,7 @@ device_inventory:
     p: "Track company laptops, phones, and equipment without the complexity of enterprise tools. Know what you own and where it is."
     show_cta: true
     cta_text: "Start Free Trial"
-    cta_href: "#"
+    cta_href: "/products/device-inventory/#pricing"
   benefits:
     title: "Simple Asset Management for Growing Teams"
     subtitle: "All the features you need, none of the complexity you don't"
@@ -114,5 +114,5 @@ device_inventory:
     h2: "Get Control of Your Company Equipment"
     p: "Start tracking in minutes with our simple setup process"
     button_text: "Start Your Free Trial"
-    button_href: "#"
+    button_href: "/products/device-inventory/#pricing"
   include_config_js: false
