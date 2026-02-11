@@ -1,8 +1,8 @@
 backend:
   name: github
-  repo: OWNER/REPO         # TODO: replace with your GitHub username/repo-name
-  branch: main             # NOTE: rename master → main first (see README)
-  base_url: https://YOUR_CF_WORKER.workers.dev  # TODO: replace after CF Worker setup
+  repo: Arbitrary-Inquiry/product-site
+  branch: main
+  base_url: https://arbinq-oauth.bumpywright03.workers.dev
 
 media_folder: "src/admin/uploads"
 public_folder: "/admin/uploads"
