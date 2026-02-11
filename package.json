@@ -1,0 +1,14 @@
+{
+  "name": "arbinq-product-site",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "description": "ArbInq product site built with Eleventy",
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "js-yaml": "^4.1.0"
+  }
+}

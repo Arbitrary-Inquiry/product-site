@@ -1,0 +1,34 @@
+/* Small Business Theme */
+/* TODO: Add business-themed background images */
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --bg-base: #b8c9e0;        /* Soft blue-grey */
+    --bg-section: #a3b8d4;     /* Medium blue */
+    --bg-card: #cdd8e8;        /* Light blue-grey */
+    --bg-header: #b0c2db;      /* Header blue */
+    --border: #96aac7;
+}
+
+/* Custom hero gradient for small business */
+.page-hero {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+/* Small business-specific styling */
+.benefit-card {
+    border-color: #96aac7;
+}
+
+.benefit-card:hover {
+    border-color: var(--primary);
+}
+
+.use-cases {
+    background: var(--bg-section);
+}
+
+.testimonial-card {
+    background: var(--bg-section);
+}

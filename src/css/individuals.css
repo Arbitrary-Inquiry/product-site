@@ -1,0 +1,43 @@
+/* Individuals Theme */
+/* TODO: Add friendly/personal background images */
+
+:root {
+    --primary: #f59e0b;
+    --primary-dark: #d97706;
+    --bg-base: #e5d4b0;        /* Soft amber-grey */
+    --bg-section: #dbc59a;     /* Medium amber */
+    --bg-card: #efe3c7;        /* Light amber-grey */
+    --bg-header: #e0ceab;      /* Header amber */
+    --border: #ccb888;
+}
+
+/* Custom hero gradient for individuals */
+.page-hero {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+/* Individual-specific styling */
+.benefit-card {
+    border-color: #ccb888;
+}
+
+.benefit-card:hover {
+    border-color: var(--primary);
+}
+
+.use-cases {
+    background: var(--bg-section);
+}
+
+.testimonial-card {
+    background: var(--bg-section);
+}
+
+/* Friendly, approachable touches */
+.btn-primary {
+    border-radius: 2rem;
+}
+
+.benefit-card {
+    border-radius: 1.5rem;
+}

@@ -1,0 +1,39 @@
+/* Developers Theme */
+/* TODO: Add tech-themed background images */
+
+:root {
+    --primary: #7c3aed;
+    --primary-dark: #6d28d9;
+    --bg-base: #c9bde0;        /* Soft purple-grey */
+    --bg-section: #b5a6d4;     /* Medium purple */
+    --bg-card: #dbd3ec;        /* Light purple-grey */
+    --bg-header: #c0b3db;      /* Header purple */
+    --border: #a699c7;
+}
+
+/* Custom hero gradient for developers */
+.page-hero {
+    background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+}
+
+/* Developer-specific styling */
+.benefit-card {
+    border-color: #a699c7;
+}
+
+.benefit-card:hover {
+    border-color: var(--primary);
+}
+
+.use-cases {
+    background: var(--bg-section);
+}
+
+.testimonial-card {
+    background: var(--bg-section);
+}
+
+/* Code-like aesthetic touches */
+.benefit-card h3 {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+}

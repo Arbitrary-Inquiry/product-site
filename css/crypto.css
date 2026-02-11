@@ -1,0 +1,51 @@
+/* Crypto Traders & Holders Theme */
+
+:root {
+    --primary: #10b981;
+    --primary-dark: #059669;
+    --bg-base: #c2d0cc;        /* Slate-green grey */
+    --bg-section: #b0c1bc;     /* Darker slate-green */
+    --bg-card: #d2deda;        /* Light slate-green */
+    --bg-header: #bccdc8;      /* Header slate-green */
+    --border: #99b5ae;
+}
+
+/* Custom hero gradient for crypto */
+.page-hero {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Crypto-specific styling */
+.benefit-card {
+    border-color: #99b5ae;
+}
+
+.benefit-card h3 {
+    color: var(--primary);
+}
+
+.benefit-card:hover {
+    border-color: var(--primary);
+}
+
+.use-cases {
+    background: var(--bg-section);
+}
+
+.testimonial-card {
+    background: var(--bg-section);
+}
+
+/* Sharp, technical aesthetic */
+.btn-primary {
+    border-radius: 0.25rem;
+}
+
+.benefit-card {
+    border-radius: 0.5rem;
+}
+
+.use-case-item {
+    border-left: 3px solid var(--primary);
+    border-radius: 0 0.5rem 0.5rem 0;
+}
