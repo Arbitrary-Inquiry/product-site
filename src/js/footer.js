@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h4>Products</h4>
                     <ul>
                         <li><a data-link="products/device-inventory">Device Inventory</a></li>
+                        <li><a data-link="code-audit">Code Audit</a></li>
                         <li><a data-link="security-review">Security Review</a></li>
                         <li><a data-link="ai-classes">AI Classes</a></li>
                     </ul>
@@ -31,9 +32,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="footer-col">
                     <h4>Company</h4>
                     <ul>
-                        <li><a data-root-link="#about">About</a></li>
+                        <li><a data-link="about">About</a></li>
+                        <li><a data-link="blog">Blog</a></li>
                         <li><a href="#">Careers</a></li>
-                        <li><a href="#">Blog</a></li>
                         <li><a href="mailto:andrew@arbinquiry.com">Contact</a></li>
                     </ul>
                 </div>
@@ -44,33 +45,15 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     `;
 
-    // Calculate path prefix based on current location
-    const path = window.location.pathname;
-    let prefix = '';
-
-    // Two levels deep: products/device-inventory or subdomain/device-inventory
-    if (path.includes('/products/device-inventory/') ||
-        path.includes('/public-schools/device-inventory/') ||
-        path.includes('/christian-schools/device-inventory/') ||
-        path.includes('/small-business/device-inventory/') ||
-        path.includes('/developers/device-inventory/') ||
-        path.includes('/individuals/device-inventory/') ||
-        path.includes('/crypto/device-inventory/')) {
-        prefix = '../../';
-    } else if (path.includes('/public-schools/') ||
-               path.includes('/christian-schools/') ||
-               path.includes('/small-business/') ||
-               path.includes('/developers/') ||
-               path.includes('/individuals/') ||
-               path.includes('/crypto/')) {
-        prefix = '../';
-    }
+    // Compute prefix by counting path depth after the site root segment.
+    // e.g. /product-site/           → depth 0 → prefix ''
+    //      /product-site/about/     → depth 1 → prefix '../'
+    //      /product-site/blog/post/ → depth 2 → prefix '../../'
+    const segments = window.location.pathname.replace(/^\//, '').split('/').filter(Boolean);
+    const depth = Math.max(0, segments.length - 1);
+    const prefix = '../'.repeat(depth);
 
     footer.querySelectorAll('a[data-link]').forEach(link => {
         link.href = prefix + link.dataset.link + '/';
-    });
-
-    footer.querySelectorAll('a[data-root-link]').forEach(link => {
-        link.href = prefix + link.dataset.rootLink;
     });
 });
