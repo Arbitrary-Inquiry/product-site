@@ -27,16 +27,24 @@
 }
 
 .product-card {
+    position: relative;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 1rem;
     padding: 2rem;
     transition: all 0.3s;
+    cursor: pointer;
 }
 
 .product-card:hover {
     box-shadow: var(--shadow-lg);
     transform: translateY(-4px);
+}
+
+.product-card .btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
 }
 
 .product-icon {
@@ -185,11 +193,19 @@
 }
 
 .team-card {
+    position: relative;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 1rem;
     padding: 2rem;
     text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.team-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
 }
 
 .team-card img {
@@ -211,9 +227,21 @@
     color: var(--primary);
 }
 
-.team-name a:hover {
+.team-name a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.team-card:hover .team-name a {
     color: var(--primary-dark);
     text-decoration: underline;
+}
+
+/* Lift bio links above the card overlay so they remain independently clickable */
+.team-bio a {
+    position: relative;
+    z-index: 2;
 }
 
 .team-title {
