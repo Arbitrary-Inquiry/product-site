@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ icp.meta.title }}</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/{{ icp.theme_css }}.css">
+</head>
+<body>
+    {% set navType = "landing" %}
+    {% include "partials/nav.njk" %}
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>{{ icp.landing.hero.h1 }}</h1>
+                <p>{{ icp.landing.hero.subheadline }}</p>
+                <div class="hero-cta">
+                    <a href="{{ icp.landing.hero.primary_cta_href }}" class="btn btn-primary btn-lg">{{ icp.landing.hero.primary_cta_text }}</a>
+                    <a href="{{ icp.landing.hero.secondary_cta_href }}" class="btn btn-secondary btn-lg">{{ icp.landing.hero.secondary_cta_text }}</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="products" class="products">
+            <div class="container">
+                <h2 class="section-title">{{ icp.landing.products_section.title }}</h2>
+                <p class="section-subtitle">{{ icp.landing.products_section.subtitle }}</p>
+
+                <div class="product-grid">
+                    {% for product in icp.landing.products_section.products %}
+                    <div class="product-card">
+                        <div class="product-icon">
+                            {% if product.icon == "monitor" %}
+                            {% include "partials/icon-monitor.njk" %}
+                            {% elif product.icon == "shield" %}
+                            {% include "partials/icon-shield.njk" %}
+                            {% elif product.icon == "chart" %}
+                            {% include "partials/icon-chart.njk" %}
+                            {% endif %}
+                        </div>
+                        <h3>{{ product.name }}</h3>
+                        <p>{{ product.description | safe }}</p>
+                        <ul class="product-features">
+                            {% for feature in product.features %}
+                            <li>{{ feature | safe }}</li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{{ product.cta_href }}" class="btn btn-{{ product.cta_style }}">{{ product.cta_text }}</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        {% if icp.landing.extra_features_section.enabled %}
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">{{ icp.landing.extra_features_section.title }}</h2>
+                <div class="feature-grid">
+                    {% for feature in icp.landing.extra_features_section.features %}
+                    <div class="feature">
+                        <h3{% if feature.h3_style %} style="{{ feature.h3_style }}"{% endif %}>{{ feature.h3 | safe }}</h3>
+                        <p>{{ feature.p | safe }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <section id="about" class="features">
+            <div class="container">
+                <h2 class="section-title">{{ icp.landing.features_section.title }}</h2>
+                <div class="feature-grid">
+                    {% for feature in icp.landing.features_section.features %}
+                    <div class="feature">
+                        <h3>{{ feature.h3 | safe }}</h3>
+                        <p>{{ feature.p | safe }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="container">
+                <h2>{{ icp.landing.cta_section.h2 }}</h2>
+                <p>{{ icp.landing.cta_section.p }}</p>
+                <a href="{{ icp.landing.cta_section.button_href }}" class="btn btn-primary btn-lg">{{ icp.landing.cta_section.button_text }}</a>
+            </div>
+        </section>
+    </main>
+
+    {% set include_config_js = icp.landing.include_config_js %}
+    {% include "partials/footer-inject.njk" %}
+</body>
+</html>

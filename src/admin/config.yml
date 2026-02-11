@@ -1,0 +1,187 @@
+backend:
+  name: github
+  repo: OWNER/REPO         # TODO: replace with your GitHub username/repo-name
+  branch: main             # NOTE: rename master → main first (see README)
+  base_url: https://YOUR_CF_WORKER.workers.dev  # TODO: replace after CF Worker setup
+
+media_folder: "src/admin/uploads"
+public_folder: "/admin/uploads"
+
+collections:
+  - name: icps
+    label: "ICP Landing Pages"
+    folder: "src/_data/icps"
+    create: true
+    extension: yaml
+    format: yaml
+    identifier_field: slug
+    fields:
+      - { label: "Slug", name: slug, widget: string, hint: "URL-safe identifier, e.g. public-schools" }
+      - { label: "Label", name: label, widget: string, hint: "Display name in nav dropdown" }
+      - { label: "Theme CSS", name: theme_css, widget: string, hint: "CSS filename without extension, e.g. public-schools" }
+
+      - label: "Meta"
+        name: meta
+        widget: object
+        fields:
+          - { label: "Page Title", name: title, widget: string }
+          - { label: "Device Inventory Page Title", name: device_inventory_title, widget: string }
+
+      - label: "Nav"
+        name: nav
+        widget: object
+        fields:
+          - { label: "CTA Button Text", name: cta_text, widget: string }
+          - { label: "CTA Button Href", name: cta_href, widget: string, default: "#" }
+          - { label: "Hide CTA on Device Inventory nav", name: di_no_cta, widget: boolean, default: false, required: false }
+
+      - label: "Landing Page"
+        name: landing
+        widget: object
+        fields:
+          - label: "Hero"
+            name: hero
+            widget: object
+            fields:
+              - { label: "Heading", name: h1, widget: string }
+              - { label: "Subheadline", name: subheadline, widget: text }
+              - { label: "Primary CTA Text", name: primary_cta_text, widget: string }
+              - { label: "Primary CTA Href", name: primary_cta_href, widget: string, default: "#products" }
+              - { label: "Secondary CTA Text", name: secondary_cta_text, widget: string }
+              - { label: "Secondary CTA Href", name: secondary_cta_href, widget: string, default: "/#contact" }
+
+          - label: "Products Section"
+            name: products_section
+            widget: object
+            fields:
+              - { label: "Section Title", name: title, widget: string }
+              - { label: "Section Subtitle", name: subtitle, widget: string }
+              - label: "Products"
+                name: products
+                widget: list
+                min: 3
+                max: 3
+                fields:
+                  - { label: "Name", name: name, widget: string }
+                  - { label: "Description (HTML allowed)", name: description, widget: text }
+                  - { label: "Icon", name: icon, widget: select, options: [monitor, shield, chart] }
+                  - label: "Features"
+                    name: features
+                    widget: list
+                    field: { label: "Feature", name: item, widget: string }
+                  - { label: "CTA Text", name: cta_text, widget: string }
+                  - { label: "CTA Href", name: cta_href, widget: string, default: "#" }
+                  - { label: "CTA Style", name: cta_style, widget: select, options: [outline, primary], default: outline }
+
+          - label: "Extra Features Section (optional cost comparison)"
+            name: extra_features_section
+            widget: object
+            fields:
+              - { label: "Enabled", name: enabled, widget: boolean, default: false }
+              - { label: "Section Title", name: title, widget: string, required: false }
+              - label: "Features"
+                name: features
+                widget: list
+                required: false
+                fields:
+                  - { label: "Heading", name: h3, widget: string }
+                  - { label: "Heading Style (CSS)", name: h3_style, widget: string, required: false }
+                  - { label: "Paragraph (HTML allowed)", name: p, widget: text }
+
+          - label: "Features Section (Why Choose)"
+            name: features_section
+            widget: object
+            fields:
+              - { label: "Section Title", name: title, widget: string }
+              - label: "Features"
+                name: features
+                widget: list
+                min: 4
+                max: 4
+                fields:
+                  - { label: "Heading (HTML allowed)", name: h3, widget: string }
+                  - { label: "Paragraph (HTML allowed)", name: p, widget: text }
+
+          - label: "CTA Section"
+            name: cta_section
+            widget: object
+            fields:
+              - { label: "Heading", name: h2, widget: string }
+              - { label: "Paragraph", name: p, widget: string }
+              - { label: "Button Text", name: button_text, widget: string }
+              - { label: "Button Href", name: button_href, widget: string, default: "#" }
+
+          - { label: "Load config.js (price injection)", name: include_config_js, widget: boolean, default: false }
+
+      - label: "Device Inventory Page"
+        name: device_inventory
+        widget: object
+        fields:
+          - label: "Hero"
+            name: hero
+            widget: object
+            fields:
+              - { label: "Heading", name: h1, widget: string }
+              - { label: "Paragraph", name: p, widget: text }
+              - { label: "Show CTA Button", name: show_cta, widget: boolean, default: true }
+              - { label: "CTA Text", name: cta_text, widget: string, required: false }
+              - { label: "CTA Href", name: cta_href, widget: string, required: false, default: "#" }
+
+          - label: "Benefits Section"
+            name: benefits
+            widget: object
+            fields:
+              - { label: "Section Title", name: title, widget: string }
+              - { label: "Section Subtitle", name: subtitle, widget: string }
+              - label: "Cards"
+                name: cards
+                widget: list
+                fields:
+                  - { label: "Heading", name: h3, widget: string }
+                  - { label: "Paragraph (HTML allowed)", name: p, widget: text }
+
+          - label: "Use Cases Section"
+            name: use_cases
+            widget: object
+            fields:
+              - { label: "Section Title", name: title, widget: string }
+              - label: "Items"
+                name: items
+                widget: list
+                fields:
+                  - { label: "Heading", name: h3, widget: string }
+                  - { label: "Paragraph (HTML allowed)", name: p, widget: text }
+
+          - label: "Testimonial"
+            name: testimonial
+            widget: object
+            fields:
+              - { label: "Enabled", name: enabled, widget: boolean, default: false }
+              - { label: "Quote", name: quote, widget: text, required: false }
+              - { label: "Attribution", name: cite, widget: string, required: false }
+
+          - label: "Extra Features Section (optional)"
+            name: extra_features_section
+            widget: object
+            fields:
+              - { label: "Enabled", name: enabled, widget: boolean, default: false }
+              - { label: "Section Title", name: title, widget: string, required: false }
+              - label: "Features"
+                name: features
+                widget: list
+                required: false
+                fields:
+                  - { label: "Heading", name: h3, widget: string }
+                  - { label: "Heading Style (CSS)", name: h3_style, widget: string, required: false }
+                  - { label: "Paragraph (HTML allowed)", name: p, widget: text }
+
+          - label: "CTA Section"
+            name: cta_section
+            widget: object
+            fields:
+              - { label: "Heading", name: h2, widget: string }
+              - { label: "Paragraph", name: p, widget: string }
+              - { label: "Button Text", name: button_text, widget: string }
+              - { label: "Button Href", name: button_href, widget: string, default: "#" }
+
+          - { label: "Load config.js (price injection)", name: include_config_js, widget: boolean, default: false }

@@ -1,0 +1,117 @@
+slug: developers
+label: "Developers"
+theme_css: developers
+
+meta:
+  title: "ArbInq for Developers - Simple Tools That Just Work"
+  device_inventory_title: "Device Inventory API for Developers - ArbInq"
+
+nav:
+  cta_text: "Get Started"
+  cta_href: "#"
+  di_no_cta: true
+
+landing:
+  hero:
+    h1: "Tools Built for Developers"
+    subheadline: "Simple APIs, clean exports, and no enterprise bloat. Tools that work the way you think."
+    primary_cta_text: "Explore Products"
+    primary_cta_href: "#products"
+    secondary_cta_text: "Contact Us"
+    secondary_cta_href: "/#contact"
+  products_section:
+    title: "Our Products for Developers"
+    subtitle: "Simplicity first. Enterprise features aren't worth enterprise prices."
+    products:
+      - name: "SimpleSight Device Inventory"
+        description: "Track devices by UUID, not confusing hostnames. Simple JSON exports."
+        icon: monitor
+        features:
+          - "UUID-based tracking"
+          - "CSV &amp; JSON export"
+          - "FastAPI backend, React frontend"
+        cta_text: "Learn More"
+        cta_href: "device-inventory/"
+        cta_style: outline
+      - name: "Security Review"
+        description: "Static analysis for your codebase. Find vulnerabilities before they ship."
+        icon: shield
+        features:
+          - "Static code analysis"
+          - "Dependency scanning"
+          - "Easy reporting exports"
+        cta_text: "Coming Soon"
+        cta_href: "#"
+        cta_style: outline
+      - name: "AI Implementation Classes"
+        description: "Hands-on training for integrating AI into your development workflow. LLM patterns, prompt engineering, and practical applications."
+        icon: chart
+        features:
+          - "AI-assisted coding"
+          - "LLM integration patterns"
+          - "Prompt engineering"
+        cta_text: "Coming Soon"
+        cta_href: "#"
+        cta_style: outline
+  extra_features_section:
+    enabled: false
+  features_section:
+    title: "Why Developers Choose ArbInq"
+    features:
+      - h3: '<span class="product-price">$20</span> and Done'
+        p: "One-time payment. No per-seat licensing, no usage fees, no contract renewals."
+      - h3: "Clean Stack"
+        p: "React + TypeScript frontend, FastAPI backend, SQLite DB. Self-hosted, no cloud dependency. CSV &amp; JSON exports."
+      - h3: "No Limits"
+        p: "100,000 devices? Go for it. We don't charge by usage or throttle you."
+      - h3: "Dev-Friendly Support"
+        p: "Talk to developers who understand your questions. Our distributed team covers multiple time zones—no support ticket runaround."
+  cta_section:
+    h2: "Keep Up with Keeping Track"
+    p: "Try it out and see what simplifying feels like"
+    button_text: "Schedule a Trial Today"
+    button_href: "#"
+  include_config_js: true
+
+device_inventory:
+  hero:
+    h1: "Device Inventory"
+    p: "It works on your machine, but you don't know where your machine is? Keep track with SimpleSight"
+    show_cta: false
+  benefits:
+    title: "Simplicity first."
+    subtitle: "Are enterprise features really worth enterprise prices? We don't think so."
+    cards:
+      - h3: "Simple Structure"
+        p: "Tables that are easy to understand at a glance, and quick to filter or sort by exactly what you need."
+      - h3: "Tracking by UUID"
+        p: "Hostnames can be confusing. All your devices named dev_2? No problem. We track by something actually unique."
+      - h3: "Software Inventory"
+        p: "Fleet-wide software view with device counts per app, publisher, and version. No whitelists or bloat."
+      - h3: "Clean Stack"
+        p: "React + TypeScript frontend, FastAPI backend, SQLite DB. Self-hosted, no cloud dependency. JWT auth for web, token auth for agents."
+      - h3: "No Device or User Limits"
+        p: "No per-device fees, no per-user fees. Run as many agents as you want with configurable check-in intervals and retry logic."
+      - h3: "One Time Payment"
+        p: '<span class="product-price">$20</span> and you own it. No price hikes, no contract renewal deadlines, no license revoking.'
+  use_cases:
+    title: "Developer Use Cases"
+    items:
+      - h3: "Small Teams"
+        p: "Have a team constantly coming to you, asking where their devices went? Give the team lead the ability to track inventory without additional MDM licenses."
+      - h3: "Non-Technical Supervisors"
+        p: "Your boss's boss's boss doesn't know how to use your MDM. But a quick glance at SimpleSight shows exactly what's where."
+      - h3: "Easy Integration to Custom Scripts"
+        p: "Tired of managing complex MDM APIs and trying to understand their export formats? Export a simple json that actually reflects the table structure, so the data is stored how you see it."
+      - h3: "Still not convinced?"
+        p: "Use our free trial as a sanity check. Run it in parallel with your favorite MDM, and see where you have the better experience. We suspect by the end, you'll be coming to SimpleSight more often than not."
+  testimonial:
+    enabled: false
+  extra_features_section:
+    enabled: false
+  cta_section:
+    h2: "Keep Up with Keeping Tack"
+    p: "Try it out and see what simplifying inventory management feels like. Hint: it's a good feeling."
+    button_text: "Schedule a trial today"
+    button_href: "#"
+  include_config_js: true

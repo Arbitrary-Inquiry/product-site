@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ icp.meta.device_inventory_title }}</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/{{ icp.theme_css }}.css">
+</head>
+<body>
+    {% set navType = "device-inventory" %}
+    {% include "partials/nav.njk" %}
+
+    <main>
+        <section class="page-hero">
+            <div class="container">
+                <h1>{{ icp.device_inventory.hero.h1 }}</h1>
+                <p>{{ icp.device_inventory.hero.p }}</p>
+                {% if icp.device_inventory.hero.show_cta %}
+                <a href="{{ icp.device_inventory.hero.cta_href }}" class="btn btn-primary btn-lg">{{ icp.device_inventory.hero.cta_text }}</a>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="benefits">
+            <div class="container">
+                <h2 class="section-title">{{ icp.device_inventory.benefits.title }}</h2>
+                <p class="section-subtitle">{{ icp.device_inventory.benefits.subtitle }}</p>
+
+                <div class="benefit-grid">
+                    {% for card in icp.device_inventory.benefits.cards %}
+                    <div class="benefit-card">
+                        <h3>{{ card.h3 }}</h3>
+                        <p>{{ card.p | safe }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="use-cases">
+            <div class="container">
+                <h2 class="section-title">{{ icp.device_inventory.use_cases.title }}</h2>
+                <div class="use-case-list">
+                    {% for item in icp.device_inventory.use_cases.items %}
+                    <div class="use-case-item">
+                        <h3>{{ item.h3 }}</h3>
+                        <p>{{ item.p | safe }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        {% if icp.device_inventory.testimonial.enabled %}
+        <section class="testimonial">
+            <div class="container">
+                <div class="testimonial-card">
+                    <blockquote>"{{ icp.device_inventory.testimonial.quote }}"</blockquote>
+                    <cite>{{ icp.device_inventory.testimonial.cite }}</cite>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {% if icp.device_inventory.extra_features_section.enabled %}
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">{{ icp.device_inventory.extra_features_section.title }}</h2>
+                <div class="feature-grid">
+                    {% for feature in icp.device_inventory.extra_features_section.features %}
+                    <div class="feature">
+                        <h3{% if feature.h3_style %} style="{{ feature.h3_style }}"{% endif %}>{{ feature.h3 | safe }}</h3>
+                        <p>{{ feature.p | safe }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <section class="cta">
+            <div class="container">
+                <h2>{{ icp.device_inventory.cta_section.h2 }}</h2>
+                <p>{{ icp.device_inventory.cta_section.p }}</p>
+                <a href="{{ icp.device_inventory.cta_section.button_href }}" class="btn btn-primary btn-lg">{{ icp.device_inventory.cta_section.button_text }}</a>
+            </div>
+        </section>
+    </main>
+
+    {% set include_config_js = icp.device_inventory.include_config_js %}
+    {% include "partials/footer-inject.njk" %}
+</body>
+</html>

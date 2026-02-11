@@ -1,0 +1,116 @@
+slug: individuals
+label: "Individuals"
+theme_css: individuals
+
+meta:
+  title: "ArbInq for Individuals - Personal Technology Management"
+  device_inventory_title: "Personal Device Inventory - ArbInq"
+
+nav:
+  cta_text: "Sign Up Free"
+  cta_href: "#"
+
+landing:
+  hero:
+    h1: "Organize Your Personal Tech"
+    subheadline: "Keep track of all your devices, software, and serial numbers in one place. Perfect for tech enthusiasts, large families, and anyone who owns more than one screen."
+    primary_cta_text: "Explore Products"
+    primary_cta_href: "#products"
+    secondary_cta_text: "Contact Us"
+    secondary_cta_href: "/#contact"
+  products_section:
+    title: "Our Products for Individuals"
+    subtitle: "Professional quality, personal simplicity"
+    products:
+      - name: "SimpleSight Device Inventory"
+        description: "Track all your laptops, phones, tablets, and smart devices. Know what you own, what software is where, and export records when you need them."
+        icon: monitor
+        features:
+          - "Track all your devices"
+          - "Software inventory"
+          - "CSV export for records"
+        cta_text: "Learn More"
+        cta_href: "device-inventory/"
+        cta_style: outline
+      - name: "Security Review"
+        description: "Building personal projects or side hustles? Check your code for security issues before you ship."
+        icon: shield
+        features:
+          - "Vulnerability scanning"
+          - "Dependency checks"
+          - "Peace of mind"
+        cta_text: "Coming Soon"
+        cta_href: "#"
+        cta_style: outline
+      - name: "AI Implementation Classes"
+        description: "Learn to use AI tools effectively in your personal projects and daily life. Practical, hands-on training."
+        icon: chart
+        features:
+          - "AI tool basics"
+          - "Practical applications"
+          - "Self-paced learning"
+        cta_text: "Coming Soon"
+        cta_href: "#"
+        cta_style: outline
+  extra_features_section:
+    enabled: false
+  features_section:
+    title: "Why Choose ArbInq"
+    features:
+      - h3: "Simple &amp; Free to Start"
+        p: 'Get started with a free trial. Full version is just <span class="product-price">$20</span>, once, forever.'
+      - h3: "No Tech Skills Needed"
+        p: "Professional quality without needing to be a professional. Easy to use from day one."
+      - h3: "Insurance Ready"
+        p: "Export complete inventory reports with serial numbers for home insurance claims."
+      - h3: "Historical Records"
+        p: "Never lose data. Every snapshot is saved so you can see your full device history."
+  cta_section:
+    h2: "Start Tracking Your Devices Today"
+    p: "Free trials available"
+    button_text: "See What SimpleSight's About"
+    button_href: "#"
+  include_config_js: true
+
+device_inventory:
+  hero:
+    h1: "Your Personal Device Inventory"
+    p: "Keep track of all your laptops, phones, smart watches, and more in one place. Know what you own and what's running on it."
+    show_cta: true
+    cta_text: "Start Free"
+    cta_href: "#"
+  benefits:
+    title: "Finally, Organization for Your Tech"
+    subtitle: "Simple tools to track your devices"
+    cards:
+      - h3: "Easy to Understand"
+        p: "Professional quality device tracking, without needing to be a professional to understand it."
+      - h3: "No Thought Required"
+        p: "Simply put in your device, and it's tracked. No more digging through drawers when you're wondering what model that old cell was."
+      - h3: "Optional Software Tracking"
+        p: "Can't remember if you last did your taxes on your desktop, Chromebook, or iMac? See at a glance without having to log into everything."
+      - h3: "Historical Snapshots"
+        p: "Never lose data. Every check-in is saved, so you can see your full device history over time."
+      - h3: "Insurance Ready"
+        p: "Export a complete inventory report to CSV for your home insurance. Serial numbers, device specs, and software all documented."
+  use_cases:
+    title: "Perfect For"
+    items:
+      - h3: "Tech Enthusiasts"
+        p: "You've got phones, tablets, laptops, smart home devices, cameras, and more. Keep track of what you own and what's on it. Sure, \"it works on my machine\", but which one?"
+      - h3: "Home Insurance Documentation"
+        p: "If disaster strikes, you'll need serial numbers and proof of ownership for insurance claims. SimpleSight keeps everything documented and ready to export."
+      - h3: "Large Families"
+        p: "Your kids arguing over whose phone is whose? Buying everyone a tablet for Christmas, but forgot the youngest? Keep track with SimpleSight!"
+  testimonial:
+    enabled: true
+    quote: "I got 10 chromebooks for cheap when a school closed, but only started using one. I would have had to boot them all to see where my software was, if I didn't have SimpleSight to track the serial numbers and manage device names."
+    cite: "- Reel Pherson, Chromebook Enthusiasts"
+  extra_features_section:
+    enabled: false
+  cta_section:
+    h2: "Start Tracking Your Devices Today"
+    p: "Free trials available!"
+    button_text: "See What SimpleSight's About"
+    button_href: "#"
+  include_config_js: false

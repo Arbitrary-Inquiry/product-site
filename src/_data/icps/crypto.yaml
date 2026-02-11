@@ -1,0 +1,118 @@
+slug: crypto
+label: "Crypto Traders"
+theme_css: crypto
+
+meta:
+  title: "ArbInq for Crypto Traders &amp; Holders - Hardware Stack Management"
+  device_inventory_title: "Crypto Hardware Inventory - ArbInq"
+
+nav:
+  cta_text: "Start Free Trial"
+  cta_href: "#"
+
+landing:
+  hero:
+    h1: "Know Every Device in Your Crypto Stack"
+    subheadline: "Track hardware wallets, trading machines, and node hardware in one place. Know what's on each device before it gets anywhere near your keys."
+    primary_cta_text: "Explore Products"
+    primary_cta_href: "#products"
+    secondary_cta_text: "Contact Us"
+    secondary_cta_href: "/#contact"
+  products_section:
+    title: "Our Products for Crypto Traders &amp; Holders"
+    subtitle: "Know your hardware. Control your security."
+    products:
+      - name: "SimpleSight Device Inventory"
+        description: "Track every piece of hardware that touches your crypto—hardware wallets, trading machines, nodes, and signing devices. Know exactly what software is on each one."
+        icon: monitor
+        features:
+          - "Hardware wallet documentation"
+          - "Software &amp; firmware tracking"
+          - "CSV export for insurance"
+        cta_text: "Learn More"
+        cta_href: "device-inventory/"
+        cta_style: outline
+      - name: "Security Review"
+        description: "Running your own trading bots or DeFi scripts? Audit your code for vulnerabilities before deploying it anywhere near real funds."
+        icon: shield
+        features:
+          - "Code vulnerability scanning"
+          - "Dependency checks"
+          - "Smart contract review"
+        cta_text: "Coming Soon"
+        cta_href: "#"
+        cta_style: outline
+      - name: "AI Implementation Classes"
+        description: "Learn to apply AI tools to on-chain data analysis, trading research, and pattern recognition. Practical training for serious market participants."
+        icon: chart
+        features:
+          - "On-chain data analysis"
+          - "AI-assisted research"
+          - "Self-paced learning"
+        cta_text: "Coming Soon"
+        cta_href: "#"
+        cta_style: outline
+  extra_features_section:
+    enabled: false
+  features_section:
+    title: "Why Crypto Users Choose ArbInq"
+    features:
+      - h3: "Know Your Attack Surface"
+        p: "Every device that has ever touched your keys is a potential vulnerability. Document them all so nothing falls through the cracks."
+      - h3: "Hardware Wallet Records"
+        p: "Serial numbers, firmware versions, and purchase dates—documented and exportable. If a Ledger or Trezor goes missing, you have proof of ownership."
+      - h3: "One-Time Payment"
+        p: 'No subscriptions quietly draining your stack. Pay <span class="product-price">$20</span> once and own it forever.'
+      - h3: "Self-Hosted Control"
+        p: "Your device inventory data doesn't need to live on someone else's server. Run SimpleSight on your own infrastructure."
+  cta_section:
+    h2: "Document Your Hardware Stack Today"
+    p: "Free trials available"
+    button_text: "Start Free Trial"
+    button_href: "#"
+  include_config_js: true
+
+device_inventory:
+  hero:
+    h1: "Inventory for Your Crypto Hardware Stack"
+    p: "Document every device that touches your crypto—hardware wallets, trading machines, nodes, and signing devices. Know exactly what's on each one."
+    show_cta: true
+    cta_text: "Start Free Trial"
+    cta_href: "#"
+  benefits:
+    title: "Total Visibility Over Your Hardware"
+    subtitle: "Because \"not your keys, not your coins\" starts with knowing what's on your devices"
+    cards:
+      - h3: "Hardware Wallet Documentation"
+        p: "Track your Ledger, Trezor, ColdCard, and other signing devices by serial number, firmware version, and purchase date. Know exactly what you own and can prove it."
+      - h3: "Trading Machine Inventory"
+        p: "Multiple machines for different exchanges or strategies? Know which apps, browser extensions, and wallets are installed on each device—no guessing required."
+      - h3: "Node Hardware Records"
+        p: "Running a Bitcoin full node, Ethereum validator, or Lightning node? Keep detailed hardware records for your Raspberry Pi, NUC, or dedicated server."
+      - h3: "Firmware &amp; Software Audit Trail"
+        p: "Historical snapshots let you see exactly what was installed on any device at any point in time. Spot unexpected changes before they become security problems."
+      - h3: "Insurance &amp; Loss Documentation"
+        p: "Export a complete inventory to CSV with serial numbers and device specs. If hardware is lost, stolen, or destroyed, you have proof of ownership for insurance claims."
+  use_cases:
+    title: "Who Uses SimpleSight"
+    items:
+      - h3: "Multi-Device Traders"
+        p: "You trade from a desktop at home, a laptop at the office, and check prices on your phone. SimpleSight shows you exactly what wallet software and exchange apps are on each device—so you know your entire exposure at a glance."
+      - h3: "Hardware Wallet Collectors"
+        p: "Multiple Ledgers, a Trezor for altcoins, a ColdCard for cold storage—it adds up. Track which physical device handles which purpose, along with firmware versions and serial numbers for every one."
+      - h3: "Node Operators"
+        p: "Home nodes, VPS instances, Raspberry Pi setups—your infrastructure has value and should be documented. SimpleSight tracks hardware specs, running software, and version history so you always know what's deployed."
+      - h3: "Security-Conscious Holders"
+        p: "Before a device gets anywhere near your private keys, you should know everything that's on it. SimpleSight gives you a clear, auditable record of every machine in your setup."
+  testimonial:
+    enabled: true
+    quote: "I had three Ledgers and couldn't remember which one I'd updated last or what was on each. Ten minutes with SimpleSight and I had everything documented. Found out one of them still had an outdated firmware too."
+    cite: "- Satoshi's Ghost, Hardware Wallet Collector"
+  extra_features_section:
+    enabled: false
+  cta_section:
+    h2: "Document Your Hardware Stack Today"
+    p: "Free trials available. One-time payment, no subscriptions."
+    button_text: "Start Free Trial"
+    button_href: "#"
+  include_config_js: true

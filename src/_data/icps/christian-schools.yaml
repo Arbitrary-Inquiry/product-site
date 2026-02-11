@@ -1,0 +1,142 @@
+slug: christian-schools
+label: "Christian Schools"
+theme_css: christian-schools
+
+meta:
+  title: "ArbInq for Christian Schools - Affordable Technology Solutions"
+  device_inventory_title: "Device Management for Christian Schools - ArbInq"
+
+nav:
+  cta_text: "Get Free Quote"
+  cta_href: "#"
+
+landing:
+  hero:
+    h1: "Affordable Technology for Christian Schools"
+    subheadline: "Enterprise-quality tools at prices that respect your ministry's budget. Steward your technology resources wisely with ArbInq."
+    primary_cta_text: "Explore Products"
+    primary_cta_href: "#products"
+    secondary_cta_text: "Request Demo"
+    secondary_cta_href: "/#contact"
+  products_section:
+    title: "Our Products for Christian Schools"
+    subtitle: "Powerful tools without the enterprise price tag"
+    products:
+      - name: "SimpleSight Device Inventory"
+        description: 'Track student devices, monitor battery health, manage 1:1 programs, and demonstrate good stewardship to donors—all for a one-time <span class="product-price">$20</span> payment.'
+        icon: monitor
+        features:
+          - 'One-time <span class="product-price">$20</span> purchase'
+          - "Battery health &amp; charge monitoring"
+          - "CSV export for donor reports"
+        cta_text: "Learn More"
+        cta_href: "device-inventory/"
+        cta_style: outline
+      - name: "Security Review"
+        description: "Protect student and family data by ensuring any school-developed tools meet security standards."
+        icon: shield
+        features:
+          - "Privacy protection"
+          - "Vulnerability scanning"
+          - "Peace of mind"
+        cta_text: "Coming Soon"
+        cta_href: "#"
+        cta_style: outline
+      - name: "AI Implementation Classes"
+        description: "Train your staff on using AI tools responsibly and effectively in a faith-based educational environment."
+        icon: chart
+        features:
+          - "Ethical AI usage"
+          - "Practical training"
+          - "Educational applications"
+        cta_text: "Coming Soon"
+        cta_href: "#"
+        cta_style: outline
+  extra_features_section:
+    enabled: true
+    title: "Cost Comparison"
+    features:
+      - h3: "Enterprise MDM"
+        h3_style: "color: #dc2626;"
+        p: "$3-6 per device/month. For 200 devices: $7,200-$14,400/year"
+      - h3: "Enterprise Asset Mgmt"
+        h3_style: "color: #dc2626;"
+        p: "$2,000-$10,000/year plus implementation fees"
+      - h3: "SimpleSight"
+        h3_style: "color: #059669;"
+        p: '<span class="product-price">$20</span> one-time. That&#39;s it. Forever.'
+      - h3: "Your Savings"
+        h3_style: "color: #059669;"
+        p: "Thousands of dollars back into your ministry every year"
+  features_section:
+    title: "Why Christian Schools Choose ArbInq"
+    features:
+      - h3: "Budget-Friendly"
+        p: "We understand ministry budgets. Our one-time pricing means no surprise fees draining your resources."
+      - h3: "Ministry Discounts"
+        p: "Additional discounts available for churches, schools, and other ministries. Just ask."
+      - h3: "Simple to Use"
+        p: "No IT department required. If you can use a spreadsheet, you can use our tools."
+      - h3: "Responsive Support"
+        p: "Our distributed team spans multiple time zones, giving your questions the attention they deserve with broad coverage throughout the day."
+  cta_section:
+    h2: "Good Stewardship Starts Here"
+    p: "See why Christian schools trust ArbInq with their technology"
+    button_text: "Get Your Free Quote"
+    button_href: "/#contact"
+  include_config_js: true
+
+device_inventory:
+  hero:
+    h1: "Affordable Device Management for Christian Schools"
+    p: "Enterprise-quality asset tracking at a price that respects your ministry's budget. Steward your technology resources wisely."
+    show_cta: true
+    cta_text: "See Our Pricing"
+    cta_href: "#"
+  benefits:
+    title: "Built for Faith-Based Education"
+    subtitle: "Powerful tools without the enterprise price tag"
+    cards:
+      - h3: "Budget-Friendly Pricing"
+        p: "We understand Christian schools operate on tight budgets, often donations from ministry members. Our pricing is 60-70% less than enterprise solutions, with no hidden fees or surprise costs."
+      - h3: "Ministry Discounts"
+        p: "Additional discounts available for schools, churches, and other ministries. Missions is our goal, not money."
+      - h3: "No Long-Term Contracts"
+        p: "One time purchase. Don't stress about price hikes or contract renewal."
+      - h3: "Battery Health Monitoring"
+        p: "Know which student laptops have degraded batteries before they die in class. Track charge status and battery health across your fleet so you can plan replacements instead of scrambling."
+      - h3: "1:1 Device Programs"
+        p: "Easily manage student device assignments for 1:1 programs. Track which student has which device with historical snapshots."
+      - h3: "Simple Setup"
+        p: "No IT department required. Self-hosted with a simple setup. The user-mode agent requires no admin privileges on target devices."
+      - h3: "Summer Collection"
+        p: "Streamline end-of-year device collection. Export reports of outstanding devices and see which ones have stopped checking in."
+  use_cases:
+    title: "Trusted by Christian Schools Nationwide"
+    items:
+      - h3: "Small Schools"
+        p: 'Managing 50-200 devices? A one time <span class="product-price">$20</span> payment gives you everything you need. That&#39;s less than the cost of one lost Chromebook per year. No enterprise bloat, just the features that matter.'
+      - h3: "Growing Academies"
+        p: 'Expanding your technology program? No problem with our scalable solution. <span class="product-price">$20</span> is less than $2/month after the first year, and only more savings as time continues. Compare that to Jamf, Mosyle, or other enterprise tools charging $3-5 per device per month.'
+      - h3: "Grant &amp; Donor Reporting"
+        p: "Show donors and grant providers exactly how their technology gifts are being used. Generate reports that demonstrate responsible stewardship of the resources entrusted to your school."
+  testimonial:
+    enabled: true
+    quote: "We looked at enterprise solutions and the quotes were shocking—$8,000+ per year for our small school. ArbInq gives us everything we need for under the cost of dinner. It's been a blessing for our budget."
+    cite: "- Definitely Not Brandon Green, COO, Not a Real School"
+  extra_features_section:
+    enabled: true
+    title: "Cost Comparison"
+    features:
+      - h3: "Enterprise MDM"
+        p: "$3-6 per device/month. For 200 devices: $7,200-$14,400/year"
+      - h3: "Enterprise Asset Mgmt"
+        p: "$2,000-$10,000/year plus implementation fees"
+      - h3: "SimpleSight"
+        p: '<span class="product-price">$20</span> to buy, 20 minutes to implement and learn.'
+  cta_section:
+    h2: "Good Stewardship Starts Here"
+    p: "See why Christian schools trust ArbInq with their technology assets"
+    button_text: "Start Your Free Trial"
+    button_href: "#"
+  include_config_js: true

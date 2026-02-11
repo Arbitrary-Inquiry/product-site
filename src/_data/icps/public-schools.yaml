@@ -1,0 +1,120 @@
+slug: public-schools
+label: "Public Schools"
+theme_css: public-schools
+
+meta:
+  title: "ArbInq for Public Schools - Technology Solutions for K-12 Districts"
+  device_inventory_title: "Device Management for Public Schools - ArbInq"
+
+nav:
+  cta_text: "Get Education Pricing"
+  cta_href: "#"
+
+landing:
+  hero:
+    h1: "Technology Solutions for Public Schools"
+    subheadline: "ArbInq helps K-12 districts manage technology assets, secure code, and train staff on AI—all at education-friendly prices."
+    primary_cta_text: "Explore Products"
+    primary_cta_href: "#products"
+    secondary_cta_text: "Request Demo"
+    secondary_cta_href: "/#contact"
+  products_section:
+    title: "Our Products for Public Schools"
+    subtitle: "Solutions designed for district IT teams and administrators"
+    products:
+      - name: "SimpleSight Device Inventory"
+        description: "Track Chromebooks, tablets, and laptops across your entire district. Manage 1:1 programs with hardware specs, battery health monitoring, software inventory, and CSV export."
+        icon: monitor
+        features:
+          - "District-wide asset tracking"
+          - "Battery health &amp; charge monitoring"
+          - "Hardware &amp; software inventory"
+        cta_text: "Learn More"
+        cta_href: "device-inventory/"
+        cta_style: outline
+      - name: "Security Review"
+        description: "Ensure student data privacy by scanning district-developed applications for security vulnerabilities before deployment."
+        icon: shield
+        features:
+          - "FERPA compliance support"
+          - "Vulnerability detection"
+          - "Security reporting"
+        cta_text: "Coming Soon"
+        cta_href: "#"
+        cta_style: outline
+      - name: "AI Implementation Classes"
+        description: "Train your IT staff and teachers on using AI tools effectively and responsibly in educational settings."
+        icon: chart
+        features:
+          - "AI in education best practices"
+          - "Tool integration training"
+          - "Policy development support"
+        cta_text: "Coming Soon"
+        cta_href: "#"
+        cta_style: outline
+  extra_features_section:
+    enabled: false
+  features_section:
+    title: "Why Districts Choose ArbInq"
+    features:
+      - h3: "Education Pricing"
+        p: "One-time purchase pricing that respects tight district budgets. No per-device or per-user fees."
+      - h3: "Easy for Staff"
+        p: "Intuitive interfaces that tech coordinators, teachers, and principals can use without IT training."
+      - h3: "Scales District-Wide"
+        p: "From a single school to thousands of devices across dozens of buildings. No additional licensing."
+      - h3: "Dedicated Support"
+        p: "Our distributed team covers multiple time zones for faster response times. We understand your unique challenges."
+  cta_section:
+    h2: "Ready to Simplify District Technology Management?"
+    p: "See how ArbInq can help your schools"
+    button_text: "Request a Demo"
+    button_href: "/#contact"
+  include_config_js: false
+
+device_inventory:
+  hero:
+    h1: "Device Management for Public Schools"
+    p: "Track every Chromebook, tablet, and laptop across your district. Simplify device checkout for students and staff."
+    show_cta: true
+    cta_text: "Request Education Demo"
+    cta_href: "#"
+  benefits:
+    title: "Built for Public School Districts"
+    subtitle: "Everything you need to manage your district's technology assets"
+    cards:
+      - h3: "Simple Interface"
+        p: "Principals and purchasers can see what's what immediately, without waiting for manual reports from IT."
+      - h3: "1:1 Device Programs"
+        p: "Easily manage student device assignments for 1:1 programs. Track which student has which device with historical snapshots."
+      - h3: "Battery Health Monitoring"
+        p: "See which laptops have degraded batteries before they become a problem. Track charge status and battery health across your entire fleet so you can plan replacements proactively instead of reactively."
+      - h3: "Hardware &amp; Software Inventory"
+        p: "Automatically collect hardware specs, installed software, Windows Update status, and more from every device in your fleet."
+      - h3: "Online/Offline Tracking"
+        p: "See at a glance which devices are checking in and which have gone silent. Identify missing or inactive devices instantly."
+      - h3: "Searchable Tables &amp; CSV Export"
+        p: "Find any device instantly with searchable, sortable tables. Export data to CSV for audits, reports, or compliance."
+      - h3: "Role-Based Access"
+        p: "Give principals and coordinators viewer access while IT admins manage the fleet. Admin and viewer roles built in."
+  use_cases:
+    title: "Use Cases for Public Schools"
+    items:
+      - h3: "Student Device Assignment"
+        p: "Assign Chromebooks to students and track who has which device. The lightweight agent runs without admin privileges, automatically reporting hardware specs, software, and battery health back to your dashboard."
+      - h3: "Fleet Health Monitoring"
+        p: "See which devices are online, which need Windows updates, and which have low battery health. Drill into any device for full details: system info, storage usage, network config, and installed software."
+      - h3: "District-Wide Asset Audits"
+        p: "Export your full device inventory to CSV for annual audits and state compliance. Every data snapshot is preserved, so you never lose historical records."
+  testimonial:
+    enabled: true
+    quote: "We manage 15,000 Chromebooks across 22 schools. Before SimpleSight, we had no idea where half our devices were. Now we have full visibility into our fleet and can run audits in minutes instead of days."
+    cite: "- Some district manager with way too many Chromebooks"
+  extra_features_section:
+    enabled: false
+  cta_section:
+    h2: "Ready to Simplify District Device Management?"
+    p: "Special pricing for K-12 public school districts"
+    button_text: "Get Your Free Education Quote"
+    button_href: "#"
+  include_config_js: false
