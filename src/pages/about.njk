@@ -19,6 +19,15 @@ permalink: /about/
                 <li><a href="{{ "/" | url }}#products">Products</a></li>
                 <li><a href="{{ "/about/" | url }}">About</a></li>
                 <li><a href="{{ "/blog/" | url }}">Blog</a></li>
+                <li class="dropdown">
+                    <a href="#">Solutions</a>
+                    <ul class="dropdown-menu">
+                        {% for icpItem in site.icps %}
+                        {% set slugPath = "/" + icpItem.slug + "/" %}
+                        <li><a href="{{ slugPath | url }}">{{ icpItem.label }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
                 <li><a href="mailto:andrew@arbinquiry.com">Contact</a></li>
             </ul>
             <a href="{{ "/products/device-inventory/#pricing" | url }}" class="btn btn-primary">Buy Now</a>

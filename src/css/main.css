@@ -178,7 +178,7 @@
 
 .team-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
     max-width: 900px;
     margin: 0 auto;
@@ -240,7 +240,7 @@
     font-size: 0.9rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     .team-grid {
         grid-template-columns: 1fr;
     }
