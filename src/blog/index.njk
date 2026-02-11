@@ -1,0 +1,66 @@
+---
+permalink: /blog/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - ArbInq</title>
+    <meta name="description" content="Insights on software auditing, AI-generated code, and building things that don't break at 2am.">
+    <link rel="stylesheet" href="{{ "/css/base.css" | url }}">
+    <link rel="stylesheet" href="{{ "/css/main.css" | url }}">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="{{ "/" | url }}" class="logo">ArbInq</a>
+            <ul class="nav-links">
+                <li><a href="{{ "/" | url }}#products">Products</a></li>
+                <li><a href="{{ "/about/" | url }}">About</a></li>
+                <li><a href="{{ "/blog/" | url }}">Blog</a></li>
+                <li><a href="mailto:andrew@arbinquiry.com">Contact</a></li>
+            </ul>
+            <a href="https://cal.com/ateesdalejr/init" class="btn btn-primary">Book Audit</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Blog</h1>
+                <p>Insights on auditing, AI-generated code, and building things that don't break.</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                {% if collections.post %}
+                <div class="blog-list">
+                    {% for post in collections.post | reverse %}
+                    <div class="blog-post-item">
+                        {% if post.data.topics %}
+                        <div class="post-topics">
+                            {% for topic in post.data.topics %}
+                            <span class="topic-tag">{{ topic }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <h2 class="blog-post-title">
+                            <a href="{{ post.url }}">{{ post.data.title }}</a>
+                        </h2>
+                        <p class="blog-post-meta">{{ post.date | readableDate }} &nbsp;&middot;&nbsp; {{ post.data.author }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="section-subtitle">No posts yet. Check back soon.</p>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer"></footer>
+    <script src="{{ "/js/footer.js" | url }}"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - ArbInq</title>
+    <meta name="description" content="{{ title }}">
+    <link rel="stylesheet" href="{{ "/css/base.css" | url }}">
+    <link rel="stylesheet" href="{{ "/css/main.css" | url }}">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="{{ "/" | url }}" class="logo">ArbInq</a>
+            <ul class="nav-links">
+                <li><a href="{{ "/" | url }}#products">Products</a></li>
+                <li><a href="{{ "/about/" | url }}">About</a></li>
+                <li><a href="{{ "/blog/" | url }}">Blog</a></li>
+                <li><a href="mailto:andrew@arbinquiry.com">Contact</a></li>
+            </ul>
+            <a href="https://cal.com/ateesdalejr/init" class="btn btn-primary">Book Audit</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="page-hero">
+            <div class="container">
+                {% if topics %}
+                <div class="post-topics">
+                    {% for topic in topics %}
+                    <span class="topic-tag">{{ topic }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <h1>{{ title }}</h1>
+                <p class="post-meta">{{ date | readableDate }} &nbsp;&middot;&nbsp; {{ author }}</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <div class="post-body">
+                    {{ content | safe }}
+                </div>
+                <div class="post-back">
+                    <a href="{{ "/blog/" | url }}" class="btn btn-secondary">&larr; All Posts</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="container">
+                <h2>Found Something Worth Looking At?</h2>
+                <p>Book a call and we'll scope your audit on the spot.</p>
+                <a href="https://cal.com/ateesdalejr/init" class="btn btn-primary btn-lg">Book Your Audit</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer"></footer>
+    <script src="{{ "/js/footer.js" | url }}"></script>
+</body>
+</html>

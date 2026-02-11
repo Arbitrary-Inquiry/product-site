@@ -132,3 +132,224 @@
         transform: none;
     }
 }
+
+/* About Page */
+.about-story {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.about-story p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.mission-card {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    background: var(--primary);
+    border-radius: 1rem;
+    text-align: center;
+}
+
+.mission-card p {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+.mission-values {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.mission-values span {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 700;
+    font-size: 1rem;
+    font-style: normal;
+    letter-spacing: 0.02em;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.team-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+}
+
+.team-card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 3px solid var(--border);
+}
+
+.team-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.team-name a {
+    color: var(--primary);
+}
+
+.team-name a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.team-title {
+    font-style: italic;
+    color: var(--secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.team-bio {
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+.about-footnotes {
+    max-width: 760px;
+    margin: 2rem auto 0;
+    font-size: 0.9rem;
+    color: var(--secondary);
+}
+
+.about-footnotes p {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .team-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Blog */
+.blog-list {
+    max-width: 760px;
+    margin: 0 auto;
+}
+
+.blog-post-item {
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.blog-post-item:last-child {
+    border-bottom: none;
+}
+
+.blog-post-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.4rem;
+}
+
+.blog-post-title a {
+    color: var(--dark);
+    transition: color 0.2s;
+}
+
+.blog-post-title a:hover {
+    color: var(--primary);
+}
+
+.blog-post-meta {
+    font-size: 0.9rem;
+    color: var(--secondary);
+    margin-bottom: 0;
+}
+
+/* Topic tags (used in listing and post header) */
+.post-topics {
+    margin-bottom: 0.75rem;
+}
+
+.topic-tag {
+    display: inline-block;
+    background: var(--bg-section);
+    color: var(--secondary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.65rem;
+    border-radius: 99px;
+    margin-right: 0.4rem;
+    border: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.page-hero .topic-tag {
+    background: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Blog post body */
+.post-body {
+    max-width: 760px;
+    margin: 0 auto;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.post-body h2,
+.post-body h3 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    color: var(--dark);
+}
+
+.post-body p {
+    margin-bottom: 1.25rem;
+}
+
+.post-body ul,
+.post-body ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.post-body ul { list-style: disc; }
+.post-body ol { list-style: decimal; }
+
+.post-body li {
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+}
+
+.post-body a {
+    color: var(--primary);
+    text-decoration: underline;
+}
+
+.post-back {
+    max-width: 760px;
+    margin: 2.5rem auto 0;
+}
+
+.post-meta {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}

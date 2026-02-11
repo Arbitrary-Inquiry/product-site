@@ -2,3 +2,15 @@ simplesight_overview.md
 node_modules/
 _site/
 cloudflare-worker-oauth.js
+
+# Local reference files (not part of the build)
+About Us _ Arbitrary Inquiry.html
+About Us _ Arbitrary Inquiry_files/
+Arbitrary Inquiry.html
+
+# Sample/draft blog posts (not for production)
+src/blog/posts/what-we-look-for-in-a-code-audit.md
+src/blog/posts/the-real-cost-of-vibe-coded-code.md
+
+# Local tooling
+.claude/

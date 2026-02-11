@@ -8,6 +8,20 @@ media_folder: "src/admin/uploads"
 public_folder: "/admin/uploads"
 
 collections:
+  - name: blog
+    label: "Blog Posts"
+    folder: "src/blog/posts"
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: title, widget: string }
+      - { label: "Date", name: date, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Author", name: author, widget: string }
+      - { label: "Topics", name: topics, widget: list, hint: "Press Enter after each topic, e.g. AI, Security, Auditing" }
+      - { label: "Body", name: body, widget: markdown }
+
   - name: icps
     label: "ICP Landing Pages"
     folder: "src/_data/icps"
