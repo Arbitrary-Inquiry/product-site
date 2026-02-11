@@ -1,4 +1,6 @@
 /* Reset and Base Styles */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
+
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -6,19 +8,18 @@
 }
 
 :root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
-    --secondary: #64748b;
-    --dark: #1e293b;
-    /* TODO: Replace color backgrounds with images */
-    --bg-base: #d4d8e0;        /* Main page background - soft blue-grey */
-    --bg-section: #c5cad4;     /* Alternating section background */
-    --bg-card: #e2e5eb;        /* Card backgrounds */
-    --bg-header: #cdd2dc;      /* Header/nav background */
-    --text-on-bg: #f8f9fa;     /* Text color for use on primary buttons etc */
-    --border: #b8bcc6;
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.15);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.15);
+    --primary: #c8892a;
+    --primary-dark: #a0701e;
+    --secondary: #9e9890;
+    --dark: #ece6d9;
+    --bg-base: #131110;
+    --bg-section: #1b1916;
+    --bg-card: #221f1b;
+    --bg-header: #0d0b09;
+    --text-on-bg: #131110;
+    --border: #2c2926;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.6);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.7);
 }
 
 html {
@@ -30,7 +31,6 @@ body {
     line-height: 1.6;
     color: var(--dark);
     background: var(--bg-base);
-    /* TODO: Add subtle background image/pattern */
 }
 
 /* Container */
@@ -42,6 +42,7 @@ body {
 
 /* Typography */
 h1, h2, h3, h4 {
+    font-family: 'Playfair Display', Georgia, serif;
     line-height: 1.2;
     margin-bottom: 1rem;
 }
@@ -68,7 +69,7 @@ ul {
 .btn {
     display: inline-block;
     padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
+    border-radius: 0.2rem;
     font-weight: 600;
     transition: all 0.2s;
     cursor: pointer;
@@ -77,7 +78,7 @@ ul {
 
 .btn-primary {
     background: var(--primary);
-    color: var(--text-on-bg);
+    color: #131110;
 }
 
 .btn-primary:hover {
@@ -102,7 +103,7 @@ ul {
 
 .btn-outline:hover {
     background: var(--primary);
-    color: var(--text-on-bg);
+    color: #131110;
 }
 
 .btn-lg {
@@ -111,7 +112,6 @@ ul {
 }
 
 /* Header */
-/* TODO: Consider header background image or gradient */
 .header {
     position: fixed;
     top: 0;
@@ -130,9 +130,11 @@ ul {
 }
 
 .logo {
+    font-family: 'Playfair Display', Georgia, serif;
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary);
+    letter-spacing: 0.02em;
 }
 
 .nav-links {
@@ -147,7 +149,7 @@ ul {
 }
 
 .nav-links a:hover {
-    color: var(--primary);
+    color: var(--dark);
 }
 
 /* Dropdown */
@@ -161,7 +163,8 @@ ul {
     left: 0;
     background: var(--bg-card);
     box-shadow: var(--shadow-lg);
-    border-radius: 0.5rem;
+    border-radius: 0.2rem;
+    border: 1px solid var(--border);
     padding: 0.5rem 0;
     min-width: 180px;
     opacity: 0;
@@ -183,6 +186,7 @@ ul {
 
 .dropdown-menu li a:hover {
     background: var(--bg-section);
+    color: var(--dark);
 }
 
 /* Section Styles */
@@ -202,7 +206,6 @@ section {
 }
 
 /* Features Section */
-/* TODO: Add background image for features section */
 .features {
     background: var(--bg-section);
 }
@@ -223,37 +226,39 @@ section {
 }
 
 /* CTA Section */
-/* TODO: Add background image for CTA section */
 .cta {
-    background: var(--primary);
-    color: var(--text-on-bg);
+    background: var(--bg-header);
+    color: var(--dark);
     text-align: center;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
 }
 
 .cta h2 {
-    color: var(--text-on-bg);
+    color: var(--primary);
 }
 
 .cta p {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--secondary);
     font-size: 1.1rem;
     margin-bottom: 2rem;
 }
 
 .cta .btn-primary {
-    background: var(--bg-card);
-    color: var(--primary);
+    background: var(--primary);
+    color: #131110;
 }
 
 .cta .btn-primary:hover {
-    background: var(--bg-section);
+    background: var(--primary-dark);
 }
 
 /* Sitewide Footer */
 .site-footer {
-    background: var(--dark);
-    color: var(--text-on-bg);
+    background: var(--bg-header);
+    color: var(--dark);
     padding: 4rem 0 2rem;
+    border-top: 1px solid var(--border);
 }
 
 .footer-grid {
@@ -268,7 +273,7 @@ section {
 }
 
 .footer-col p {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--secondary);
 }
 
 .footer-col ul li {
@@ -276,41 +281,41 @@ section {
 }
 
 .footer-col a {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--secondary);
     transition: color 0.2s;
     cursor: pointer;
 }
 
 .footer-col a:hover {
-    color: var(--text-on-bg);
+    color: var(--dark);
 }
 
 .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--border);
     padding-top: 2rem;
     text-align: center;
 }
 
 .footer-bottom p {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--secondary);
+    opacity: 0.5;
     margin: 0;
 }
 
 /* Subpage Common Styles */
-/* TODO: Add hero background images for subpages */
 .page-hero {
     padding: 8rem 0 4rem;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: var(--text-on-bg);
+    color: var(--dark);
     text-align: center;
 }
 
 .page-hero h1 {
-    color: var(--text-on-bg);
+    color: var(--dark);
 }
 
 .page-hero p {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(236, 230, 217, 0.85);
     font-size: 1.25rem;
     max-width: 600px;
     margin: 0 auto 2rem;
@@ -322,7 +327,6 @@ section {
     justify-content: center;
 }
 
-/* TODO: Add background image for benefits section */
 .benefits {
     background: var(--bg-card);
 }
@@ -336,14 +340,13 @@ section {
 .benefit-card {
     padding: 2rem;
     border: 1px solid var(--border);
-    border-radius: 1rem;
+    border-radius: 0.3rem;
 }
 
 .benefit-card h3 {
     color: var(--primary);
 }
 
-/* TODO: Add background image for use-cases section */
 .use-cases {
     background: var(--bg-section);
 }
@@ -356,7 +359,7 @@ section {
 .use-case-item {
     background: var(--bg-card);
     padding: 2rem;
-    border-radius: 1rem;
+    border-radius: 0.3rem;
     margin-bottom: 1.5rem;
     box-shadow: var(--shadow);
 }
@@ -366,7 +369,6 @@ section {
 }
 
 /* Testimonial */
-/* TODO: Add background image for testimonial section */
 .testimonial {
     background: var(--bg-base);
 }
@@ -377,12 +379,14 @@ section {
     text-align: center;
     padding: 3rem;
     background: var(--bg-section);
-    border-radius: 1rem;
+    border-radius: 0.3rem;
+    border-left: 3px solid var(--primary);
 }
 
 .testimonial-card blockquote {
-    font-size: 1.25rem;
+    font-family: 'Playfair Display', Georgia, serif;
     font-style: italic;
+    font-size: 1.25rem;
     margin-bottom: 1.5rem;
     color: var(--dark);
 }
