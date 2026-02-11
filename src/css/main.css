@@ -256,11 +256,13 @@
 }
 
 .blog-post-item {
+    position: relative;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 1rem;
     padding: 2rem;
     transition: all 0.2s;
+    cursor: pointer;
 }
 
 .blog-post-item:hover {
@@ -278,7 +280,13 @@
     transition: color 0.2s;
 }
 
-.blog-post-title a:hover {
+.blog-post-title a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.blog-post-item:hover .blog-post-title a {
     color: var(--primary);
 }
 
