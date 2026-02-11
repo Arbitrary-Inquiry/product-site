@@ -8,8 +8,8 @@
 }
 
 :root {
-    --primary: #c8892a;
-    --primary-dark: #a0701e;
+    --primary: #c4a84a;
+    --primary-dark: #a08935;
     --secondary: #9e9890;
     --dark: #ece6d9;
     --bg-base: #131110;
@@ -328,7 +328,7 @@ section {
 }
 
 .benefits {
-    background: var(--bg-card);
+    background: var(--bg-section);
 }
 
 .benefit-grid {
@@ -339,6 +339,7 @@ section {
 
 .benefit-card {
     padding: 2rem;
+    background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 0.3rem;
 }
