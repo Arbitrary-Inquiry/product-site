@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ icp.meta.device_inventory_title }}</title>
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/{{ icp.theme_css }}.css">
+    <link rel="stylesheet" href="{{ "/css/base.css" | url }}">
+    {% set themeCssPath = "/css/" + icp.theme_css + ".css" %}
+    <link rel="stylesheet" href="{{ themeCssPath | url }}">
 </head>
 <body>
     {% set navType = "device-inventory" %}
@@ -17,7 +18,7 @@
                 <h1>{{ icp.device_inventory.hero.h1 }}</h1>
                 <p>{{ icp.device_inventory.hero.p }}</p>
                 {% if icp.device_inventory.hero.show_cta %}
-                <a href="{{ icp.device_inventory.hero.cta_href }}" class="btn btn-primary btn-lg">{{ icp.device_inventory.hero.cta_text }}</a>
+                <a href="{{ icp.device_inventory.hero.cta_href | url }}" class="btn btn-primary btn-lg">{{ icp.device_inventory.hero.cta_text }}</a>
                 {% endif %}
             </div>
         </section>
@@ -83,7 +84,7 @@
             <div class="container">
                 <h2>{{ icp.device_inventory.cta_section.h2 }}</h2>
                 <p>{{ icp.device_inventory.cta_section.p }}</p>
-                <a href="{{ icp.device_inventory.cta_section.button_href }}" class="btn btn-primary btn-lg">{{ icp.device_inventory.cta_section.button_text }}</a>
+                <a href="{{ icp.device_inventory.cta_section.button_href | url }}" class="btn btn-primary btn-lg">{{ icp.device_inventory.cta_section.button_text }}</a>
             </div>
         </section>
     </main>

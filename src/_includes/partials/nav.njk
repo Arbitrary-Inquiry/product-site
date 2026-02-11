@@ -1,10 +1,10 @@
 <header class="header">
     <nav class="nav container">
-        <a href="/" class="logo">ArbInq</a>
+        <a href="{{ "/" | url }}" class="logo">ArbInq</a>
         <ul class="nav-links">
             {% if navType == "device-inventory" %}
-            <li><a href="/products/device-inventory/">Product</a></li>
-            <li><a href="/products/device-inventory/#pricing">Pricing</a></li>
+            <li><a href="{{ "/products/device-inventory/" | url }}">Product</a></li>
+            <li><a href="{{ "/products/device-inventory/" | url }}#pricing">Pricing</a></li>
             {% else %}
             <li><a href="#products">Products</a></li>
             <li><a href="#about">About</a></li>
@@ -13,11 +13,12 @@
                 <a href="#">Solutions</a>
                 <ul class="dropdown-menu">
                     {% for icpItem in site.icps %}
-                    <li><a href="/{{ icpItem.slug }}/">{{ icpItem.label }}</a></li>
+                    {% set slugPath = "/" + icpItem.slug + "/" %}
+                    <li><a href="{{ slugPath | url }}">{{ icpItem.label }}</a></li>
                     {% endfor %}
                 </ul>
             </li>
-            <li><a href="/#contact">Contact</a></li>
+            <li><a href="{{ "/" | url }}#contact">Contact</a></li>
         </ul>
         {% if icp.nav.cta_text and not (navType == "device-inventory" and icp.nav.di_no_cta) %}
         <a href="{{ icp.nav.cta_href }}" class="btn btn-primary">{{ icp.nav.cta_text }}</a>

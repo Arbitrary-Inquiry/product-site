@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ icp.meta.title }}</title>
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/{{ icp.theme_css }}.css">
+    <link rel="stylesheet" href="{{ "/css/base.css" | url }}">
+    {% set themeCssPath = "/css/" + icp.theme_css + ".css" %}
+    <link rel="stylesheet" href="{{ themeCssPath | url }}">
 </head>
 <body>
     {% set navType = "landing" %}
@@ -17,8 +18,8 @@
                 <h1>{{ icp.landing.hero.h1 }}</h1>
                 <p>{{ icp.landing.hero.subheadline }}</p>
                 <div class="hero-cta">
-                    <a href="{{ icp.landing.hero.primary_cta_href }}" class="btn btn-primary btn-lg">{{ icp.landing.hero.primary_cta_text }}</a>
-                    <a href="{{ icp.landing.hero.secondary_cta_href }}" class="btn btn-secondary btn-lg">{{ icp.landing.hero.secondary_cta_text }}</a>
+                    <a href="{{ icp.landing.hero.primary_cta_href | url }}" class="btn btn-primary btn-lg">{{ icp.landing.hero.primary_cta_text }}</a>
+                    <a href="{{ icp.landing.hero.secondary_cta_href | url }}" class="btn btn-secondary btn-lg">{{ icp.landing.hero.secondary_cta_text }}</a>
                 </div>
             </div>
         </section>
@@ -47,7 +48,7 @@
                             <li>{{ feature | safe }}</li>
                             {% endfor %}
                         </ul>
-                        <a href="{{ product.cta_href }}" class="btn btn-{{ product.cta_style }}">{{ product.cta_text }}</a>
+                        <a href="{{ product.cta_href | url }}" class="btn btn-{{ product.cta_style }}">{{ product.cta_text }}</a>
                     </div>
                     {% endfor %}
                 </div>
@@ -88,7 +89,7 @@
             <div class="container">
                 <h2>{{ icp.landing.cta_section.h2 }}</h2>
                 <p>{{ icp.landing.cta_section.p }}</p>
-                <a href="{{ icp.landing.cta_section.button_href }}" class="btn btn-primary btn-lg">{{ icp.landing.cta_section.button_text }}</a>
+                <a href="{{ icp.landing.cta_section.button_href | url }}" class="btn btn-primary btn-lg">{{ icp.landing.cta_section.button_text }}</a>
             </div>
         </section>
     </main>

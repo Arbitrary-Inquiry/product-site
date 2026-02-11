@@ -7,13 +7,13 @@ permalink: /
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ArbInq - Asset Management Solutions</title>
-    <link rel="stylesheet" href="/css/base.css">
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="{{ "/css/base.css" | url }}">
+    <link rel="stylesheet" href="{{ "/css/main.css" | url }}">
 </head>
 <body>
     <header class="header">
         <nav class="nav container">
-            <a href="/" class="logo">ArbInq</a>
+            <a href="{{ "/" | url }}" class="logo">ArbInq</a>
             <ul class="nav-links">
                 <li><a href="#products">Products</a></li>
                 <li><a href="#about">About</a></li>
@@ -21,7 +21,8 @@ permalink: /
                     <a href="#">Solutions</a>
                     <ul class="dropdown-menu">
                         {% for icpItem in site.icps %}
-                        <li><a href="/{{ icpItem.slug }}/">{{ icpItem.label }}</a></li>
+                        {% set slugPath = "/" + icpItem.slug + "/" %}
+                        <li><a href="{{ slugPath | url }}">{{ icpItem.label }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
@@ -64,7 +65,7 @@ permalink: /
                             <li>Searchable, sortable tables</li>
                             <li>CSV &amp; JSON export</li>
                         </ul>
-                        <a href="/products/device-inventory/" class="btn btn-outline">Learn More</a>
+                        <a href="{{ "/products/device-inventory/" | url }}" class="btn btn-outline">Learn More</a>
                     </div>
 
                     <div class="product-card">
@@ -161,6 +162,6 @@ permalink: /
     </main>
 
     <footer class="site-footer"></footer>
-    <script src="/js/footer.js"></script>
+    <script src="{{ "/js/footer.js" | url }}"></script>
 </body>
 </html>
