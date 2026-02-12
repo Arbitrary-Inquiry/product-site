@@ -2,23 +2,23 @@
 /* TODO: Add friendly/personal background images */
 
 :root {
-    --primary: #f59e0b;
-    --primary-dark: #d97706;
-    --bg-base: #e5d4b0;        /* Soft amber-grey */
-    --bg-section: #dbc59a;     /* Medium amber */
-    --bg-card: #efe3c7;        /* Light amber-grey */
-    --bg-header: #e0ceab;      /* Header amber */
-    --border: #ccb888;
+    --primary: #f4b3e1;
+    --primary-dark: #b06bb9;
+    --bg-base: #e5b0e0;        /* Soft amber-grey */
+    --bg-section: #d59adb;     /* Medium amber */
+    --bg-card: #edc7ef;        /* Light amber-grey */
+    --bg-header: #d9abe0;      /* Header amber */
+    --border: #ca88cc;
 }
 
 /* Custom hero gradient for individuals */
 .page-hero {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    background: linear-gradient(135deg, #f50bda 0%, #c706d9 100%);
 }
 
 /* Individual-specific styling */
 .benefit-card {
-    border-color: #ccb888;
+    border-color: #cc88bc;
 }
 
 .benefit-card:hover {
