@@ -1,0 +1,7 @@
+name = "arbinq-api"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# Secrets — set with: wrangler secret put SECRET_NAME
+# Required now:   GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
+# Required later: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET

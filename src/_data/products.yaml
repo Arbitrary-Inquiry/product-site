@@ -1,0 +1,5 @@
+simplesight:
+  name: "SimpleSight Device Inventory"
+  price_once: 20
+  stripe_price_id: null   # set this when Stripe product is created
+  buy_href: "/products/device-inventory/#pricing"
