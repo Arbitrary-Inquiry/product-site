@@ -118,7 +118,7 @@ device_inventory:
         p: 'Managing 50-200 devices? A one time <span class="product-price">$20</span> payment gives you everything you need. That&#39;s less than the cost of one lost Chromebook per year. No enterprise bloat, just the features that matter.'
       - h3: "Growing Academies"
         p: 'Expanding your technology program? No problem with our scalable solution. <span class="product-price">$20</span> is less than $2/month after the first year, and only more savings as time continues. Compare that to Jamf, Mosyle, or other enterprise tools charging $3-5 per device per month.'
-      - h3: "Grant &amp; Donor Reporting"
+      - h3: "Grant & Donor Reporting"
         p: "Show donors and grant providers exactly how their technology gifts are being used. Generate reports that demonstrate responsible stewardship of the resources entrusted to your school."
   testimonial:
     enabled: true

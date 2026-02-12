@@ -3,7 +3,7 @@ label: "Crypto Traders"
 theme_css: crypto
 
 meta:
-  title: "ArbInq for Crypto Traders &amp; Holders - Hardware Stack Management"
+  title: "ArbInq for Crypto Traders & Holders - Hardware Stack Management"
   device_inventory_title: "Crypto Hardware Inventory - ArbInq"
 
 nav:
@@ -19,7 +19,7 @@ landing:
     secondary_cta_text: "Contact Us"
     secondary_cta_href: "mailto:andrew@arbinquiry.com"
   products_section:
-    title: "Our Products for Crypto Traders &amp; Holders"
+    title: "Our Products for Crypto Traders & Holders"
     subtitle: "Know your hardware. Control your security."
     products:
       - name: "SimpleSight Device Inventory"
@@ -89,9 +89,9 @@ device_inventory:
         p: "Multiple machines for different exchanges or strategies? Know which apps, browser extensions, and wallets are installed on each device—no guessing required."
       - h3: "Node Hardware Records"
         p: "Running a Bitcoin full node, Ethereum validator, or Lightning node? Keep detailed hardware records for your Raspberry Pi, NUC, or dedicated server."
-      - h3: "Firmware &amp; Software Audit Trail"
+      - h3: "Firmware & Software Audit Trail"
         p: "Historical snapshots let you see exactly what was installed on any device at any point in time. Spot unexpected changes before they become security problems."
-      - h3: "Insurance &amp; Loss Documentation"
+      - h3: "Insurance & Loss Documentation"
         p: "Export a complete inventory to CSV with serial numbers and device specs. If hardware is lost, stolen, or destroyed, you have proof of ownership for insurance claims."
   use_cases:
     title: "Who Uses SimpleSight"

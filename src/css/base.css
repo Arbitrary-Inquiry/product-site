@@ -22,6 +22,50 @@
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.7);
 }
 
+/* Light mode via system preference (no JS required) */
+@media (prefers-color-scheme: light) {
+    :root {
+        --secondary: #6b5d52;
+        --dark: #1c1815;
+        --bg-base: #faf8f5;
+        --bg-section: #f0ece5;
+        --bg-card: #ffffff;
+        --bg-header: #fefcfa;
+        --text-on-bg: #faf8f5;
+        --border: #ddd5c8;
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.08);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.12);
+    }
+}
+
+/* Manual dark override (takes precedence over system preference) */
+html[data-theme="dark"] {
+    --secondary: #9e9890;
+    --dark: #ece6d9;
+    --bg-base: #131110;
+    --bg-section: #1b1916;
+    --bg-card: #221f1b;
+    --bg-header: #0d0b09;
+    --text-on-bg: #131110;
+    --border: #2c2926;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.6);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.7);
+}
+
+/* Manual light override */
+html[data-theme="light"] {
+    --secondary: #6b5d52;
+    --dark: #1c1815;
+    --bg-base: #faf8f5;
+    --bg-section: #f0ece5;
+    --bg-card: #ffffff;
+    --bg-header: #fefcfa;
+    --text-on-bg: #faf8f5;
+    --border: #ddd5c8;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.08);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.12);
+}
+
 html {
     scroll-behavior: smooth;
 }
@@ -78,7 +122,7 @@ ul {
 
 .btn-primary {
     background: var(--primary);
-    color: #131110;
+    color: var(--bg-base);
 }
 
 .btn-primary:hover {
@@ -103,7 +147,7 @@ ul {
 
 .btn-outline:hover {
     background: var(--primary);
-    color: #131110;
+    color: var(--bg-base);
 }
 
 .btn-lg {
@@ -246,7 +290,7 @@ section {
 
 .cta .btn-primary {
     background: var(--primary);
-    color: #131110;
+    color: var(--bg-base);
 }
 
 .cta .btn-primary:hover {
@@ -395,6 +439,49 @@ section {
 .testimonial-card cite {
     color: var(--secondary);
 }
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem;
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.2rem;
+    transition: color 0.2s;
+    flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+    color: var(--dark);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+
+/* Dark mode (default): show sun to switch to light */
+.theme-toggle .icon-sun { display: block; }
+.theme-toggle .icon-moon { display: none; }
+
+/* System preference light: show moon to switch to dark */
+@media (prefers-color-scheme: light) {
+    .theme-toggle .icon-sun { display: none; }
+    .theme-toggle .icon-moon { display: block; }
+}
+
+/* Manual dark override */
+html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
+/* Manual light override */
+html[data-theme="light"] .theme-toggle .icon-sun { display: none; }
+html[data-theme="light"] .theme-toggle .icon-moon { display: block; }
 
 /* Responsive */
 @media (max-width: 768px) {

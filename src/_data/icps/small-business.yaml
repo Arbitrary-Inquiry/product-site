@@ -89,7 +89,7 @@ device_inventory:
         p: "Get a report everyone can understand. Time spent trying to read enterprise reports is time you could be spending fixing the issue."
       - h3: "Remote Team Support"
         p: "Track devices for distributed teams. The lightweight agent checks in automatically, reporting device specs, software, and online/offline status."
-      - h3: "Searchable Tables &amp; Export"
+      - h3: "Searchable Tables & Export"
         p: "Find any device instantly with searchable, sortable tables. Export your full inventory to CSV or JSON for audits, insurance, or compliance."
       - h3: "Quick Audits"
         p: "Run a complete inventory audit to make sure everyone has what they need: nothing more, nothing less."
@@ -102,7 +102,7 @@ device_inventory:
         p: "When someone leaves, instantly see all equipment assigned to them. Historical snapshots ensure you never lose records of past assignments."
       - h3: "Fleet Health Monitoring"
         p: "See which devices are online, which need updates, and which have aging batteries. Drill into any device for full details on OS, storage, and software."
-      - h3: "Insurance &amp; Compliance"
+      - h3: "Insurance & Compliance"
         p: "Export a complete inventory report to CSV with UUIDs, device specs, and software records. Ready for insurance claims or compliance audits."
   testimonial:
     enabled: true
