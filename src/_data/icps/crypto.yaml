@@ -52,6 +52,26 @@ landing:
         cta_text: "Coming Soon"
         cta_href: "/ai-classes/"
         cta_style: outline
+      - name: "Code Audit Service"
+        description: "Running trading bots or DeFi scripts? We audit your code for vulnerabilities before it gets anywhere near real funds. $600, 48-hour turnaround."
+        icon: search
+        features:
+          - "Security vulnerability review"
+          - "Dependency &amp; logic analysis"
+          - "$600 flat fee, 48 hours"
+        cta_text: "Learn More"
+        cta_href: "/code-audit/"
+        cta_style: outline
+      - name: "Small Business Tax Services"
+        description: "Crypto tax reporting done right. Capital gains calculations, staking income, DeFi transactions, and Form 8949 preparation for traders and holders."
+        icon: dollar
+        features:
+          - "Crypto capital gains &amp; Form 8949"
+          - "Staking &amp; DeFi income"
+          - "Full transaction reconciliation"
+        cta_text: "Learn More"
+        cta_href: "/tax-services/"
+        cta_style: outline
   extra_features_section:
     enabled: false
   features_section:

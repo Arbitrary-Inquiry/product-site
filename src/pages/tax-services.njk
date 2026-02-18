@@ -1,0 +1,145 @@
+---
+permalink: /tax-services/
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Small Business Tax Services - ArbInq</title>
+    <meta name="description" content="Basic tax services for small businesses, freelancers, and side hustlers. Plain language, flat fees, no jargon.">
+    <link rel="stylesheet" href="{{ "/css/base.css" | url }}">
+    <link rel="stylesheet" href="{{ "/css/main.css" | url }}">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <a href="{{ "/" | url }}" class="logo">ArbInq</a>
+            <ul class="nav-links">
+                <li><a href="{{ "/" | url }}#products">Products</a></li>
+                <li><a href="{{ "/about/" | url }}">About</a></li>
+                <li><a href="{{ "/blog/" | url }}">Blog</a></li>
+                <li class="dropdown">
+                    <a href="#">Solutions</a>
+                    <ul class="dropdown-menu">
+                        {% for icpItem in site.icps %}
+                        {% set slugPath = "/" + icpItem.slug + "/" %}
+                        <li><a href="{{ slugPath | url }}">{{ icpItem.label }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li><a href="{{ "/contact/" | url }}">Contact</a></li>
+            </ul>
+            <a href="mailto:andrew@arbinquiry.com" class="btn btn-primary">Get Started</a>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light/dark mode" title="Toggle light/dark mode">
+                <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Small Business Tax Services</h1>
+                <p>Taxes shouldn't take you away from running your business. We handle the basics — filing, estimates, deductions — in plain language with no surprise fees.</p>
+                <div class="hero-cta">
+                    <a href="mailto:andrew@arbinquiry.com" class="btn btn-primary btn-lg">Get Started</a>
+                    <a href="{{ "/about/" | url }}" class="btn btn-secondary btn-lg">Meet the Team</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="sidebar-layout">
+        <aside class="page-sidebar">
+            <p class="sidebar-label">On this page</p>
+            <nav>
+                <ul>
+                    <li><a href="#what-we-handle">What We Handle</a></li>
+                    <li><a href="#who-its-for">Who It's For</a></li>
+                    <li><a href="#contact">Get Started</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <div class="sidebar-content">
+
+        <section>
+            <div class="container">
+                <div class="about-story">
+                    <p>You're running a business. You don't have time to untangle whether you should file as an LLC or S-corp, which expenses actually qualify as deductions, or when your quarterly estimates are due. You just want someone to handle it correctly without charging you enterprise accounting rates.</p>
+                    <p>That's what we do. Basic tax services for small businesses, freelancers, and independent operators — the people who are building something real and need the tax side handled without drama.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="what-we-handle" class="features">
+            <div class="container">
+                <h2 class="section-title">What We Handle</h2>
+                <div class="feature-grid">
+                    <div class="feature">
+                        <h3>Annual Tax Filing</h3>
+                        <p>Federal and state returns for sole proprietors, LLCs, and S-corps. We collect what we need, prepare your return, and walk you through it before filing.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Quarterly Estimates</h3>
+                        <p>Self-employed means you owe estimated taxes four times a year. We calculate what you owe and make sure you never get blindsided by penalties.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Deductions Review</h3>
+                        <p>Home office, equipment, software subscriptions, mileage — you're probably leaving money on the table. We find what qualifies and make sure you claim it.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Entity Structure Guidance</h3>
+                        <p>LLC vs. S-corp vs. sole prop — we'll tell you which makes sense for your situation and what it would take to switch if you're not optimized.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Crypto Tax Reporting</h3>
+                        <p>Capital gains, staking income, DeFi transactions, Form 8949. We handle the complexity of crypto taxes so you don't file wrong and find out later.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Nonprofit Compliance</h3>
+                        <p>Form 990, 501(c)(3) maintenance, and state exemption filings for churches, schools, and small nonprofits. Stay compliant without the attorney fees.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="who-its-for" class="benefits">
+            <div class="container">
+                <h2 class="section-title">Who It's For</h2>
+                <p class="section-subtitle">We focus on small operations. If you're running a business and need the tax side handled, we can help.</p>
+                <div class="benefit-grid">
+                    <div class="benefit-card">
+                        <h3>Freelancers &amp; Contractors</h3>
+                        <p>1099 income, multiple clients, and no employer handling withholding for you. We sort out what you owe and help you stop overpaying.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <h3>Small Business Owners</h3>
+                        <p>Running a shop, a service business, or a product company. Annual filing, expense tracking guidance, and quarterly compliance — handled.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <h3>Side Hustlers</h3>
+                        <p>Online shop, consulting on the side, gig work. You have income the IRS wants to know about. We make sure you report it right without overpaying.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="cta">
+            <div class="container">
+                <h2>Ready to Stop Guessing on Your Taxes?</h2>
+                <p>Send us a message and we'll get back to you within one business day.</p>
+                <a href="mailto:andrew@arbinquiry.com" class="btn btn-primary btn-lg">Contact Us</a>
+            </div>
+        </section>
+
+        </div><!-- /.sidebar-content -->
+        </div><!-- /.sidebar-layout -->
+    </main>
+
+    <footer class="site-footer"></footer>
+    <script src="{{ "/js/theme-toggle.js" | url }}"></script>
+    <script src="{{ "/js/footer.js" | url }}"></script>
+    <script src="{{ "/js/sidebar.js" | url }}"></script>
+</body>
+</html>

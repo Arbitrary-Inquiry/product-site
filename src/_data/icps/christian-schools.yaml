@@ -52,6 +52,26 @@ landing:
         cta_text: "Coming Soon"
         cta_href: "/ai-classes/"
         cta_style: outline
+      - name: "Code Audit Service"
+        description: "Protect member data and ministry systems. We audit custom apps and school tools for security issues and tell you exactly what needs fixing."
+        icon: search
+        features:
+          - "Security vulnerability review"
+          - "Plain-language findings doc"
+          - "Results in 48 hours"
+        cta_text: "Learn More"
+        cta_href: "/code-audit/"
+        cta_style: outline
+      - name: "Small Business Tax Services"
+        description: "Church and ministry tax compliance made simple. Form 990, 501(c)(3) maintenance, and state exemption filings so your school can focus on its mission."
+        icon: dollar
+        features:
+          - "Nonprofit &amp; ministry tax support"
+          - "Form 990 &amp; exemption filings"
+          - "Plain-language guidance"
+        cta_text: "Learn More"
+        cta_href: "/tax-services/"
+        cta_style: outline
   extra_features_section:
     enabled: true
     title: "Cost Comparison"

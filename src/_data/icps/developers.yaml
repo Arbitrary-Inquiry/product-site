@@ -53,6 +53,26 @@ landing:
         cta_text: "Coming Soon"
         cta_href: "/ai-classes/"
         cta_style: outline
+      - name: "Code Audit Service"
+        description: "A second set of eyes on your production codebase. We find the vulnerabilities you're too close to see, triage them honestly, and give you prompts to fix them."
+        icon: search
+        features:
+          - "Security &amp; vulnerability review"
+          - "Dependency analysis"
+          - "$600 flat fee, 48 hours"
+        cta_text: "Learn More"
+        cta_href: "/code-audit/"
+        cta_style: outline
+      - name: "Small Business Tax Services"
+        description: "Freelancer and indie hacker taxes. Self-employment tax, quarterly estimates, deductible expenses, and S-corp election timing — explained without jargon."
+        icon: dollar
+        features:
+          - "1099 &amp; self-employment tax"
+          - "Quarterly estimates &amp; deductions"
+          - "S-corp election guidance"
+        cta_text: "Learn More"
+        cta_href: "/tax-services/"
+        cta_style: outline
   extra_features_section:
     enabled: false
   features_section:

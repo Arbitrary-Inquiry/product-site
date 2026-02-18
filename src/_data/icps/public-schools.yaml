@@ -52,6 +52,26 @@ landing:
         cta_text: "Coming Soon"
         cta_href: "/ai-classes/"
         cta_style: outline
+      - name: "Code Audit Service"
+        description: "We review district-developed apps and vendor-provided tools for security vulnerabilities. Catch issues before student data is at risk."
+        icon: search
+        features:
+          - "Security vulnerability review"
+          - "Plain-language findings doc"
+          - "Results in 48 hours"
+        cta_text: "Learn More"
+        cta_href: "/code-audit/"
+        cta_style: outline
+      - name: "Small Business Tax Services"
+        description: "Tax compliance and filing for school organizations, PTAs, booster clubs, and educational nonprofits. We handle the IRS so you can focus on students."
+        icon: dollar
+        features:
+          - "Nonprofit &amp; 501(c)(3) support"
+          - "Annual returns &amp; filings"
+          - "Plain-language guidance"
+        cta_text: "Learn More"
+        cta_href: "/tax-services/"
+        cta_style: outline
   extra_features_section:
     enabled: false
   features_section:

@@ -52,6 +52,26 @@ landing:
         cta_text: "Coming Soon"
         cta_href: "/ai-classes/"
         cta_style: outline
+      - name: "Code Audit Service"
+        description: "Shipping a personal project or side hustle? We check your code for security holes and tell you what needs fixing before your users run into it."
+        icon: search
+        features:
+          - "Security vulnerability review"
+          - "Plain-language findings"
+          - "Results in 48 hours"
+        cta_text: "Learn More"
+        cta_href: "/code-audit/"
+        cta_style: outline
+      - name: "Small Business Tax Services"
+        description: "Personal tax prep for freelancers, side hustlers, and gig workers. We handle the complexity so you file correctly and don't overpay."
+        icon: dollar
+        features:
+          - "Freelance &amp; side hustle taxes"
+          - "Deductions review"
+          - "Quarterly estimate guidance"
+        cta_text: "Learn More"
+        cta_href: "/tax-services/"
+        cta_style: outline
   extra_features_section:
     enabled: false
   features_section:

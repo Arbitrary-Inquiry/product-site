@@ -40,6 +40,10 @@
                             {% include "partials/icon-shield.njk" %}
                             {% elif product.icon == "chart" %}
                             {% include "partials/icon-chart.njk" %}
+                            {% elif product.icon == "search" %}
+                            {% include "partials/icon-search.njk" %}
+                            {% elif product.icon == "dollar" %}
+                            {% include "partials/icon-dollar.njk" %}
                             {% endif %}
                         </div>
                         <h3>{{ product.name }}</h3>

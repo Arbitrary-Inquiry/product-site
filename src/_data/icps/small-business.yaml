@@ -52,6 +52,26 @@ landing:
         cta_text: "Coming Soon"
         cta_href: "/ai-classes/"
         cta_style: outline
+      - name: "Code Audit Service"
+        description: "We look at your internal tools and customer-facing code for security problems before they become expensive incidents. $600 flat, 48-hour turnaround."
+        icon: search
+        features:
+          - "Security vulnerability review"
+          - "Plain-language findings doc"
+          - "$600 flat fee, 48 hours"
+        cta_text: "Learn More"
+        cta_href: "/code-audit/"
+        cta_style: outline
+      - name: "Small Business Tax Services"
+        description: "Annual filings, quarterly estimates, deductions review, and entity structure guidance for LLCs, S-corps, and sole proprietors. Flat fees, no surprises."
+        icon: dollar
+        features:
+          - "Annual filing &amp; quarterly estimates"
+          - "Deductions &amp; expense review"
+          - "Entity structure guidance"
+        cta_text: "Learn More"
+        cta_href: "/tax-services/"
+        cta_style: outline
   extra_features_section:
     enabled: false
   features_section:
