@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li><a data-link="code-audit">Code Audit</a></li>
                         <li><a data-link="security-review">Security Review</a></li>
                         <li><a data-link="ai-classes">AI Classes</a></li>
+                        <li><a data-link="tax-services">Tax Services</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
