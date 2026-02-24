@@ -1,0 +1,706 @@
+================================================================================
+SimpleSight - Troubleshooting Guide
+================================================================================
+
+This guide covers common issues and their solutions. Issues are organized by
+component and symptom.
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+
+1. Server Issues
+2. Agent Issues
+3. Network/Connectivity Issues
+4. Web UI Issues
+5. Database Issues
+6. Certificate/SSL Issues
+7. Installation Issues
+8. Performance Issues
+9. Log File Locations
+10. Getting Help
+
+================================================================================
+1. SERVER ISSUES
+================================================================================
+
+SYMPTOM: Server won't start after installation
+------------------------------------------------------------
+
+Check 1: Verify server files exist
+- Navigate to: C:\Program Files\SimpleSight Server
+- Verify SimpleSightServer.exe exists
+- Verify server_config.json exists
+
+Check 2: Check Task Scheduler
+- Open Task Scheduler
+- Look for "SimpleSight Server" task
+- Right-click → Run
+- Watch for error messages
+
+Check 3: Run server manually
+- Open Command Prompt as Administrator
+- cd "C:\Program Files\SimpleSight Server"
+- .\SimpleSightServer.exe
+- Watch for error messages in console
+
+Check 4: Check logs
+- Open: C:\ProgramData\SimpleSight\logs\server_YYYYMMDD.log
+- Look for error messages
+- Common errors:
+  - "Database not found" → Run installer again
+  - "Permission denied" → Check admin privileges
+  - "Port already in use" → Another service using port 8000
+
+
+SYMPTOM: Server starts but web UI shows "Connection refused"
+------------------------------------------------------------
+
+Check 1: Verify port number
+- Check server_config.json for configured port
+- Try: http://localhost:8000 (or your port)
+- If works on HTTP but not HTTPS, certificate issue
+
+Check 2: Windows Firewall
+- Open Windows Defender Firewall with Advanced Security
+- Check Inbound Rules for "SimpleSight Server"
+- If missing, add rule for port 8000 TCP
+
+Check 3: Server is actually running
+- Open Task Manager
+- Look for SimpleSightServer.exe process
+- If not running, check Task Scheduler
+
+
+SYMPTOM: Server was working, now suddenly stopped
+------------------------------------------------------------
+
+Check 1: Windows updates or reboot
+- Check if Windows updated/rebooted recently
+- Server should auto-start via Task Scheduler
+- Check Task Scheduler → SimpleSight Server
+- Last Run Result should be 0x0 (success)
+
+Check 2: Database corruption
+- Check database file size: C:\ProgramData\SimpleSight\inventory.db
+- If 0 bytes, database is corrupt
+- Restore from backup OR reinstall (data loss)
+
+Check 3: Disk space
+- Check C:\ drive has free space
+- Server needs space for logs and database
+- If full, clean up disk space and restart server
+
+
+SYMPTOM: Server running but no devices showing in web UI
+------------------------------------------------------------
+
+Check 1: Are agents actually installed?
+- Login to a client computer
+- Check: C:\Program Files\SimpleSight\
+- Verify SimpleSightAgent.exe exists
+
+Check 2: Are agents running?
+- On client, check Task Scheduler
+- Look for "SimpleSight Agent" task
+- Check Last Run Time and Last Run Result
+
+Check 3: Network connectivity
+- From client, ping server IP
+- From client, browser to https://<SERVER_IP>:8000
+- Should reach login page (certificate warning OK)
+
+Check 4: Agent logs
+- On client: C:\Users\USERNAME\AppData\Local\SimpleSight\logs\
+- Look for recent agent_YYYYMMDD.log files
+- Check for connection errors, authentication errors
+
+================================================================================
+2. AGENT ISSUES
+================================================================================
+
+SYMPTOM: Agent installer fails with "Permission denied"
+------------------------------------------------------------
+
+Solution: Run installer as Administrator
+- Right-click SimpleSightInstaller.exe
+- Select "Run as administrator"
+- If UAC prompt appears, click Yes
+
+
+SYMPTOM: Agent installer fails at "Test Connection"
+------------------------------------------------------------
+
+Check 1: Server URL is correct
+- Verify format: https://SERVER_IP:8000
+- Or: https://hostname:8000
+- Must include https://
+- Must include port number
+
+Check 2: Server is reachable
+- From client computer, open Command Prompt
+- ping SERVER_IP
+- Should reply without timeout
+- If timeout, network issue or firewall
+
+Check 3: Firewall on server
+- Check Windows Firewall allows port 8000
+- See "Server Issues" section above
+
+
+SYMPTOM: Agent installer fails at "Test Credentials"
+------------------------------------------------------------
+
+Check 1: Credentials are correct
+- Double-check username (usually "admin")
+- Double-check password
+- Passwords are case-sensitive
+
+Check 2: Account not locked
+- If too many failed login attempts, account may be locked
+- Login to web UI from server computer
+- Check if account is active
+
+
+SYMPTOM: Agent installed but device not appearing in web UI
+------------------------------------------------------------
+
+Check 1: Wait 5 minutes
+- Initial check-in can take a few minutes
+- Agent runs immediately after install, then every 4 hours
+
+Check 2: Force agent to run
+- On client computer, open Task Scheduler
+- Find "SimpleSight Agent" task
+- Right-click → Run
+- Wait 1 minute, refresh web UI
+
+Check 3: Check agent logs
+- C:\Users\USERNAME\AppData\Local\SimpleSight\logs\
+- Look for errors in agent_YYYYMMDD.log
+- Common errors:
+  - "401 Unauthorized" → Token invalid, reinstall agent
+  - "Connection refused" → Server not reachable
+  - "SSL certificate verify failed" → Certificate issue
+
+
+SYMPTOM: Device showing as "Offline" in web UI
+------------------------------------------------------------
+
+Check 1: When was last check-in?
+- Click device in web UI
+- Check "Last Check-in" timestamp
+- If < 6 hours ago, device is "Online"
+- If > 6 hours ago, device is "Offline"
+
+Check 2: Is agent still installed?
+- Login to client computer
+- Check C:\Program Files\SimpleSight\ exists
+- Check Task Scheduler for "SimpleSight Agent"
+
+Check 3: Network changes
+- Did client computer get a new IP address?
+- Can client still reach server? (ping test)
+- Did server IP address change?
+
+Check 4: Agent token expired/revoked
+- Check web UI → Settings → Tokens (if available)
+- If token revoked, reinstall agent
+
+
+SYMPTOM: Agent check-in taking a very long time (> 5 minutes)
+------------------------------------------------------------
+
+Check 1: Large software inventory
+- Check client computer's Programs and Features
+- 500+ programs can slow down collection
+- This is normal, agent will complete eventually
+
+Check 2: Network performance
+- Slow network can cause timeouts
+- Check network speed between client and server
+- Consider increasing timeout in agent config (advanced)
+
+Check 3: Client computer under heavy load
+- Agent uses minimal resources but can be slowed by:
+  - High CPU usage (other programs)
+  - Low memory (< 2GB available)
+  - Disk thrashing
+
+
+SYMPTOM: Agent installed but scheduled task not running
+------------------------------------------------------------
+
+Check 1: Task Scheduler settings
+- Open Task Scheduler
+- Find "SimpleSight Agent"
+- Check "Triggers" tab
+- Should have:
+  - Trigger 1: At startup, delay 1 minute
+  - Trigger 2: Daily at 12:01 AM, repeat every 4 hours
+
+Check 2: Task execution history
+- Right-click task → Properties
+- History tab (if enabled)
+- Look for failed executions
+- Common failure: "User not logged in" (shouldn't happen)
+
+Check 3: Recreate scheduled task
+- Uninstall agent
+- Reinstall agent
+- Scheduled tasks will be recreated
+
+================================================================================
+3. NETWORK/CONNECTIVITY ISSUES
+================================================================================
+
+SYMPTOM: "Could not resolve hostname" errors
+------------------------------------------------------------
+
+Problem: DNS not configured properly
+
+Solution 1: Use IP address instead
+- Reconfigure agents to use https://192.168.1.100:8000
+- Avoids DNS entirely
+
+Solution 2: Configure hosts file
+- See NETWORK_CONFIGURATION.txt
+- Add entry: 192.168.1.100    simplesight
+- Do this on every client computer
+
+Solution 3: Configure DNS properly
+- Router DNS configuration
+- Or Active Directory DNS
+- See NETWORK_CONFIGURATION.txt for details
+
+
+SYMPTOM: "Connection timed out" errors
+------------------------------------------------------------
+
+Problem: Network connectivity or firewall
+
+Check 1: Basic network connectivity
+- From client, ping server IP
+- From client, ping server hostname (if using)
+- If ping fails, network issue or firewall
+
+Check 2: Port reachability
+- From client, run PowerShell:
+  Test-NetConnection -ComputerName SERVER_IP -Port 8000
+- Should show "TcpTestSucceeded : True"
+- If False, firewall blocking port
+
+Check 3: Server firewall
+- On server, check Windows Firewall
+- Verify inbound rule allows port 8000
+- See DEPLOYMENT_GUIDE.txt for firewall configuration
+
+Check 4: Router/network firewall
+- If client and server on different subnets
+- Check router firewall rules
+- Check VLAN configuration (if applicable)
+
+
+SYMPTOM: Works on local network, fails remotely (VPN/internet)
+------------------------------------------------------------
+
+Check 1: VPN routing
+- Verify VPN routes traffic to server subnet
+- Check VPN client routing table
+- May need to add static route
+
+Check 2: Firewall on server allows external IPs
+- Windows Firewall rule may be limited to local subnet
+- Modify rule to allow "Any IP address"
+
+Check 3: Using correct URL
+- When remote, may need different URL
+- VPN: Use internal IP (192.168.x.x)
+- Internet: Use public IP/domain (not recommended)
+
+================================================================================
+4. WEB UI ISSUES
+================================================================================
+
+SYMPTOM: Login page won't load
+------------------------------------------------------------
+
+Check 1: Server is running
+- See "Server Issues" section above
+- Verify SimpleSightServer.exe is running
+
+Check 2: Correct URL
+- Should be: https://SERVER_IP:8000
+- Include https://
+- Include port number
+- Try: https://localhost:8000 from server computer
+
+SYMPTOM: "Invalid username or password" but credentials are correct
+------------------------------------------------------------
+
+Check 1: Caps Lock is off
+- Passwords are case-sensitive
+
+Check 2: Check database
+- On server, run SQLite browser (if available)
+- Open: C:\ProgramData\SimpleSight\inventory.db
+- Check users table for account
+- If missing, reinstall server
+
+SYMPTOM: Login works but dashboard shows no data
+------------------------------------------------------------
+
+Check 1: Are devices actually checked in?
+- Click "Devices" in navigation
+- Should show device list
+- If empty, no agents installed/checked in yet
+
+Check 2: Database has data
+- Check file size: C:\ProgramData\SimpleSight\inventory.db
+- Should be > 100KB
+
+Check 3: Browser cache
+- Hard refresh: Ctrl+F5 (Windows) or Cmd+Shift+R (Mac)
+- Or clear browser cache
+- Or try incognito/private mode
+
+
+SYMPTOM: Web UI loads but looks broken (no styling)
+------------------------------------------------------------
+
+Problem: Frontend files not loaded properly
+
+Check 1: Frontend files exist
+- On server: C:\Program Files\SimpleSight Server\frontend\
+- Should contain:
+  - index.html
+  - assets\ folder with .js and .css files
+
+Check 2: Browser console errors
+- Open browser Developer Tools (F12)
+- Check Console tab
+- Look for 404 errors loading CSS/JS files
+
+Check 3: Reinstall server
+- Frontend may not have been extracted properly
+- Run server installer again
+- Choose "Restore existing database"
+
+================================================================================
+5. DATABASE ISSUES
+================================================================================
+
+SYMPTOM: "Database is locked" errors in logs
+------------------------------------------------------------
+
+Problem: Multiple processes trying to write to SQLite database
+
+Solution 1: Only one server instance
+- Check Task Manager
+- Kill duplicate SimpleSightServer.exe processes
+- Restart server
+
+Solution 2: Backup process interfering
+- If you have backup software
+- Exclude: C:\ProgramData\SimpleSight\inventory.db
+- Use SQLite backup command instead (see below)
+
+
+SYMPTOM: Database file growing very large (> 1GB)
+------------------------------------------------------------
+
+This is normal after many devices and months of operation. SQLite can handle
+large files but performance may degrade.
+
+Check 1: How many devices?
+- If < 100 devices, database should be < 500MB
+- If 100-200 devices, database may reach 1-2GB
+- If > 200 devices, consider PostgreSQL migration (v0.4.0)
+
+Check 2: Snapshot retention
+- Currently no automatic cleanup
+- Old snapshots remain forever
+- Manual cleanup (advanced):
+  - Use SQLite browser
+  - Delete old inventory_snapshots records
+  - Run VACUUM to reclaim space
+
+Solution: Regular maintenance
+- Plan to clean up snapshots quarterly
+- Automatic cleanup is planned soon
+
+
+SYMPTOM: Database file is 0 bytes or corrupted
+------------------------------------------------------------
+
+Problem: Database corruption (power loss, disk failure, etc.)
+
+Solution 1: Restore from backup
+- If you have backup, restore it
+- Copy to: C:\ProgramData\SimpleSight\inventory.db
+- Restart server
+
+Solution 2: Recreate database (DATA LOSS)
+- Delete: C:\ProgramData\SimpleSight\inventory.db
+- Run server installer
+- Choose "Create new database"
+- All device history will be lost
+- Agents will check in and recreate device records
+
+
+HOW TO BACKUP DATABASE SAFELY
+------------------------------------------------------------
+
+WRONG WAY: Copy file while server is running
+- May result in corrupted backup
+- SQLite doesn't support this
+
+RIGHT WAY: Use SQLite backup command
+1. Stop server (Task Scheduler → SimpleSight Server → Disable)
+2. Copy file: C:\ProgramData\SimpleSight\inventory.db
+3. Paste to backup location
+4. Re-enable server task
+
+OR use SQLite .backup command (if you have sqlite3.exe)
+
+OR schedule backup during maintenance window when server is stopped
+
+================================================================================
+6. CERTIFICATE/SSL ISSUES
+================================================================================
+
+SYMPTOM: Browser shows "Your connection is not private" warning
+------------------------------------------------------------
+
+This is NORMAL with untrusted self-signed certificates.
+
+Solution 1: Proceed anyway (safe for internal server)
+- Click "Advanced"
+- Click "Proceed to site" or "Accept the risk"
+- Browser will remember this for the session
+
+Solution 2: Install certificate to Trusted Root (done during installation)
+- On server, certificate should already be installed by default
+- On client computers, it is NOT installed by default
+- To install on client:
+  - Copy C:\Program Files\SimpleSight Server\certs\server.crt
+  - Double-click → Install Certificate
+  - Store Location: Local Machine
+  - Place in: Trusted Root Certification Authorities
+
+
+SYMPTOM: "Certificate not valid for this hostname" error
+------------------------------------------------------------
+
+Problem: Using different hostname/IP than certificate was generated for
+
+Example:
+- Certificate generated for "simplesight"
+- But accessing via IP: https://192.168.1.100:8000
+- Or vice versa
+
+Solution 1: Use the hostname the certificate was generated for
+- Check server_config.json for hostname value
+- Use that in URLs
+
+Solution 2: Regenerate certificate
+- Delete: C:\Program Files\SimpleSight Server\certs\server.crt
+- Delete: C:\Program Files\SimpleSight Server\certs\server.key
+- Run server installer again
+- Choose "Restore existing database"
+- Enter correct hostname during installation
+
+
+SYMPTOM: Agent showing "SSL certificate verify failed" in logs
+------------------------------------------------------------
+
+This should NOT happen because agents default to verify_ssl: false
+
+If it does happen:
+- Check agent config: C:\Program Files\SimpleSight\agent_config.json
+- Verify "verify_ssl": false
+- If true, change to false and restart agent
+
+================================================================================
+7. INSTALLATION ISSUES
+================================================================================
+
+SYMPTOM: Server installer fails with "Permission denied"
+------------------------------------------------------------
+
+Solution: Run as Administrator
+- Right-click SimpleSightServerInstaller.exe
+- Select "Run as administrator"
+- Must accept UAC prompt
+
+
+SYMPTOM: Server installer fails during "Building agent installer"
+------------------------------------------------------------
+
+Check 1: Antivirus interference
+- Some antivirus programs block PyInstaller
+- Temporarily disable antivirus
+- Run installer again
+
+Check 2: Check build error log
+- C:\Program Files\SimpleSight Server\agent\build_error.log
+- Contains details of what failed
+
+Check 3: Skip and build manually later
+- Installation will complete without agent installer
+- You can build it manually:
+  - Open Command Prompt as Administrator
+  - cd "C:\Program Files\SimpleSight Server\agent"
+  - Check if .py files exist (they should be removed in v0.3.0)
+  - If missing, agent installer cannot be rebuilt
+
+
+SYMPTOM: Agent installer fails during installation
+------------------------------------------------------------
+
+Check 1: Another agent already installed
+- Check: C:\Program Files\SimpleSight\
+- If exists, uninstall first:
+  - Run: C:\Program Files\SimpleSight\uninstall.exe
+  - Then reinstall
+
+Check 2: Antivirus blocking
+- Temporarily disable antivirus
+- Run installer again
+
+Check 3: Insufficient disk space
+- Check C:\ drive has free space
+- Need at least 100MB for agent
+
+================================================================================
+8. PERFORMANCE ISSUES
+================================================================================
+
+SYMPTOM: Web UI is slow to load
+------------------------------------------------------------
+
+Check 1: Server performance
+- On server, check Task Manager
+- SimpleSightServer.exe should use < 100MB RAM
+- If using > 500MB, may indicate issue
+
+Check 2: Database size
+- Check: C:\ProgramData\SimpleSight\inventory.db
+- If > 1GB, performance may degrade
+- See Database Issues section above
+
+Check 3: Network latency
+- If accessing remotely, network speed matters
+- Try from local network first
+
+
+SYMPTOM: Agent check-in taking > 5 minutes
+------------------------------------------------------------
+
+See "Agent Issues" section above for detailed troubleshooting.
+
+Quick checks:
+- How many programs installed? (> 500 slows down)
+- Network speed adequate? (< 1 Mbps may cause issues)
+- Client computer under load? (high CPU/disk usage)
+
+
+SYMPTOM: Server using high CPU
+------------------------------------------------------------
+
+Check 1: How many agents checking in?
+- If 50+ agents checking in simultaneously, CPU spike is normal
+- Should drop after check-ins complete
+
+Check 2: Database operations
+- Large database queries can cause CPU spikes
+- Check web UI activity - are you running reports?
+
+Check 3: Log file size
+- Very large log files (> 100MB) can slow down server
+- Rotate logs manually:
+  - Rename: server_YYYYMMDD.log
+  - Server will create new log file
+
+================================================================================
+9. LOG FILE LOCATIONS
+================================================================================
+
+SERVER LOGS:
+------------------------------------------------------------
+Location: C:\ProgramData\SimpleSight\logs\
+Files: server_YYYYMMDD.log (one file per day)
+
+What to look for:
+- ERROR messages indicate problems
+- WARNING messages indicate potential issues
+- INFO messages are normal operation
+
+Common errors:
+- "Database not found" → Reinstall required
+- "Permission denied" → Check admin privileges
+- "Port already in use" → Another service on port 8000
+
+
+AGENT LOGS:
+------------------------------------------------------------
+Location: C:\Users\USERNAME\AppData\Local\SimpleSight\logs\
+Files: agent_YYYYMMDD.log (one file per day)
+
+What to look for:
+- "Check-in successful" = normal
+- "401 Unauthorized" = authentication problem
+- "Connection refused" = cannot reach server
+- "SSL certificate verify failed" = certificate issue
+
+Note: Logs are per-user. If agent runs as SYSTEM, logs may be in:
+C:\Windows\System32\config\systemprofile\AppData\Local\SimpleSight\logs\
+
+
+VIEWING LOGS:
+------------------------------------------------------------
+- Open with Notepad, Notepad++, or any text editor
+- Sort by date/time to find recent errors
+- Search for "ERROR" to find problems quickly
+
+================================================================================
+10. GETTING HELP
+================================================================================
+
+BEFORE ASKING FOR HELP:
+------------------------------------------------------------
+
+Gather this information:
+
+1. SimpleSight version (v0.3.0)
+2. Windows version (server and client)
+3. Network topology (how many computers, same network or remote?)
+4. Error messages (exact text from logs)
+5. What you were trying to do when the problem occurred
+6. What troubleshooting steps you've already tried
+
+SUPPORT CHANNELS:
+------------------------------------------------------------
+
+- Documentation: Read all .txt files in docs\ folder
+- Community forum: [URL to be added]
+- Email support: [Email to be added]
+- GitHub issues: [URL to be added]
+
+When reporting issues:
+- Include logs (server and/or agent)
+- Include screenshots if relevant
+- Describe steps to reproduce the problem
+- Note what you expected vs what actually happened
+
+================================================================================
+
+For more information, see:
+- README.txt - Quick start guide
+- DEPLOYMENT_GUIDE.txt - Complete deployment instructions
+- NETWORK_CONFIGURATION.txt - DNS and IP address setup
+- ARCHITECTURE.txt - Technical details and system design
+
+SimpleSight - Lightweight IT Asset Management
+
+================================================================================

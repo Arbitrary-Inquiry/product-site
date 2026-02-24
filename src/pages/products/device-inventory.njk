@@ -58,6 +58,7 @@ permalink: /products/device-inventory/
                     <li><a href="#why-own">Why Own</a></li>
                     <li><a href="#developer">About the Developer</a></li>
                     <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#documentation">Documentation</a></li>
                 </ul>
             </nav>
         </aside>
@@ -78,9 +79,10 @@ permalink: /products/device-inventory/
                             </svg>
                         </div>
                         <h3>Device Tracking</h3>
-                        <p>Track laptops, tablets, phones, and any hardware asset. Collect system info, hardware specs, network config, battery health, and Windows Update status automatically.</p>
+                        <p>Track Windows laptops, desktops, and servers. Lightweight agent collects system info, hardware specs, network config, battery health, and Windows Update status automatically every 4 hours.</p>
                         <ul class="product-features">
-                            <li>Hardware specs (CPU, RAM, disks, serial)</li>
+                            <li>Hardware specs (CPU, RAM, disks, serial, BIOS)</li>
+                            <li>Network config (IPs, MACs, adapters)</li>
                             <li>Online/offline status indicators</li>
                             <li>Historical snapshots of all data</li>
                         </ul>
@@ -143,6 +145,22 @@ permalink: /products/device-inventory/
                     <div class="feature">
                         <h3>Responsive Design</h3>
                         <p>Access your inventory from any device. The web interface works on desktop, tablet, and phone.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>No Admin Required</h3>
+                        <p>Agent runs in user mode with no elevated privileges needed after installation. Collects everything without admin rights.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>TLS/HTTPS Security</h3>
+                        <p>All agent-to-server communication encrypted with TLS. Self-hosted means your data never leaves your network.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Standalone Agent Executable</h3>
+                        <p>~15MB compiled executable with no Python required on target machines. Typical runtime 20-30 seconds per check-in.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Windows Defender Status</h3>
+                        <p>Track Defender update status and definition dates across your fleet. Know which machines need attention.</p>
                     </div>
                 </div>
             </div>
@@ -253,12 +271,12 @@ permalink: /products/device-inventory/
                         <p>Scale to 1,000+ devices with PostgreSQL migration.</p>
                     </div>
                     <div class="feature">
-                        <h3>Standalone .exe Agent</h3>
-                        <p>Compiled agent with no Python required on target machines. Double-click to install.</p>
-                    </div>
-                    <div class="feature">
                         <h3>Alert System</h3>
                         <p>Configurable alert rules with email notifications for device events.</p>
+                    </div>
+                    <div class="feature">
+                        <h3>Automatic Agent Updates</h3>
+                        <p>Push agent updates to all machines automatically without manual reinstallation.</p>
                     </div>
                     <div class="feature">
                         <h3>Mac &amp; Linux Agents</h3>
@@ -267,6 +285,35 @@ permalink: /products/device-inventory/
                     <div class="feature">
                         <h3>Visual Dashboards</h3>
                         <p>Charts and graphs for fleet-wide trends and reporting.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="documentation" class="features">
+            <div class="container">
+                <h2 class="section-title">Documentation</h2>
+                <p class="section-subtitle">Complete guides for deployment, configuration, and troubleshooting</p>
+                <div class="feature-grid">
+                    <div class="feature">
+                        <h3>📄 README</h3>
+                        <p>Quick start guide and system overview. Everything you need to know to get SimpleSight running.</p>
+                        <a href="{{ "/docs/README.txt" | url }}" class="btn btn-outline" download>Download</a>
+                    </div>
+                    <div class="feature">
+                        <h3>🚀 Deployment Guide</h3>
+                        <p>Step-by-step installation instructions for server and agents. Covers Windows environments and network setup.</p>
+                        <a href="{{ "/docs/DEPLOYMENT_GUIDE.txt" | url }}" class="btn btn-outline" download>Download</a>
+                    </div>
+                    <div class="feature">
+                        <h3>🌐 Network Configuration</h3>
+                        <p>Firewall rules, port configuration, VPN setup, and multi-site deployment guidance.</p>
+                        <a href="{{ "/docs/NETWORK_CONFIGURATION.txt" | url }}" class="btn btn-outline" download>Download</a>
+                    </div>
+                    <div class="feature">
+                        <h3>🔧 Troubleshooting</h3>
+                        <p>Common issues and their solutions. Agent connectivity, database errors, certificate problems, and more.</p>
+                        <a href="{{ "/docs/TROUBLESHOOTING.txt" | url }}" class="btn btn-outline" download>Download</a>
                     </div>
                 </div>
             </div>
