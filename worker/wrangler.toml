@@ -2,6 +2,28 @@ name = "arbinq-api"
 main = "src/index.js"
 compatibility_date = "2025-01-01"
 
+# R2 bucket for secure file downloads
+[[r2_buckets]]
+binding = "DOWNLOADS"
+bucket_name = "arbinq-downloads"
+
+# D1 database for purchase and download tracking
+[[d1_databases]]
+binding = "DB"
+database_name = "arbinq-purchases"
+database_id = ""  # Fill this after running: wrangler d1 create arbinq-purchases
+
 # Secrets — set with: wrangler secret put SECRET_NAME
-# Required now:   GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
-# Required later: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
+#
+# OAuth (existing):
+#   GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
+#
+# Stripe (Phase 1-2):
+#   STRIPE_SECRET_KEY - Stripe API secret key for checkout
+#   STRIPE_WEBHOOK_SECRET - Webhook signing secret from Stripe dashboard
+#
+# Download Distribution (Phase 2A):
+#   R2_ACCESS_KEY_ID - R2 API token for presigned URL generation
+#   R2_SECRET_ACCESS_KEY - R2 API secret for presigned URL generation
+#   RESEND_API_KEY - Resend.com API key for sending download emails
+#   ADMIN_API_KEY - Secret key for manual download link resend API
