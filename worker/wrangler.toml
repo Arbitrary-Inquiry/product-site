@@ -11,7 +11,7 @@ bucket_name = "arbinq-downloads"
 [[d1_databases]]
 binding = "DB"
 database_name = "arbinq-purchases"
-database_id = ""  # Fill this after running: wrangler d1 create arbinq-purchases
+database_id = "349cae48-db45-4cb4-b720-897adc1b4241"
 
 # Secrets — set with: wrangler secret put SECRET_NAME
 #
@@ -25,5 +25,6 @@ database_id = ""  # Fill this after running: wrangler d1 create arbinq-purchases
 # Download Distribution (Phase 2A):
 #   R2_ACCESS_KEY_ID - R2 API token for presigned URL generation
 #   R2_SECRET_ACCESS_KEY - R2 API secret for presigned URL generation
+#   R2_ACCOUNT_ID - Cloudflare account ID for R2 endpoint (66b9b9f5a05cee221924d9876eb5159a)
 #   RESEND_API_KEY - Resend.com API key for sending download emails
 #   ADMIN_API_KEY - Secret key for manual download link resend API
