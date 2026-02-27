@@ -1,0 +1,117 @@
+Absolutely — here’s a **short, no-nonsense checklist** you can keep handy when you actually build this. Think of it as your “don’t overthink it” reference.
+
+---
+
+## ✅ Hybrid Multi-Domain Site Checklist
+
+### 1. Domains & DNS
+
+* [ ] Point **both domains** to the same server IP
+* [ ] Enable HTTPS for **both domains** (single cert with both SANs)
+
+---
+
+### 2. Server Configuration
+
+* [ ] Create **separate virtual hosts** for each domain
+* [ ] Each vhost has its **own document root**
+* [ ] Both vhosts include a **shared server config**
+
+**Example**
+
+* `example.com → /var/www/sites/example.com`
+* `different.com → /var/www/sites/different.com`
+
+---
+
+### 3. Directory Structure
+
+* [ ] Create a shared base directory:
+
+  ```
+  /var/www/shared
+  ```
+* [ ] Create per-domain site roots:
+
+  ```
+  /var/www/sites/example.com
+  /var/www/sites/different.com
+  ```
+* [ ] Put common layouts, components, assets in `shared/`
+* [ ] Put domain-specific pages & overrides in each site root
+
+---
+
+### 4. Request Handling (Fallback Logic)
+
+* [ ] Requests check **domain-specific files first**
+* [ ] If not found, fall back to **shared content**
+* [ ] Missing files return a proper 404 from shared templates
+
+---
+
+### 5. Overrides Pattern
+
+* [ ] Allow per-domain overrides for:
+
+  * Headers / footers
+  * Meta tags
+  * Copy blocks
+  * CTAs
+* [ ] Default to shared templates when no override exists
+
+---
+
+### 6. SEO (Do This Early)
+
+* [ ] Decide canonical strategy:
+
+  * One primary domain **or**
+  * Self-canonical per domain
+* [ ] Add `<link rel="canonical">` on every page
+* [ ] Separate `robots.txt` per domain if needed
+* [ ] Generate sitemaps with **domain-aware URLs**
+
+---
+
+### 7. Assets
+
+* [ ] Serve CSS/JS/images from shared paths or a CDN
+* [ ] Avoid duplicating asset URLs across domains
+* [ ] Ensure assets are not indexed as pages
+
+---
+
+### 8. App Awareness
+
+* [ ] App reads the current domain (`Host` header)
+* [ ] Domain used only for:
+
+  * Overrides
+  * SEO decisions
+  * Optional branding differences
+
+---
+
+### 9. Guardrails
+
+* [ ] No redirects between domains (unless intentional)
+* [ ] Cookies scoped per domain
+* [ ] Internal links use the **current domain**
+* [ ] Avoid accidental cross-domain canonical tags
+
+---
+
+### 10. Future-Proofing
+
+* [ ] Name site folders by actual domain
+* [ ] Keep shared logic truly shared
+* [ ] Assume domains may diverge later
+
+---
+
+If you ever forget *why* this works, remember the mantra:
+
+> **Separate domains at the server level, share everything below.**
+
+You’re set — this is a solid, professional setup.

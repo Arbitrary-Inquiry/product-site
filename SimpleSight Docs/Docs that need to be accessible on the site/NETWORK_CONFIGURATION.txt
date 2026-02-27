@@ -1,0 +1,459 @@
+================================================================================
+SimpleSight - Network Configuration Guide
+================================================================================
+
+This guide explains how to configure your network so that agent computers can
+reliably connect to the SimpleSight server.
+
+================================================================================
+THE PROBLEM
+================================================================================
+
+Agents need to connect to the server using a URL like:
+    https://simplesight:8000
+    or
+    https://192.168.1.100:8000
+
+If agents can't resolve the hostname or reach the IP address, they cannot
+check in. This results in "Offline" devices in the web UI.
+
+================================================================================
+SOLUTION OPTIONS
+================================================================================
+
+Choose ONE of the following based on your environment:
+
+1. Static IP Address (Recommended)
+2. Windows Hosts File (Good for <50 devices)
+3. Router DNS (Good for small business)
+4. Active Directory DNS (Enterprise environments)
+
+================================================================================
+OPTION 1: STATIC IP ADDRESS (RECOMMENDED)
+================================================================================
+
+This is the simplest approach: configure the server with a static IP and use
+that IP address everywhere.
+
+STEP 1: ASSIGN STATIC IP TO SERVER
+------------------------------------------------------------
+
+Method A: Configure Static IP on Server
+1. Open Control Panel → Network and Sharing Center
+2. Click "Change adapter settings"
+3. Right-click your network adapter → Properties
+4. Select "Internet Protocol Version 4 (TCP/IPv4)" → Properties
+5. Select "Use the following IP address"
+6. Enter:
+   - IP address: 192.168.1.100 (choose an unused IP in your network)
+   - Subnet mask: 255.255.255.0 (typical for home/small office)
+   - Default gateway: 192.168.1.1 (your router's IP)
+   - Preferred DNS: your preferred DNS server, like 8.8.8.8 or 1.1.1.1
+7. Click OK → OK
+8. Test: Open Command Prompt, run "ipconfig" - verify new IP
+
+Method B: Configure DHCP Reservation on Router
+1. Find the server's MAC address:
+   - Open Command Prompt
+   - Run "ipconfig /all"
+   - Note the "Physical Address" of your network adapter
+     Example: 00-1A-2B-3C-4D-5E
+
+2. Login to router admin interface (usually http://192.168.1.1)
+3. Find DHCP settings (varies by router model):
+   - "LAN Settings" → "DHCP Reservation"
+   - "Advanced" → "Address Reservation"
+   - "DHCP" → "Static Leases"
+
+4. Add reservation:
+   - MAC address: 00-1A-2B-3C-4D-5E
+   - IP address: 192.168.1.100
+   - Description: SimpleSight Server
+
+5. Save and reboot router if required
+6. Reboot server to get new IP assignment
+7. Verify with "ipconfig"
+
+
+STEP 2: USE IP ADDRESS IN AGENT INSTALLER
+------------------------------------------------------------
+
+When deploying agents, use the IP address as the server URL:
+    https://192.168.1.100:8000
+
+Advantages:
+* No DNS configuration needed
+* Simple to troubleshoot
+
+Disadvantages:
+* If server IP changes, all agents must be reconfigured
+
+STEP 3: VERIFY CONNECTIVITY
+------------------------------------------------------------
+
+From any client computer:
+1. Open Command Prompt
+2. Run: ping 192.168.1.100 (or whatever your server static IP is)
+   - Should reply with "Reply from 192.168.1.100: bytes=32 time<1ms TTL=128"
+   - If "Request timed out" → check firewall
+
+3. Open browser
+4. Navigate to: https://192.168.1.100:8000
+   - Should show SimpleSight login page
+   - May show certificate warning
+
+================================================================================
+OPTION 2: WINDOWS HOSTS FILE
+================================================================================
+
+The hosts file allows you to manually map a hostname to an IP address on each
+computer. This is acceptable for small deployments.
+
+STEP 1: CONFIGURE STATIC IP (Same as Option 1)
+------------------------------------------------------------
+Follow Option 1 above to give the server a static IP: 192.168.1.100
+
+
+STEP 2: EDIT HOSTS FILE ON EACH COMPUTER
+------------------------------------------------------------
+
+On EVERY computer that needs to connect to the server (including the server
+itself if you want to use the hostname locally):
+
+1. Open Notepad as Administrator:
+   - Right-click Notepad → Run as administrator
+
+2. Open hosts file:
+   File → Open → Navigate to:
+   C:\Windows\System32\drivers\etc\hosts
+   
+   Change file type filter to "All Files (*.*)" to see it
+
+3. Add this line at the end:
+   192.168.1.100    simplesight
+   
+   (Replace 192.168.1.100 with your actual server IP)
+   (Replace simplesight with your actual hostname)
+
+4. Save and close Notepad
+
+5. Test from Command Prompt:
+   ping simplesight
+   
+   Should reply from 192.168.1.100
+
+
+STEP 3: USE HOSTNAME IN AGENT INSTALLER
+------------------------------------------------------------
+
+When deploying agents, use the hostname:
+    https://simplesight:8000
+
+The hosts file will resolve "simplesight" to 192.168.1.100
+
+
+Advantages:
+* Hostname instead of IP address
+* No DNS server required
+* Certificate matches hostname (if cert was generated with that name)
+
+Disadvantages:
+* Must edit hosts file on every computer
+* Manual process, not scalable beyond ~50 devices
+* Hosts file changes don't propagate automatically
+
+
+AUTOMATING HOSTS FILE UPDATES (Optional)
+------------------------------------------------------------
+
+You can add hosts file modification to a deployment script:
+
+Create deploy_hosts.bat:
+
+    @echo off
+    REM Check if entry already exists
+    findstr /C:"simplesight" %WINDIR%\System32\drivers\etc\hosts >nul
+    if %errorlevel% equ 0 goto :end
+    
+    REM Add entry
+    echo 192.168.1.100    simplesight >> %WINDIR%\System32\drivers\etc\hosts
+    
+    :end
+    exit /b 0
+
+Run this script as Administrator before deploying the agent installer.
+
+Note: Modifying hosts file requires administrator privileges.
+
+================================================================================
+OPTION 3: ROUTER DNS CONFIGURATION
+================================================================================
+
+Some routers allow you to configure DNS entries that apply to all devices on
+your network. This is ideal for small business environments.
+
+STEP 1: CONFIGURE STATIC IP (Same as Option 1)
+------------------------------------------------------------
+Follow Option 1 above to give the server a static IP: 192.168.1.100
+
+
+STEP 2: CONFIGURE DNS ON ROUTER
+------------------------------------------------------------
+
+This varies significantly by router brand/model. Common locations:
+
+1. Login to router admin interface (usually http://192.168.1.1)
+
+2. Look for DNS settings:
+   - "LAN" → "DNS Settings"
+   - "Advanced" → "Local DNS"
+   - "Services" → "DNS Server"
+
+3. Add DNS entry:
+   - Hostname: simplesight (or simplesight.local)
+   - IP address: 192.168.1.100
+
+4. Save settings
+
+5. Test from any computer:
+   - Open Command Prompt
+   - Run: nslookup simplesight
+   - Should show: Address: 192.168.1.100
+
+
+ROUTER-SPECIFIC INSTRUCTIONS
+------------------------------------------------------------
+
+Common routers that support local DNS:
+
+Ubiquiti EdgeRouter:
+- SSH to router
+- Edit /etc/hosts
+- Add: 192.168.1.100 simplesight
+- Run: configure → commit → save
+
+pfSense:
+- Services → DNS Resolver → Host Overrides
+- Add host: simplesight, Domain: local, IP: 192.168.1.100
+
+DD-WRT:
+- Services → Services → DNSMasq
+- Enable DNSMasq
+- Additional DNSMasq Options:
+  address=/simplesight.local/192.168.1.100
+
+Consumer routers (Netgear, Linksys, TP-Link):
+- Most consumer routers do NOT support local DNS entries
+- Use hosts file or Active Directory DNS instead
+
+
+Advantages:
+* Centralized configuration
+* All devices on network can resolve hostname automatically
+* No per-device configuration needed
+
+Disadvantages:
+* Not all routers support this feature
+* May require router reboot
+* Limited to local network (no remote access)
+
+================================================================================
+OPTION 4: ACTIVE DIRECTORY DNS (ENTERPRISE)
+================================================================================
+
+If you have Active Directory, you can create a DNS record for the SimpleSight
+server. This is the most professional solution for domain environments.
+
+Prerequisites:
+- Active Directory Domain Services
+- DNS Server role installed on domain controller
+
+STEP 1: CONFIGURE STATIC IP (Same as Option 1)
+------------------------------------------------------------
+Follow Option 1 above to give the server a static IP: 192.168.1.100
+
+
+STEP 2: CREATE DNS A RECORD
+------------------------------------------------------------
+
+On your domain controller:
+
+1. Open DNS Manager (Server Manager → Tools → DNS)
+
+2. Expand Forward Lookup Zones
+
+3. Right-click your domain (e.g., company.local) → New Host (A or AAAA)
+
+4. Enter:
+   - Name: simplesight
+   - FQDN: simplesight.company.local (auto-filled)
+   - IP address: 192.168.1.100
+   - ☐ Create associated pointer (PTR) record (optional)
+
+5. Click "Add Host" → OK
+
+6. Test from any domain-joined computer:
+   nslookup simplesight.company.local
+   
+   Should show: Address: 192.168.1.100
+
+
+STEP 3: USE FQDN IN AGENT INSTALLER
+------------------------------------------------------------
+
+When deploying agents, use the fully qualified domain name:
+    https://simplesight.company.local:8000
+
+Or use the short name (if DNS suffix is configured):
+    https://simplesight:8000
+
+
+Advantages:
+* Centralized, enterprise-grade DNS management
+* Automatic propagation to all domain-joined computers
+* Supports remote access via VPN
+* Professional FQDN instead of IP or simple hostname
+
+Disadvantages:
+* Requires Active Directory (not available in home/small office)
+* Only works for domain-joined computers
+
+================================================================================
+CERTIFICATE CONSIDERATIONS
+================================================================================
+
+The SimpleSight server uses a self-signed TLS certificate. The certificate is
+generated with these Subject Alternative Names (SANs):
+
+- The hostname you entered during installation
+- "localhost"
+- 127.0.0.1
+- ::1
+
+IMPORTANT:
+- If you use an IP address that wasn't included during installation, browsers
+  will show certificate warnings
+  
+- If you use a hostname that wasn't included during installation, browsers
+  will show certificate warnings
+
+To regenerate certificate with different names:
+1. Uninstall server (keep existing database)
+3. Run server installer again (choose "Restore existing database")
+4. Enter new hostname during installation
+5. Certificate will be regenerated with new name
+
+
+AGENT CERTIFICATE VERIFICATION:
+By default, agents have "verify_ssl: false" in their config. This means they
+accept the self-signed certificate without verification.
+
+For production environments, you can:
+1. Distribute the server.crt file to all agents
+2. Install it to Windows Trusted Root store on each computer
+3. Change agent config to "verify_ssl: true"
+
+This is more secure but significantly more complex to manage.
+
+================================================================================
+FIREWALL CONFIGURATION
+================================================================================
+
+WINDOWS FIREWALL (Server)
+------------------------------------------------------------
+
+The server installer does NOT create firewall rules automatically. (We don't know your firewall setup) 
+You must allow inbound connections manually:
+
+1. Open Windows Defender Firewall with Advanced Security
+2. Click "Inbound Rules" → "New Rule..."
+3. Rule Type: Port
+4. Protocol: TCP, Specific local port: 8000 (or your configured port)
+5. Action: Allow the connection
+6. Profile: Domain, Private (Public if needed for remote access)
+7. Name: SimpleSight Server
+8. Click Finish
+
+This is merely an example for if you are using the default Windows Defender Firewall, your configurations may vary.
+
+ROUTER FIREWALL (Port Forwarding - Only if remote access needed)
+------------------------------------------------------------
+
+WARNING: Only do this if you need remote access AND you understand the
+security implications.
+
+1. Login to router admin interface
+2. Find Port Forwarding settings
+3. Create rule:
+   - External port: 8000
+   - Internal IP: 192.168.1.100
+   - Internal port: 8000
+   - Protocol: TCP
+4. Save and test from external network
+
+Again: VPN is MUCH more secure than port forwarding.
+
+================================================================================
+TESTING CONNECTIVITY
+================================================================================
+
+BASIC CONNECTIVITY TEST
+------------------------------------------------------------
+
+From agent computer, test each layer:
+
+1. Ping test:
+   ping 192.168.1.100
+   ping simplesight
+   
+   Should reply without timeout
+
+2. Port test (using PowerShell):
+   Test-NetConnection -ComputerName simplesight -Port 8000
+   
+   Should show: TcpTestSucceeded : True
+
+3. HTTP test (using browser):
+   Navigate to: https://simplesight:8000
+   
+   Should show login page (may have certificate warning)
+
+
+TROUBLESHOOTING CONNECTIVITY ISSUES
+------------------------------------------------------------
+
+Problem: "Ping request could not find host simplesight"
+Solution: DNS not configured properly
+- Check hosts file
+- Check router DNS
+- Check Active Directory DNS
+- Use IP address instead
+
+Problem: "Request timed out" when pinging IP
+Solution: Network connectivity issue
+- Check server is on same subnet
+- Check network cable
+- Check router is routing traffic
+
+Problem: Ping works but browser can't connect
+Solution: Firewall blocking port 8000
+- Check Windows Firewall on server
+- Check router firewall rules
+- Verify server is running (check Task Scheduler)
+
+Problem: Certificate warning in browser
+Solution: Expected with self-signed certificate
+- Click "Advanced" → "Proceed to site" (browser dependent)
+- Or install certificate to Trusted Root store
+- Or configure agents to not verify SSL
+
+================================================================================
+
+For more information, see:
+- README.txt - Quick start guide
+- DEPLOYMENT_GUIDE.txt - Complete deployment instructions
+- TROUBLESHOOTING.txt - Common issues and solutions
+
+SimpleSight - Lightweight IT Asset Management
+
+================================================================================

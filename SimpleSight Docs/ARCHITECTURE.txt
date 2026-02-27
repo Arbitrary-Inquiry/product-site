@@ -1,0 +1,1067 @@
+================================================================================
+SimpleSight - System Architecture Technical Documentation
+================================================================================
+
+This document provides a technical overview of SimpleSight's architecture,
+design decisions, and implementation details for IT professionals and
+developers.
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+
+1. High-Level Architecture
+2. Server Component
+3. Agent Component
+4. Installer System
+5. Database Schema
+6. API Specification
+7. Security Architecture
+8. Network Communication
+9. File Structure
+10. Build System
+11. Known Limitations
+12. Future Roadmap
+
+================================================================================
+1. HIGH-LEVEL ARCHITECTURE
+================================================================================
+
+SimpleSight uses a client-server architecture:
+
+┌──────────────────────────────────────────────────────────────┐
+│                     CLIENT MACHINES                          │
+│                                                              │
+│  ┌────────────────────────────────────────────────────┐    │
+│  │  SimpleSightAgent.exe                             │    │
+│  │  - Runs in user mode (no admin after install)     │    │
+│  │  - Collects inventory every 4 hours               │    │
+│  │  - Scheduled tasks (startup + periodic)           │    │
+│  │  - Logs to %LOCALAPPDATA%\SimpleSight\logs\       │    │
+│  └────────────────────────────────────────────────────┘    │
+│                           │                                  │
+│                           │ HTTPS (TLS)                      │
+│                           │ Port 8000                        │
+│                           ▼                                  │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────┐
+│                     SERVER MACHINE                           │
+│                                                              │
+│  ┌────────────────────────────────────────────────────┐    │
+│  │  SimpleSightServer.exe (Console Application)      │    │
+│  │  - FastAPI + uvicorn HTTPS server                 │    │
+│  │  - Serves React web UI (static files)             │    │
+│  │  - API endpoints for agents and web UI            │    │
+│  │  - Runs via Task Scheduler at startup             │    │
+│  │  - Requires admin (database in ProgramData)       │    │
+│  └────────────────────────────────────────────────────┘    │
+│                           │                                  │
+│  ┌────────────────────────────────────────────────────┐    │
+│  │  SQLite Database                                  │    │
+│  │  C:\ProgramData\SimpleSight\inventory.db          │    │
+│  │  - Device records                                 │    │
+│  │  - Inventory snapshots (full JSON)                │    │
+│  │  - Software inventory (queryable)                 │    │
+│  │  - User accounts, agent tokens                    │    │
+│  └────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
+
+COMMUNICATION FLOW:
+1. Agent wakes up (startup or scheduled interval)
+2. Collects system inventory (PowerShell + WMI + Registry)
+3. Sends HTTPS POST to /api/v1/checkin with bearer token
+4. Server validates token, stores data in database
+5. Server responds with status and optional instructions
+6. Agent logs result and exits
+
+WEB UI FLOW:
+1. User opens browser to https://SERVER:8000
+2. Server serves React SPA (index.html + static assets)
+3. User logs in with username/password
+4. Server generates JWT token (24-hour expiration)
+5. React app makes API calls with JWT in Authorization header
+6. Server returns JSON data from database
+7. React app renders dashboard, device lists, etc.
+
+================================================================================
+2. SERVER COMPONENT
+================================================================================
+
+TECHNOLOGY STACK:
+------------------------------------------------------------
+- Python 3.11+
+- FastAPI 0.104.1 (modern async web framework)
+- Uvicorn (ASGI server with HTTPS support)
+- SQLite 3 (embedded database)
+- Pydantic (data validation)
+- bcrypt (password hashing)
+- PyJWT (JWT token generation/validation)
+- cryptography (TLS certificate generation)
+
+SERVER EXECUTABLE:
+------------------------------------------------------------
+File: SimpleSightServer.exe
+Built with: PyInstaller (--onefile, console mode)
+Size: ~25MB (includes Python runtime, dependencies, frontend)
+
+Entry point: server.py
+Configuration: server_config.json (auto-generated during install)
+
+Example server_config.json:
+{
+  "hostname": "simplesight",
+  "port": 8000,
+  "database_path": "C:\\ProgramData\\SimpleSight\\inventory.db",
+  "log_path": "C:\\ProgramData\\SimpleSight\\logs",
+  "cert_path": "C:\\Program Files\\SimpleSight Server\\certs\\server.crt",
+  "key_path": "C:\\Program Files\\SimpleSight Server\\certs\\server.key",
+  "frontend_path": "C:\\Program Files\\SimpleSight Server\\frontend"
+}
+
+API ENDPOINTS:
+------------------------------------------------------------
+Public (no auth):
+  GET  /health                    - Health check
+  POST /api/auth/login            - User login (returns JWT)
+
+Agent endpoints (Bearer token auth):
+  POST /api/v1/checkin            - Agent inventory submission
+
+Web UI endpoints (JWT auth):
+  GET  /api/auth/me               - Current user info
+  POST /api/v1/tokens/generate    - Generate new agent token
+  GET  /api/devices               - List all devices
+  GET  /api/devices/{id}          - Device details
+  GET  /api/software              - Aggregated software inventory
+
+Static files:
+  GET  /*                         - React frontend (catch-all)
+
+LOGGING:
+------------------------------------------------------------
+Location: C:\ProgramData\SimpleSight\logs\server_YYYYMMDD.log
+Format: %(asctime)s - %(name)s - %(levelname)s - %(message)s
+Rotation: New file per day (YYYYMMDD)
+Levels: INFO, WARNING, ERROR
+
+Logged events:
+- Server startup/shutdown
+- Agent check-ins (success/failure)
+- User authentication attempts
+- API errors and exceptions
+- Database operations
+
+PROCESS MODEL:
+------------------------------------------------------------
+- Single process, single threaded (uvicorn default)
+- Async/await for I/O operations
+- SQLite handles concurrent reads well
+- Writes are serialized (SQLite limitation)
+
+For 100+ concurrent agents, consider:
+- PostgreSQL migration (removes write serialization)
+- Multiple worker processes (uvicorn --workers)
+- Load balancer (future feature)
+
+STARTUP MECHANISM:
+------------------------------------------------------------
+- Windows Task Scheduler task: "SimpleSight Server"
+- Trigger: At system startup
+- Action: Run SimpleSightServer.exe
+- Run level: Highest (runs with admin privileges)
+- Working directory: C:\Program Files\SimpleSight Server
+
+Why admin required:
+- Database in C:\ProgramData requires elevated writes
+- Port binding < 1024 would require admin (not used)
+- Future: Windows Service will run as Local System
+
+================================================================================
+3. AGENT COMPONENT
+================================================================================
+
+TECHNOLOGY STACK:
+------------------------------------------------------------
+- Python 3.11+
+- psutil (system information)
+- requests (HTTP client)
+- WMI (via subprocess + PowerShell)
+- Registry access (via subprocess + PowerShell)
+
+AGENT EXECUTABLE:
+------------------------------------------------------------
+File: SimpleSightAgent.exe
+Built with: PyInstaller (--onefile, console mode)
+Size: ~15MB
+
+Entry point: agent.py
+Configuration: agent_config.json (created during installation)
+
+Example agent_config.json:
+{
+  "server_url": "https://192.168.1.100:8000",
+  "agent_token": "ag_xxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "check_in_interval_hours": 4,
+  "output_mode": "api",
+  "max_software_items": 500,
+  "retry_attempts": 3,
+  "retry_delay_seconds": 5,
+  "enable_performance_tracking": true,
+  "log_level": "INFO",
+  "verify_ssl": false
+}
+
+INVENTORY COLLECTION:
+------------------------------------------------------------
+Agent collects the following via PowerShell + WMI:
+
+1. System Information:
+   - OS name, version, architecture, build number
+   - Computer name, domain/workgroup
+   - Install date, last boot time
+   - System manufacturer, model
+   Source: Win32_OperatingSystem, Win32_ComputerSystem
+
+2. Hardware:
+   - CPU model, cores, threads
+   - Total RAM (GB)
+   - Disks (model, size, type)
+   - BIOS/UEFI version, serial number
+   Source: Win32_Processor, Win32_PhysicalMemory, Win32_DiskDrive
+
+3. Network:
+   - Active adapters (name, MAC, IP addresses)
+   - IPv4 and IPv6 support
+   - Adapter status (up/down)
+   Source: Get-NetAdapter, Get-NetIPAddress
+
+4. Software:
+   - Installed programs from registry
+   - Name, version, publisher, install date
+   - Limited to first 500 items (configurable)
+   Source: Registry keys:
+     HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall
+     HKLM\Software\Wow6432Node\...\Uninstall (64-bit)
+
+5. Windows Update:
+   - Last update check date
+   - Pending updates count
+   - Last successful update date
+   - Windows Defender status and definitions date
+   Source: Windows Update Agent COM objects
+
+6. User Accounts:
+   - Local user accounts
+   - Last login times
+   - Account status (enabled/disabled)
+   Source: Win32_UserAccount
+
+7. Battery (laptops only):
+   - Battery status, charge percentage
+   - Estimated runtime
+   - Power source (AC/battery)
+   Source: Win32_Battery
+
+EXECUTION MODEL:
+------------------------------------------------------------
+- Agent runs to completion and exits
+- No persistent background process
+- Scheduled via Windows Task Scheduler:
+  - Task 1: At startup, delay 1 minute
+  - Task 2: Daily at 00:01, repeat every 4 hours for 23:59
+
+- Typical runtime: 20-30 seconds
+- Memory usage: 50-100MB during collection
+- No admin required (runs in user context)
+
+ERROR HANDLING:
+------------------------------------------------------------
+- Individual collection failures logged but don't stop execution
+- Network errors trigger retry mechanism (3 attempts, 5 sec delay)
+- All errors included in check-in payload to server
+- Logged to: %LOCALAPPDATA%\SimpleSight\logs\agent_YYYYMMDD.log
+
+PERFORMANCE METRICS:
+------------------------------------------------------------
+Agent tracks and reports:
+- Collection duration (seconds)
+- Memory usage (MB)
+- CPU usage (%)
+- Data size (bytes)
+- Individual component collection times
+
+Included in check-in payload for server-side monitoring.
+
+================================================================================
+4. INSTALLER SYSTEM
+================================================================================
+
+SimpleSight uses a sophisticated multi-stage installer system:
+
+SERVER INSTALLER:
+------------------------------------------------------------
+File: SimpleSightServerInstaller.exe
+Size: ~130MB
+Built with: PyInstaller
+
+Contains:
+- SimpleSightServer.exe (25MB)
+- ServerUninstaller.exe (5MB)
+- SimpleSightAgent.exe (15MB)
+- Agent uninstaller (5MB)
+- installer.py, install_logic.py (agent installer source)
+- React frontend (built, ~2MB)
+- python_bundle (80MB) - Python 3.11 + PyInstaller for agent build
+- Documentation files (5 .txt files)
+
+Installation steps:
+1. Create directories (Program Files, ProgramData)
+2. Generate TLS certificate with hostname
+3. Optionally install certificate to Trusted Root store
+4. Initialize SQLite database with schema
+5. Create admin user with bcrypt password hash
+6. Create server_config.json
+7. Extract all server files
+8. Extract python_bundle and rename disguised DLLs
+9. Build agent installer using bundled Python + PyInstaller
+10. Remove .py files after agent build completes
+11. Extract documentation to docs folder
+12. Create Task Scheduler entry for auto-start
+13. Register with Windows Programs and Features
+14. Start server
+
+AGENT INSTALLER:
+------------------------------------------------------------
+File: SimpleSightInstaller.exe
+Size: ~20-25MB
+Built with: PyInstaller (inside server installer!)
+
+Built automatically during server installation using:
+- Bundled Python 3.11 runtime
+- Bundled PyInstaller
+- Explicit tkinter binaries and data
+- Runtime hook for Tcl/Tk paths
+
+Contains:
+- SimpleSightAgent.exe
+- Agent uninstaller
+- Server certificate (server.crt)
+- Tkinter GUI libraries
+
+Installation steps:
+1. Authenticate with server (admin credentials)
+2. Generate agent token via API
+3. Create installation directory
+4. Extract agent files
+5. Create agent_config.json with token
+6. Create scheduled tasks (startup + periodic)
+7. Register with Windows Programs and Features
+8. Run initial check-in
+9. Verify installation
+
+KEY INNOVATION - SELF-BOOTSTRAPPING:
+------------------------------------------------------------
+The server installer builds the agent installer automatically during
+installation, eliminating all manual post-installation steps.
+
+Technical challenges solved:
+- PyInstaller-inside-PyInstaller execution
+- Tcl/Tk version conflicts (dev Python 3.13 vs bundled Python 3.11)
+- DLL/PYD files disguised as .dll_/.pyd_ to avoid conflicts
+- Runtime hooks to set TCL_LIBRARY/TK_LIBRARY before tkinter loads
+- Explicit binaries/datas instead of auto-detection
+
+This provides a seamless deployment experience rivaling commercial tools.
+
+UNINSTALLERS:
+------------------------------------------------------------
+Both server and agent include dedicated uninstaller executables that:
+- Remove scheduled tasks
+- Remove registry entries (Programs and Features)
+- Delete installation files (via delayed batch script)
+- Preserve or remove data based on user choice
+
+================================================================================
+5. DATABASE SCHEMA
+================================================================================
+
+SimpleSight uses SQLite with a normalized schema designed for queryability
+and future expansion.
+
+CORE TABLES:
+------------------------------------------------------------
+
+devices:
+  - Primary device records
+  - hostname, hardware_uuid (composite unique key)
+  - Tracks: first_seen, last_checkin, agent_version, is_active
+  - Optional: device_group, location, notes (for organization)
+
+inventory_snapshots:
+  - Full JSON dumps of every check-in
+  - Provides complete audit trail
+  - Includes: timestamp, collection_duration_ms, data_size_bytes
+  - Foreign key: device_id → devices
+
+software_inventory:
+  - Normalized software records (extracted from JSON)
+  - Allows efficient querying/reporting
+  - software_name, software_version, publisher, install_date
+  - Foreign keys: device_id → devices, snapshot_id → snapshots
+
+agent_logs:
+  - Agent error/warning logs sent to server
+  - log_level, message, error_type, stack_trace
+  - Performance data: memory_usage_mb, cpu_usage_percent
+  - Foreign key: device_id → devices
+
+agent_checkins:
+  - Status records for each check-in attempt
+  - status (success/failed/timeout), error_message
+  - agent_version, agent_ip_address
+  - Foreign key: device_id → devices
+
+AUTHENTICATION TABLES:
+------------------------------------------------------------
+
+users:
+  - Web UI user accounts
+  - username, email, password_hash (bcrypt), role (admin/viewer)
+  - Security: is_active, is_locked, failed_login_attempts
+  - Session management: current_session_token, session_expires_at
+
+agent_tokens:
+  - Bearer tokens for agent authentication
+  - token_hash (SHA256), token_prefix (display), device_id
+  - Lifecycle: created_at, expires_at, last_used, is_revoked
+  - Foreign keys: device_id → devices, created_by → users
+
+FUTURE TABLES (v0.4.0+):
+------------------------------------------------------------
+
+alert_rules:
+  - Configurable alerting thresholds
+  - rule_type, threshold_value, applies_to, is_enabled
+
+alerts:
+  - Alert history and resolution tracking
+  - triggered_at, severity, message, is_resolved
+
+audit_log:
+  - User action auditing
+  - timestamp, user_id, action, entity_type, details
+
+INDEXES:
+------------------------------------------------------------
+20+ indexes for optimal query performance:
+
+- devices: hostname, is_active+last_checkin, device_group
+- inventory_snapshots: device_id+timestamp DESC, timestamp DESC
+- software_inventory: device_id, software_name, name+version
+- agent_logs: device_id+timestamp DESC, log_level+timestamp
+- agent_checkins: device_id+timestamp DESC, status+timestamp
+- agent_tokens: token_hash, device_id
+- users: username, email
+- audit_log: user_id+timestamp DESC, action+timestamp
+
+DATABASE SIZE ESTIMATES:
+------------------------------------------------------------
+- Empty database: ~60KB
+- 10 devices, 1 week: ~5MB
+- 50 devices, 1 month: ~50MB
+- 100 devices, 3 months: ~200MB
+- 200 devices, 6 months: ~500MB - 1GB
+
+Growth factors:
+- Snapshot size: ~50-100KB per device per check-in
+- Software inventory: Varies widely (100KB - 1MB)
+- Check-in frequency: 6x per day = 180 snapshots/month/device
+
+================================================================================
+6. API SPECIFICATION
+================================================================================
+
+AGENT CHECK-IN ENDPOINT:
+------------------------------------------------------------
+POST /api/v1/checkin
+Authorization: Bearer {agent_token}
+Content-Type: application/json
+
+Request body (AgentCheckinRequest):
+{
+  "agent_version": "0.3.0",
+  "hostname": "DESKTOP-ABC123",
+  "hardware_uuid": "12345678-1234-1234-1234-123456789ABC",
+  "timestamp": "2026-02-22T14:30:00Z",
+  "system_info": {
+    "os": "Windows 11 Pro",
+    "os_version": "10.0.22000",
+    "architecture": "AMD64",
+    ...
+  },
+  "hardware": {
+    "manufacturer": "Dell Inc.",
+    "model": "OptiPlex 7090",
+    "cpu": "Intel Core i7-11700",
+    "ram_gb": 32,
+    ...
+  },
+  "network": {
+    "adapters": [...]
+  },
+  "software": [
+    {
+      "name": "Microsoft Office Professional Plus 2021",
+      "version": "16.0.14332.20447",
+      "publisher": "Microsoft Corporation",
+      "install_date": "20240115"
+    },
+    ...
+  ],
+  "updates": {
+    "days_since_windows_update": 5,
+    "days_since_defender_update": 0,
+    ...
+  },
+  "users": [...],
+  "battery": {...},
+  "performance_metrics": {
+    "collection_duration_seconds": 23.5,
+    "memory_usage_mb": 85.2,
+    "cpu_usage_percent": 12.3
+  },
+  "collection_errors": []
+}
+
+Response (AgentCheckinResponse):
+{
+  "status": "success",
+  "message": "Inventory received for DESKTOP-ABC123",
+  "device_id": 42,
+  "snapshot_id": 1337,
+  "server_time": "2026-02-22T14:30:05Z",
+  "instructions": null
+}
+
+Error responses:
+- 401 Unauthorized: Invalid/expired token
+- 500 Internal Server Error: Database error
+
+USER AUTHENTICATION:
+------------------------------------------------------------
+POST /api/auth/login
+Content-Type: application/json
+
+Request:
+{
+  "username": "admin",
+  "password": "password123"
+}
+
+Response:
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer",
+  "user": {
+    "id": 1,
+    "username": "admin",
+    "email": "admin@localhost",
+    "role": "admin"
+  }
+}
+
+Error responses:
+- 401 Unauthorized: Invalid credentials, locked account, disabled account
+
+TOKEN GENERATION:
+------------------------------------------------------------
+POST /api/v1/tokens/generate
+Authorization: Bearer {jwt_token}
+Content-Type: application/json
+
+Request:
+{
+  "description": "Auto-generated for LAPTOP-XYZ",
+  "expires_days": null
+}
+
+Response:
+{
+  "token": "ag_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+  "token_id": 7,
+  "token_prefix": "ag_a1b2c3d4e5f6",
+  "expires_at": null,
+  "message": "Token generated successfully. Store securely!"
+}
+
+DEVICE LIST:
+------------------------------------------------------------
+GET /api/devices
+Authorization: Bearer {jwt_token}
+
+Response:
+{
+  "devices": [
+    {
+      "id": 1,
+      "hostname": "DESKTOP-ABC123",
+      "hardware_uuid": "...",
+      "agent_version": "0.3.0",
+      "first_seen": "2026-01-15T10:00:00Z",
+      "last_checkin": "2026-02-22T14:30:00Z",
+      "is_active": true,
+      "os": "Windows 11 Pro",
+      "manufacturer": "Dell Inc.",
+      "model": "OptiPlex 7090",
+      ...
+    },
+    ...
+  ],
+  "total": 42
+}
+
+DEVICE DETAIL:
+------------------------------------------------------------
+GET /api/devices/{id}
+Authorization: Bearer {jwt_token}
+
+Response: Full device record + latest snapshot + history
+
+SOFTWARE INVENTORY:
+------------------------------------------------------------
+GET /api/software
+Authorization: Bearer {jwt_token}
+
+Response:
+{
+  "software": [
+    {
+      "software_name": "Microsoft Office",
+      "software_version": "16.0.14332.20447",
+      "publisher": "Microsoft Corporation",
+      "device_count": 25,
+      "installed_on": ["DESKTOP-1", "LAPTOP-2", ...]
+    },
+    ...
+  ],
+  "total": 500
+}
+
+================================================================================
+7. SECURITY ARCHITECTURE
+================================================================================
+
+TRANSPORT SECURITY:
+------------------------------------------------------------
+- HTTPS/TLS 1.2+ for all communication
+- Self-signed certificate (2048-bit RSA, SHA256 hash)
+- Certificate valid for 2 years
+- Subject Alternative Names: hostname, localhost, 127.0.0.1, ::1
+
+Certificate installation:
+- Server: Optional installation to Windows Trusted Root during setup
+- Agents: Default verify_ssl=false (accept self-signed)
+- Production: Consider proper CA or Let's Encrypt (v0.4.0 feature)
+
+AUTHENTICATION:
+------------------------------------------------------------
+
+Web UI (Users):
+- JWT tokens with 24-hour expiration
+- Payload: user_id, username, exp (expiration timestamp)
+- Secret key: Random 32-byte value (environment var or generated)
+- Algorithm: HS256 (HMAC-SHA256)
+- Transmitted in Authorization: Bearer {token} header
+
+Agents (Devices):
+- Bearer tokens with "ag_" prefix
+- SHA256 hash stored in database (not plaintext)
+- Token format: ag_{random_urlsafe_32_bytes}
+- No expiration by default (optional expires_at field)
+- Can be revoked via is_revoked flag
+
+PASSWORD SECURITY:
+------------------------------------------------------------
+- bcrypt hashing with automatic salt generation
+- Cost factor: bcrypt default (currently 12 rounds)
+- Password minimum: 8 characters (enforced in installer)
+- No password recovery mechanism (v0.3.0 limitation)
+
+Token format: $2b$12$randomsalt...bcrypthash...
+
+AUTHORIZATION:
+------------------------------------------------------------
+- Role-based access control (RBAC)
+- Roles: admin, viewer (viewer not fully implemented)
+- Admin: Full access to all endpoints
+- Viewer: Read-only access (future feature)
+
+TOKEN LIFECYCLE:
+------------------------------------------------------------
+
+Agent tokens:
+1. Created via /api/v1/tokens/generate (requires admin JWT)
+2. Returned ONCE (cannot be retrieved later)
+3. Used for check-ins with last_used timestamp updated
+4. Can be revoked (is_revoked=1, revoked_at, revoked_by)
+5. Optional expiration (expires_at timestamp)
+
+JWT tokens:
+1. Created at login
+2. 24-hour expiration
+3. Stateless (no server-side session)
+4. Cannot be revoked (reissue with short expiration for security)
+
+ATTACK SURFACE:
+------------------------------------------------------------
+
+Mitigated:
+✓ SQL injection: Pydantic validation + parameterized queries
+✓ XSS: React auto-escaping
+✓ CSRF: JWT in header (not cookie)
+✓ Password attacks: bcrypt (slow hashing)
+✓ Man-in-the-middle: TLS/HTTPS
+
+Not mitigated (v0.3.0):
+✗ Rate limiting: No throttling on login or API endpoints
+✗ Brute force: No account lockout after X failed logins
+✗ DDoS: No request limiting or connection throttling
+✗ Certificate pinning: Agents accept any cert if verify_ssl=false
+
+These are planned for v0.4.0 (production hardening phase).
+
+================================================================================
+8. NETWORK COMMUNICATION
+================================================================================
+
+PROTOCOL:
+------------------------------------------------------------
+- HTTPS only (no HTTP support)
+- TLS 1.2 or higher
+- JSON payloads (Content-Type: application/json)
+- REST-style API design
+
+PORT CONFIGURATION:
+------------------------------------------------------------
+- Default: 8000
+- Configurable during installation
+- Firewall rule required (manual configuration)
+- Standard HTTPS port 443 can be used but may conflict with IIS
+
+CLIENT REQUIREMENTS:
+------------------------------------------------------------
+- Agent: Outbound HTTPS to server (port 8000 or configured)
+- Web UI: Browser with JavaScript enabled
+- No inbound ports required on agents
+- Server requires inbound firewall rule
+
+NETWORK TOPOLOGIES:
+------------------------------------------------------------
+
+Same subnet (typical small business):
+  Client: 192.168.1.50
+  Server: 192.168.1.100
+  Works immediately with IP address or DNS
+
+Different subnets (multi-site):
+  Client: 10.0.1.50
+  Server: 192.168.1.100
+  Requires routing between subnets
+  May require firewall rules on router
+
+VPN (remote workers):
+  Client: 10.8.0.50 (VPN IP)
+  Server: 192.168.1.100
+  VPN must route 192.168.x.x traffic
+  Agent uses internal IP, not public IP
+
+Public internet (NOT RECOMMENDED v0.3.0):
+  Client: Any public IP
+  Server: Public IP + port forward
+  Security risks: self-signed cert warnings, no rate limiting
+  Better: Use VPN instead
+
+DATA FLOW:
+------------------------------------------------------------
+
+Agent → Server:
+1. DNS resolution (hostname → IP) OR direct IP
+2. TCP handshake to port 8000
+3. TLS handshake (certificate exchange)
+4. HTTP POST /api/v1/checkin
+5. Server validates bearer token
+6. Server stores data in database
+7. HTTP 200 response with JSON
+8. Connection closed
+
+Browser → Server:
+1. DNS resolution
+2. TCP + TLS handshake
+3. HTTP GET / (serves index.html)
+4. Browser loads React app
+5. User logs in (POST /api/auth/login)
+6. JWT token stored in localStorage
+7. Subsequent API calls include JWT
+8. WebSocket not used (pure REST)
+
+BANDWIDTH USAGE:
+------------------------------------------------------------
+- Agent check-in: 50-100KB payload (varies with software count)
+- Initial agent install: Downloads certificate (~2KB)
+- Web UI initial load: ~500KB (React bundle + assets)
+- Dashboard refresh: <10KB (JSON data only)
+
+Estimated monthly bandwidth per device:
+- 6 check-ins/day × 30 days = 180 check-ins
+- 180 × 75KB average = ~13.5MB/month/device
+- 100 devices = ~1.35GB/month total
+
+Low enough for even slow DSL connections.
+
+================================================================================
+9. FILE STRUCTURE
+================================================================================
+
+SERVER INSTALLATION:
+------------------------------------------------------------
+C:\Program Files\SimpleSight Server\
+├── SimpleSightServer.exe           # Main server executable
+├── ServerUninstaller.exe           # Uninstaller
+├── server_config.json              # Configuration
+├── certs\
+│   ├── server.crt                  # TLS certificate
+│   └── server.key                  # Private key
+├── frontend\                       # React web UI (built)
+│   ├── index.html
+│   ├── assets\
+│   │   ├── index-abc123.js
+│   │   └── index-abc123.css
+│   └── ...
+├── docs\                           # Documentation (NEW in v0.3.0)
+│   ├── README.txt
+│   ├── DEPLOYMENT_GUIDE.txt
+│   ├── NETWORK_CONFIGURATION.txt
+│   ├── TROUBLESHOOTING.txt
+│   └── ARCHITECTURE.txt
+├── python_bundle\                  # Bundled Python runtime
+│   ├── python.exe                  # Python 3.11 embeddable
+│   ├── Scripts\pyinstaller.exe     # PyInstaller
+│   ├── Lib\tkinter\                # Tkinter Python package
+│   ├── DLLs\                       # Tkinter DLLs
+│   └── tcl_pkg\                    # Tcl/Tk data
+└── agent\                          # Agent deployment package
+    ├── SimpleSightInstaller.exe    # READY TO DISTRIBUTE
+    ├── SimpleSightAgent.exe        # Agent executable
+    ├── uninstall.exe               # Agent uninstaller
+    ├── server.crt                  # Certificate (bundled into installer)
+    └── README.txt                  # Instructions
+
+C:\ProgramData\SimpleSight\         # Data directory
+├── inventory.db                    # SQLite database
+└── logs\
+    └── server_YYYYMMDD.log         # Server logs
+
+AGENT INSTALLATION:
+------------------------------------------------------------
+C:\Program Files\SimpleSight\
+├── SimpleSightAgent.exe
+├── uninstall.exe
+├── agent_config.json
+└── certs\
+    └── server.crt
+
+C:\Users\{USER}\AppData\Local\SimpleSight\logs\
+└── agent_YYYYMMDD.log
+
+Or, if running as SYSTEM:
+C:\Windows\System32\config\systemprofile\AppData\Local\SimpleSight\logs\
+
+REGISTRY ENTRIES:
+------------------------------------------------------------
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SimpleSightServer
+HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SimpleSight
+
+Used for Programs and Features integration.
+
+SCHEDULED TASKS:
+------------------------------------------------------------
+Server:
+- Name: "SimpleSight Server"
+- Trigger: At system startup
+- Action: Run SimpleSightServer.exe
+- Run level: Highest (admin)
+
+Agent:
+- Name: "SimpleSight Agent"
+- Trigger 1: At system startup, delay 1 minute
+- Trigger 2: Daily at 00:01, repeat every 4 hours for 23:59
+- Action: Run SimpleSightAgent.exe
+- Run level: Limited (user mode)
+
+================================================================================
+10. BUILD SYSTEM
+================================================================================
+
+DEVELOPMENT ENVIRONMENT:
+------------------------------------------------------------
+- Python 3.13 (dev machine)
+- Node.js 18+ with npm
+- PyInstaller 6.3.0
+- Windows 10/11
+
+BUILD PROCESS:
+------------------------------------------------------------
+
+1. Frontend (React):
+   cd frontend
+   npm install
+   npm run build
+   # Output: frontend/dist/
+
+2. Server executable:
+   python -m PyInstaller --clean build_server.spec
+   # Output: dist/SimpleSightServer.exe
+
+3. Server uninstaller:
+   python -m PyInstaller --clean build_server_uninstaller.spec
+   # Output: dist/ServerUninstaller.exe
+
+4. Agent executable:
+   python -m PyInstaller --clean agent.spec
+   # Output: dist/SimpleSightAgent.exe
+
+5. Agent uninstaller:
+   python -m PyInstaller --clean uninstaller.spec
+   # Output: dist/uninstall.exe
+
+6. Organize build_assets/:
+   - Copy all .exe files
+   - Copy frontend/dist/ → frontend/
+   - Copy python_bundle/ (pre-prepared)
+   - Copy docs/ (pre-prepared)
+   - Copy installer scripts (installer.py, install_logic.py)
+
+7. Server installer:
+   python -m PyInstaller --clean build_server_installer.spec
+   # Output: dist/SimpleSightServerInstaller.exe (~130MB)
+
+PYINSTALLER SPECS:
+------------------------------------------------------------
+Key configurations:
+
+build_server.spec:
+- Console mode (see server logs)
+- Bundles: frontend/, server_config.json
+- Hidden imports: uvicorn modules
+
+build_server_installer.spec:
+- GUI mode (tkinter wizard)
+- Bundles: ALL executables, frontend, python_bundle, docs
+- Hidden imports: tkinter, bcrypt, cryptography
+
+agent.spec:
+- Console mode
+- Hidden imports: psutil
+
+installer.spec (agent installer):
+- GUI mode (tkinter wizard)
+- Bundles: SimpleSightAgent.exe, uninstall.exe, server.crt
+- Explicit tkinter binaries + data
+- Runtime hook for Tcl/Tk paths
+
+PYTHON BUNDLE PREPARATION:
+------------------------------------------------------------
+One-time setup for python_bundle/:
+
+1. Download Python 3.11 embeddable package
+2. Modify python311._pth to include Lib, DLLs
+3. Install PyInstaller + dependencies to Lib/site-packages/
+4. Copy full tkinter package from standard Python install
+5. Rename Tcl/Tk DLLs to .dll_ / .pyd_ (disguise from PyInstaller)
+6. Rename tcl8.6/tk8.6 folders to tcl_data/tk_data
+
+This bundle is reused for all builds.
+
+DOCUMENTATION PREPARATION:
+------------------------------------------------------------
+Create docs/ folder with all doc files.
+
+BUILD AUTOMATION:
+------------------------------------------------------------
+BUILD_ALL.bat handles the entire build process:
+
+@echo off
+cd frontend
+call npm run build
+cd ..
+python -m PyInstaller --clean agent.spec
+python -m PyInstaller --clean uninstaller.spec
+python -m PyInstaller --clean build_server.spec
+python -m PyInstaller --clean build_server_uninstaller.spec
+REM Manually organize build_assets/
+python -m PyInstaller --clean build_server_installer.spec
+
+Total build time: ~5-10 minutes
+
+================================================================================
+11. KNOWN LIMITATIONS
+================================================================================
+
+SCALABILITY:
+------------------------------------------------------------
+- SQLite write serialization limits concurrent check-ins
+- Practical limit: 100-200 devices
+- Workaround: Stagger agent check-in times
+- Solution: PostgreSQL migration (v0.4.0)
+
+SECURITY:
+------------------------------------------------------------
+- No rate limiting (vulnerable to brute force)
+- No account lockout mechanism
+- Self-signed certificates (browser warnings)
+- No DDoS protection
+- verify_ssl=false by default on agents
+
+FEATURES:
+------------------------------------------------------------
+- No real-time updates (must refresh browser)
+- No email/Slack notifications
+- No remote command execution
+- No patch management
+- No custom reports/dashboards
+- No multi-tenancy
+- No SSO/LDAP integration
+
+PLATFORM:
+------------------------------------------------------------
+- Windows only (no Mac/Linux agents)
+- 64-bit only
+- Server must be Windows 10/11 or Server 2016+
+
+DEPLOYMENT:
+------------------------------------------------------------
+- No silent installation (/S flag)
+- No MSI installer
+- No GPO deployment template
+- No code signing (unsigned executables)
+
+OPERATIONAL:
+------------------------------------------------------------
+- No automatic updates
+- No backup/restore GUI
+- No database maintenance tools
+- Console window visible (not Windows Service)
+- No log rotation (manual cleanup required)
+
+These limitations are acceptable for v0.3.0 demo/MVP.
+
+================================================================================
+
+This document represents the complete technical architecture of SimpleSight
+v0.3.0. For operational documentation, see the other files in the docs/ folder.
+
+SimpleSight - Lightweight IT Asset Management
+Built with Python, FastAPI, React, and SQLite
+
+================================================================================

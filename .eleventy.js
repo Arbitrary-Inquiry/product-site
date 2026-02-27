@@ -11,7 +11,6 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "src/docs": "docs" });
 
   return {
-    pathPrefix: "/product-site/",
     dir: {
       input: "src",
       output: "_site",

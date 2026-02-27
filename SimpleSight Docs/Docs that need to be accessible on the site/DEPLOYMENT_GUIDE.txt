@@ -1,0 +1,266 @@
+================================================================================
+SimpleSight - Deployment Guide
+================================================================================
+
+This guide walks you through deploying SimpleSight in your environment, from
+server setup to rolling out agents across your fleet.
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+
+1. Pre-Deployment Planning
+2. Server Deployment
+3. Network Configuration
+4. Agent Deployment
+5. Post-Deployment Verification
+6. Scaling and Best Practices
+
+================================================================================
+1. PRE-DEPLOYMENT PLANNING
+================================================================================
+
+BEFORE YOU BEGIN:
+
+* Choose a dedicated server computer (physical or VM)
+  - Windows 10/11 or Windows Server 2016+
+  - Minimum: 4GB RAM, 50GB disk space
+  - Recommended: 8GB RAM, 100GB+ disk space for large deployments
+
+* Decide on a static IP address or hostname for the server
+  - Example: 192.168.1.100 or simplesight.company.local
+  - This MUST be configured before deploying agents
+  - See NETWORK_CONFIGURATION.txt for details
+
+* Determine server accessibility
+  - On-premises only?
+  - Remote access via VPN?
+
+* Plan agent deployment strategy
+  - Manual deployment per-device?
+  - Group Policy deployment? (domain-joined computers)
+  - Remote deployment via RMM tool? (MSPs)
+
+* Backup strategy
+  - Local backup of database file?
+  - Windows Server Backup?
+  - Third-party backup solution?
+
+================================================================================
+2. SERVER DEPLOYMENT
+================================================================================
+
+STEP 1: RUN SERVER INSTALLER
+------------------------------------------------------------
+
+1. Download SimpleSightServerInstaller.exe
+2. Right-click → Run as Administrator
+3. Follow the installation wizard:
+
+   a) Server Hostname
+      - Use the computer's network name OR IP address
+      - Examples: "OFFICE-SERVER", "simplesight", "192.168.1.100"
+      - This goes into the TLS certificate
+
+   b) Certificate Installation
+      - It's recommended to leave "Install certificate to Trusted Root" CHECKED
+      - This allows the browser to trust HTTPS on the local server.
+      - The agent installer will have the generated certificate packaged in.
+
+   c) Server Port
+      - Default: 8000
+      - Use 443 for standard HTTPS (may conflict with IIS/other services)
+      - Firewall rules will need to allow this port
+
+   d) Admin Credentials
+      - Choose a strong password (minimum 8 characters)
+      - This is your web UI login
+      - Secure this password somewhere - password recovery is not yet implemented, a full reinstall would be required if lost.
+
+   e) Database Options
+      - First install: Creates new database
+      - Reinstall: Option to keep existing data in uninstall wizard
+
+4. Wait a few minutes for installation to complete
+   - Server files extracted
+   - Certificate generated and installed
+   - Database initialized
+   - Agent installer built automatically
+   - Scheduled task created
+
+5. Click Finish when complete
+
+
+STEP 2: VERIFY SERVER IS RUNNING
+------------------------------------------------------------
+
+1. Open browser on the server computer
+2. Navigate to: https://localhost:8000 (or your configured port)
+3. You should see the SimpleSight login page
+   - If you see a certificate warning, the cert wasn't installed properly
+   - If you can't connect, check Windows Firewall
+
+4. Login with your admin credentials
+5. You should see the dashboard with 0 devices
+
+
+STEP 3: CONFIGURE WINDOWS FIREWALL
+------------------------------------------------------------
+
+The installer does NOT automatically create firewall rules. You may need to allow
+inbound connections manually:
+
+1. Open Windows Defender Firewall with Advanced Security
+2. Click "Inbound Rules" → "New Rule..."
+3. Rule Type: Port
+4. Protocol: TCP, Specific local port: 8000 (or your port)
+5. Action: Allow the connection
+6. Profile: Domain, Private (optionally Public if needed)
+7. Name: "SimpleSight Server"
+8. Click Finish
+
+Test from another computer:
+- Open browser
+- Navigate to https://YOUR_SERVER_IP:8000
+- You should see login page (may get certificate warning if the agent/cert isn't installed - normal)
+
+
+STEP 4: CONFIGURE STATIC IP (CRITICAL!)
+------------------------------------------------------------
+
+Agents need a consistent address to connect to. Choose one option:
+
+OPTION A: Static IP (Recommended)
+1. Open Network and Sharing Center
+2. Change adapter settings
+3. Right-click network adapter → Properties
+4. Select "Internet Protocol Version 4 (TCP/IPv4)" → Properties
+5. Select "Use the following IP address"
+6. Enter:
+   - IP address: 192.168.1.100 (or your chosen IP)
+   - Subnet mask: 255.255.255.0 (typical)
+   - Default gateway: 192.168.1.1 (your router)
+   - Preferred DNS: your preferred DNS server (such as 8.8.8.8) or your router
+7. Click OK
+
+OR configure DHCP Reservation on your router:
+1. Find router admin interface (usually 192.168.1.1)
+2. Find DHCP settings
+3. Add reservation: MAC address → desired IP address
+4. This ensures the server always gets the same IP
+
+OPTION B: DNS Configuration
+- Configure your domain DNS to point a hostname to the server
+- Example: simplesight.company.local → 192.168.1.100
+- Requires Active Directory or router DNS configuration
+- See NETWORK_CONFIGURATION.txt for details
+
+================================================================================
+3. NETWORK CONFIGURATION
+================================================================================
+
+See NETWORK_CONFIGURATION.txt for detailed DNS and hosts file configuration.
+
+Quick summary:
+- Agents need to resolve your server hostname OR use IP address
+- Static IP is simplest for small deployments
+- Hosts file is acceptable for <50 devices
+- DNS is recommended for 50+ devices
+
+================================================================================
+4. AGENT DEPLOYMENT
+================================================================================
+
+LOCATE THE AGENT INSTALLER
+------------------------------------------------------------
+
+After server installation completes, the agent installer is ready:
+
+Location: C:\Program Files\SimpleSight Server\agent\SimpleSightInstaller.exe
+
+This file is standalone and can be copied to other computers.
+
+
+DEPLOYMENT
+------------------------------------------------------------
+
+1. Copy SimpleSightInstaller.exe to a USB drive or network share
+2. On each target computer:
+   - Copy installer to local computer if on network share
+   - Right-click → Run as Administrator
+   - Follow the wizard:
+     
+     a) Server URL: https://192.168.1.100:8000 (use your server IP/hostname)
+     b) Verify SSL: Unchecked (using self-signed certificate)
+     c) Test Connection - should show green "OK"
+     d) Admin username and password (from server installation)
+     e) Test Credentials - should authenticate successfully
+     f) Check-in interval: 4 hours (default)
+     g) Wait 2 minutes for installation
+
+3. Verify installation:
+   - Check Programs and Features in Control Panel
+   - Refresh web UI - device should appear within 1 minute
+
+DEPLOYMENT VERIFICATION
+------------------------------------------------------------
+
+After deploying agents:
+
+1. Wait 2-5 minutes for initial check-in
+2. Open web UI
+3. Navigate to Devices page
+4. Verify devices appear with "Online" status (last check-in < 6 hours)
+5. Click a device to view inventory details
+
+Expected data collected:
+- System info (OS, version, architecture)
+- Hardware (CPU, RAM, disks, manufacturer, model)
+- Network (IP address, MAC address, adapters)
+- Installed software (all programs from registry)
+- Windows Update status
+
+================================================================================
+5. POST-DEPLOYMENT VERIFICATION
+================================================================================
+
+CHECKLIST:
+------------------------------------------------------------
+
+* Server accessible via HTTPS from all client computers
+* Device inventory data populating correctly
+* Check-ins occurring approx. every 4 hours (or configured interval)
+
+COMMON ISSUES:
+------------------------------------------------------------
+
+See TROUBLESHOOTING.txt for detailed solutions.
+
+Quick checks:
+
+- Agent not appearing?
+  - Check firewall on server
+  - Verify agent can reach server URL (ping/browser test)
+  - Check agent/server logs for errors
+  - Reinstall, make sure IP address/hostname is correct
+
+- Certificate errors?
+  - Use "verify_ssl: false" in agent config (default)
+  - Or distribute certificate to all computers
+  - Or use IP address instead of hostname
+
+- Database errors?
+  - Verify server has write permissions to C:\ProgramData\SimpleSight (server must be running as admin)
+  - Check disk space
+  - Review server logs
+
+================================================================================
+
+For more information, see:
+- NETWORK_CONFIGURATION.txt - DNS and IP address setup
+- TROUBLESHOOTING.txt - Common issues and solutions
+- ARCHITECTURE.txt - Technical details and system design
+
+SimpleSight - Lightweight IT Asset Management
+
+================================================================================
