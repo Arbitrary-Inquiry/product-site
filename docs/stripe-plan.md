@@ -1,298 +1,218 @@
-# Stripe Integration Plan
+# Stripe + Distribution Plan
 
-This document tracks the full launch sequence for accepting payments on ArbInq.
-Work through the phases in order. Each phase is independently shippable.
+This document tracks the full launch sequence for accepting payments on ArbInq
+and delivering SimpleSight automatically.
 
----
-
-## Phase 0 — Payment Links (now)
-
-**Goal:** Accept real payments with zero backend code.
-
-1. Create a Stripe account (if not already done).
-2. In Stripe Dashboard → Products, create a product:
-   - Name: `SimpleSight Device Inventory`
-   - Price: `$20.00` one-time
-3. Create a Payment Link for that price.
-4. Copy the Payment Link URL and paste it into `src/_data/products.yaml`:
-   ```yaml
-   simplesight:
-     buy_href: "https://buy.stripe.com/your-link-id"
-   ```
-5. Rebuild and deploy. Every "Buy Now" button on the site now goes to Stripe.
-
-**What you get:** Real customers can pay immediately. No webhook, no backend, no
-session management. Stripe emails a receipt; you get notified of each sale.
-
-**Limitation:** No custom metadata (UTM source, ICP slug), no discount codes,
-no post-purchase redirect to a download page.
+Work through the phases in order. Phases 1 and 2 are fully implemented in code —
+they just need secrets and infrastructure provisioned.
 
 ---
 
-## Phase 1 — Checkout Sessions (Worker)
+## Phase 0 — Manual Fulfillment (emergency fallback)
 
-**Goal:** Replace the Payment Link with a custom Stripe Checkout Session so you
-control the full purchase flow.
-
-### Steps
-
-1. Set `STRIPE_SECRET_KEY` on the Worker:
-   ```bash
-   cd worker && npx wrangler secret put STRIPE_SECRET_KEY
-   ```
-2. Copy the `stripe_price_id` from your Stripe product and set it in
-   `src/_data/products.yaml`:
-   ```yaml
-   simplesight:
-     stripe_price_id: "price_xxxxxxxxxxxxxxxxxxxxxxxx"
-   ```
-3. Implement `POST /api/checkout` in `worker/src/index.js`:
-   - Accept `{ price_id, success_url, cancel_url, metadata }` in the request body.
-   - Call `stripe.checkout.sessions.create(...)`.
-   - Return `{ url }` — the frontend redirects to it.
-4. Update the "Buy Now" buttons to `POST /api/checkout` instead of a direct link
-   (or keep `buy_href` as a fallback for no-JS environments).
-
-### Enables
-- UTM tracking via `metadata`
-- ICP slug attribution (pass `icp_slug` in metadata)
-- Discount codes / promotion codes
-- Custom success/cancel redirect URLs
+If the automated system is down, you can still sell manually:
+1. Use a Stripe Payment Link from the Dashboard.
+2. After payment, email the customer a download link manually.
 
 ---
 
-## Phase 2 — Webhooks
+## Phase 1 + 2 — Automated Checkout + Delivery (IMPLEMENTED)
 
-**Goal:** Know when a purchase completes so you can fulfill it (send license key,
-grant download access, log the sale).
+The full purchase-to-download flow is coded. These are the one-time provisioning
+steps to activate it.
 
-### Steps
+### 1. Provision Cloudflare D1 (purchase database)
 
-1. Set `STRIPE_WEBHOOK_SECRET` on the Worker:
-   ```bash
-   cd worker && npx wrangler secret put STRIPE_WEBHOOK_SECRET
-   ```
-2. In Stripe Dashboard → Webhooks, register:
-   - URL: `https://arbinq-api.<subdomain>.workers.dev/api/webhooks/stripe`
-   - Events: `checkout.session.completed`
-3. Implement `POST /api/webhooks/stripe` in `worker/src/index.js`:
-   - Verify the Stripe signature using `STRIPE_WEBHOOK_SECRET`.
-   - On `checkout.session.completed`, extract customer email, amount, metadata.
-   - Write a purchase record to Cloudflare D1 (create a `purchases` table).
-   - Trigger fulfillment: email a download link or license key.
-
-### D1 schema (starter)
-
-```sql
-CREATE TABLE purchases (
-  id          TEXT PRIMARY KEY,   -- Stripe session ID
-  email       TEXT NOT NULL,
-  product_id  TEXT NOT NULL,
-  amount      INTEGER NOT NULL,   -- cents
-  icp_slug    TEXT,
-  created_at  TEXT NOT NULL       -- ISO 8601
-);
+```bash
+cd worker
+npx wrangler d1 create arbinq-purchases
 ```
 
-Add D1 binding to `worker/wrangler.toml`:
+Copy the `database_id` from the output into `worker/wrangler.toml`:
 ```toml
 [[d1_databases]]
 binding = "DB"
 database_name = "arbinq-purchases"
-database_id = ""   # fill in after: wrangler d1 create arbinq-purchases
+database_id = "PASTE_ID_HERE"
 ```
 
----
-
-## Phase 2A — Download Distribution
-
-**Goal:** Automatically deliver SimpleSight installer files to customers via email with secure, time-limited download links.
-
-### Architecture
-
-SimpleSight is a self-hosted software product with two installer files:
-- `SimpleSightServerInstaller.exe` (~130MB)
-- `SimpleSightInstaller.exe` (~20-25MB agent)
-
-Files stored in private Cloudflare R2 bucket, delivered via presigned URLs.
-
-### Steps
-
-1. **Create R2 bucket:**
-   ```bash
-   wrangler r2 bucket create arbinq-downloads
-   ```
-
-2. **Upload installers to R2:**
-   - Manually upload files to `simplesight/server/` and `simplesight/agent/` paths
-   - Bucket remains private (no public access)
-
-3. **Create R2 API token:**
-   - Generate in Cloudflare dashboard with read permissions
-   - Set as Worker secrets:
-     ```bash
-     wrangler secret put R2_ACCESS_KEY_ID
-     wrangler secret put R2_SECRET_ACCESS_KEY
-     wrangler secret put R2_ACCOUNT_ID  # Your Cloudflare account ID
-     ```
-
-4. **Set up Resend for email delivery:**
-   - Create account at resend.com (free tier: 3,000 emails/month)
-   - Add and verify sending domain
-   - Configure SPF/DKIM DNS records
-   - Generate API key and set secret:
-     ```bash
-     wrangler secret put RESEND_API_KEY
-     ```
-
-5. **Set admin API key for manual resend:**
-   ```bash
-   openssl rand -hex 32
-   wrangler secret put ADMIN_API_KEY
-   ```
-
-6. **Run D1 migrations:**
-   ```bash
-   wrangler d1 execute arbinq-purchases --file=schema.sql
-   ```
-
-7. **Update wrangler.toml with R2 and D1 bindings** (already done in implementation)
-
-### Database Schema
-
-Extended `purchases` table:
-```sql
-CREATE TABLE purchases (
-  id          TEXT PRIMARY KEY,
-  email       TEXT NOT NULL,
-  product_id  TEXT NOT NULL,
-  amount      INTEGER NOT NULL,
-  icp_slug    TEXT,
-  created_at  TEXT NOT NULL,
-  download_urls_sent_at TEXT      -- NEW: timestamp of email delivery
-);
+Apply the schema:
+```bash
+npx wrangler d1 execute arbinq-purchases --file=schema.sql
 ```
 
-New `downloads` table:
-```sql
-CREATE TABLE downloads (
-  id          TEXT PRIMARY KEY,
-  purchase_id TEXT NOT NULL,
-  file_key    TEXT NOT NULL,      -- "server" or "agent"
-  ip_address  TEXT,
-  user_agent  TEXT,
-  downloaded_at TEXT NOT NULL,
-  FOREIGN KEY (purchase_id) REFERENCES purchases(id)
-);
-```
-
-### Customer Flow
-
-1. Customer completes Stripe checkout
-2. Webhook fires → Worker handles `checkout.session.completed`
-3. Worker stores purchase in D1
-4. Worker sends email via Resend with download links:
-   - `https://arbinq-api.workers.dev/api/download/{purchase_id}/server`
-   - `https://arbinq-api.workers.dev/api/download/{purchase_id}/agent`
-5. Customer clicks link → Worker:
-   - Verifies purchase exists and is within 30-day download window
-   - Logs download event to D1
-   - Generates 15-minute presigned R2 URL
-   - Redirects customer to R2 for direct download
-6. Customer downloads file directly from R2
-
-### Security Model
-
-- Files never publicly accessible (private R2 bucket)
-- Download tracking URLs tied to purchase ID (not guessable)
-- Presigned URLs expire after 15 minutes (regenerated on each click)
-- 30-day download window per purchase
-- All downloads logged with IP/user-agent for abuse detection
-
-### Admin API
-
-To manually resend download links (e.g., customer lost email):
+### 2. Provision Cloudflare R2 (software file storage)
 
 ```bash
-curl -X POST https://arbinq-api.<subdomain>.workers.dev/api/admin/resend-download-links \
-  -H "Authorization: Bearer $ADMIN_API_KEY" \
+npx wrangler r2 bucket create arbinq-software
+```
+
+Upload the SimpleSight zip:
+```bash
+npx wrangler r2 object put arbinq-software/simplesight/simplesight-latest.zip \
+  --file=/path/to/simplesight-latest.zip
+```
+
+**To update the software file**, just re-upload with the same key. All future
+download links automatically point to the new file.
+
+### 3. Create the Stripe product and price
+
+In Stripe Dashboard → Products:
+- Name: `SimpleSight Device Inventory`
+- Price: `$20.00` one-time
+- Copy the **Price ID** (`price_...`)
+
+### 4. Set Worker secrets
+
+```bash
+cd worker
+
+# Stripe
+npx wrangler secret put STRIPE_SECRET_KEY          # sk_live_...
+npx wrangler secret put STRIPE_WEBHOOK_SECRET      # whsec_... (set after step 5)
+npx wrangler secret put SIMPLESIGHT_PRICE_ID       # price_...
+
+# Fastmail
+npx wrangler secret put FASTMAIL_API_TOKEN         # from fastmail.com → Settings → Privacy & Security → API tokens
+npx wrangler secret put FASTMAIL_ACCOUNT_ID        # see below
+npx wrangler secret put FASTMAIL_SENT_MAILBOX_ID   # see below
+npx wrangler secret put FASTMAIL_FROM_EMAIL        # e.g. sales@arbinquiry.com
+
+# Site config
+npx wrangler secret put SITE_URL                   # https://arbinquiry.com
+npx wrangler secret put WORKER_URL                 # https://arbinq-api.<account>.workers.dev
+```
+
+**Getting FASTMAIL_ACCOUNT_ID:**
+```bash
+TOKEN="your_fastmail_api_token"
+curl -s -H "Authorization: Bearer $TOKEN" https://api.fastmail.com/jmap/session \
+  | jq -r '.primaryAccounts["urn:ietf:params:jmap:mail"]'
+```
+
+**Getting FASTMAIL_SENT_MAILBOX_ID:**
+```bash
+ACCOUNT_ID="u..."   # from above
+curl -s -X POST https://api.fastmail.com/jmap/api/ \
+  -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"purchase_id": "cs_live_..."}'
+  -d "{
+    \"using\": [\"urn:ietf:params:jmap:core\",\"urn:ietf:params:jmap:mail\"],
+    \"methodCalls\": [[\"Mailbox/get\",{\"accountId\":\"$ACCOUNT_ID\",\"ids\":null},\"m1\"]]
+  }" | jq -r '.methodResponses[0][1].list[] | select(.role=="sent") | .id'
 ```
 
-### Cost Analysis
+### 5. Deploy the Worker
 
-Monthly operating costs (100 purchases/month):
-- R2 storage: ~150MB = $0.01
-- R2 operations: ~300 downloads = free (under 10M class B ops)
-- Workers requests: ~300 = free (under 100k req)
-- D1 reads/writes: ~600 = free (under 5M rows)
-- Resend emails: 100 = free (under 3k/month)
-
-**Total: ~$0.01/month** (effectively free)
-
-Paid tier needed at 3,000+ purchases/month (Resend $20/month). At that scale, monthly revenue = $60,000.
-
----
-
-## Phase 3 — User Accounts
-
-**Goal:** Let customers log in, view their purchases, and manage licenses without
-emailing you.
-
-### Recommended approach: Clerk
-
-1. Add Clerk to the frontend for authentication (email + social login).
-2. On first purchase (`checkout.session.completed`), look up or create the Clerk
-   user by email, then store `clerk_user_id` in the `purchases` table.
-3. Add a `/dashboard` page (protected route) where users can:
-   - See purchased products and download links.
-   - Access the Stripe Customer Portal for receipts/invoices.
-
-### Stripe Customer Portal
-
-```js
-// In Worker: POST /api/portal
-const session = await stripe.billingPortal.sessions.create({
-  customer: stripeCustomerId,
-  return_url: "https://arbinquiry.com/dashboard",
-});
-return jsonResponse({ url: session.url });
-```
-
----
-
-## Environment Variables
-
-| Variable                  | Phase | Description                                  |
-|---------------------------|-------|----------------------------------------------|
-| `GITHUB_CLIENT_ID`        | Now   | GitHub OAuth app client ID (Decap CMS)       |
-| `GITHUB_CLIENT_SECRET`    | Now   | GitHub OAuth app client secret (Decap CMS)   |
-| `STRIPE_SECRET_KEY`       | 1     | Stripe secret key (`sk_live_...`)            |
-| `STRIPE_WEBHOOK_SECRET`   | 2     | Stripe webhook signing secret (`whsec_...`)  |
-| `R2_ACCESS_KEY_ID`        | 2A    | R2 API token for presigned URL generation    |
-| `R2_SECRET_ACCESS_KEY`    | 2A    | R2 API secret for presigned URL generation   |
-| `R2_ACCOUNT_ID`           | 2A    | Cloudflare account ID for R2 endpoint        |
-| `RESEND_API_KEY`          | 2A    | Resend.com API key for sending emails        |
-| `ADMIN_API_KEY`           | 2A    | Secret key for manual download link resend   |
-| `CLERK_SECRET_KEY`        | 3     | Clerk backend API key                        |
-
-All set via:
 ```bash
-cd worker && npx wrangler secret put VARIABLE_NAME
+cd worker
+npx wrangler deploy
 ```
+
+### 6. Register the Stripe webhook
+
+In Stripe Dashboard → Webhooks → Add endpoint:
+- URL: `https://arbinq-api.<account>.workers.dev/api/webhooks/stripe`
+- Events: `checkout.session.completed`
+
+Copy the **Signing Secret** (`whsec_...`) and set it:
+```bash
+npx wrangler secret put STRIPE_WEBHOOK_SECRET
+```
+
+### 7. Update the site API URL
+
+In `src/js/config.js`, replace the placeholder:
+```js
+window.ARBINQ_CONFIG = {
+  apiBase: "https://arbinq-api.<account>.workers.dev",
+};
+```
+
+Rebuild and deploy the site.
+
+### 8. Test end-to-end in test mode
+
+1. Set `STRIPE_SECRET_KEY` to your `sk_test_...` key first.
+2. Use a Stripe test card (4242 4242 4242 4242) on the site.
+3. Confirm: webhook fires → purchase row in D1 → email received → download works.
+4. Swap to `sk_live_...` and the live price ID when confirmed.
+
+---
+
+## Purchase + Customer Database Schema
+
+```sql
+-- customers: one row per unique buyer, keyed on SHA-256(lower(email)).
+-- When an account system is added, match users to existing purchases by hashing
+-- their login email and looking up customers.email_hash.
+customers (email_hash PK, created_at)
+
+-- purchases: one row per Stripe Checkout Session completed.
+purchases (id PK, customer_hash FK, email, product_id, amount, icp_slug, created_at)
+
+-- download_tokens: UUID-based download links, 72hr expiry, 5 download cap.
+download_tokens (token PK, purchase_id FK, product_id, email, expires_at, download_count, max_downloads)
+```
+
+---
+
+## Phase 3 — User Accounts (future)
+
+When an account system is added (Clerk recommended):
+
+1. At registration/login, compute `SHA-256(lower(user.email))`.
+2. Look up `customers.email_hash` — if found, link existing purchases to the new account.
+3. Add `clerk_user_id TEXT` column to `customers` and set it at link time.
+4. Build a `/dashboard` page showing past purchases and re-download options.
+
+Customers who bought before accounts existed are automatically grandfathered in.
+
+---
+
+## Worker API Routes
+
+| Method | Path                    | Description                                      |
+|--------|-------------------------|--------------------------------------------------|
+| POST   | /api/checkout           | Create Stripe Checkout Session, return URL       |
+| POST   | /api/webhooks/stripe    | Handle payment events, send delivery email       |
+| GET    | /api/download?token=... | Validate token, stream file from R2              |
+| GET    | /api/health             | Health check                                     |
+| GET    | /auth                   | GitHub OAuth for Decap CMS                       |
+| GET    | /callback               | GitHub OAuth callback                            |
+
+---
+
+## Environment Variables Reference
+
+| Variable                  | Set via         | Description                                       |
+|---------------------------|-----------------|---------------------------------------------------|
+| `GITHUB_CLIENT_ID`        | wrangler secret | GitHub OAuth app client ID (Decap CMS)            |
+| `GITHUB_CLIENT_SECRET`    | wrangler secret | GitHub OAuth app client secret (Decap CMS)        |
+| `STRIPE_SECRET_KEY`       | wrangler secret | `sk_live_...` (or `sk_test_...`)                  |
+| `STRIPE_WEBHOOK_SECRET`   | wrangler secret | `whsec_...` from Stripe → Webhooks                |
+| `SIMPLESIGHT_PRICE_ID`    | wrangler secret | `price_...` from Stripe → Products                |
+| `FASTMAIL_API_TOKEN`      | wrangler secret | Fastmail API token                                |
+| `FASTMAIL_ACCOUNT_ID`     | wrangler secret | JMAP account ID (see setup steps)                 |
+| `FASTMAIL_SENT_MAILBOX_ID`| wrangler secret | JMAP mailbox ID for Sent folder                   |
+| `FASTMAIL_FROM_EMAIL`     | wrangler secret | From address for delivery emails                  |
+| `SITE_URL`                | wrangler secret | `https://arbinquiry.com`                          |
+| `WORKER_URL`              | wrangler secret | Worker public URL (used in download links)        |
+| `DB`                      | wrangler.toml   | D1 database binding                               |
+| `SOFTWARE`                | wrangler.toml   | R2 bucket binding                                 |
 
 ---
 
 ## Go-Live Checklist
 
-- [ ] Stripe account created and verified
-- [ ] Business name and bank account added to Stripe
-- [ ] Test mode purchases confirmed end-to-end
-- [ ] Swap `sk_test_...` → `sk_live_...` in Worker secrets
-- [ ] Swap Stripe Payment Link / price ID to live mode equivalent
-- [ ] Webhook registered in live mode dashboard
-- [ ] Domain verified in Stripe (for Payment Links branding)
-- [ ] `buy_href` in `products.yaml` updated to live Stripe URL
-- [ ] Smoke test a real $1 purchase (then refund)
-- [ ] Confirmation email / fulfillment tested
+- [ ] D1 database created and schema applied
+- [ ] R2 bucket created and SimpleSight zip uploaded
+- [ ] Stripe account verified with bank account
+- [ ] Stripe product + price created
+- [ ] Worker deployed with all secrets set
+- [ ] Stripe webhook registered (live mode)
+- [ ] End-to-end test with test card confirmed
+- [ ] Secrets swapped from test → live mode
+- [ ] `apiBase` in `src/js/config.js` updated and site redeployed
+- [ ] Real $1 smoke test purchase (then refund)

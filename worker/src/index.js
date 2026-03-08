@@ -1,7 +1,5 @@
 // ArbInq API Worker
-// Routes: GitHub OAuth (Decap CMS), Stripe webhooks, SimpleSight downloads
-
-import { AwsClient } from 'aws4fetch';
+// Routes: GitHub OAuth (Decap CMS), Stripe Checkout, Stripe Webhook, Software Download
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -9,31 +7,20 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
-// File configuration for SimpleSight installers
-const DOWNLOAD_FILES = {
-  server: {
-    path: "simplesight/server/SimpleSightServerInstaller.exe",
-    description: "SimpleSight Server Installer",
-    size_mb: "~130MB",
-  },
-  agent: {
-    path: "simplesight/agent/SimpleSightInstaller.exe",
-    description: "SimpleSight Agent Installer",
-    size_mb: "~20-25MB",
+// Product registry — maps product_id to R2 key and display info
+const PRODUCTS = {
+  simplesight: {
+    name: "SimpleSight Device Inventory",
+    file: "simplesight/SimpleSightServerInstaller.exe",
+    filename: "SimpleSightServerInstaller.exe",
   },
 };
 
-const DOWNLOAD_WINDOW_DAYS = 30;
-
-// ============================================================================
-// Utility Functions
-// ============================================================================
+// --- Helpers ---
 
 function corsResponse(body, init = {}) {
   const res = new Response(body, init);
-  for (const [k, v] of Object.entries(CORS_HEADERS)) {
-    res.headers.set(k, v);
-  }
+  for (const [k, v] of Object.entries(CORS_HEADERS)) res.headers.set(k, v);
   return res;
 }
 
@@ -44,351 +31,133 @@ function jsonResponse(data, status = 200) {
   });
 }
 
-function generateUUID() {
-  return crypto.randomUUID();
+// Stripe REST API helper — no npm package, just fetch
+async function stripeRequest(env, method, path, params = null) {
+  const res = await fetch(`https://api.stripe.com/v1${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${env.STRIPE_SECRET_KEY}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: params ? new URLSearchParams(params).toString() : undefined,
+  });
+  return res.json();
 }
 
-function getCurrentTimestamp() {
-  return new Date().toISOString();
-}
-
-// ============================================================================
-// Stripe Webhook Verification
-// ============================================================================
-
-async function verifyStripeSignature(request, secret) {
-  const payload = await request.text();
-  const signature = request.headers.get("stripe-signature");
-
-  if (!signature) {
-    return { valid: false, error: "Missing signature" };
-  }
-
-  const parts = signature.split(",").reduce((acc, part) => {
-    const [key, value] = part.split("=");
-    acc[key] = value;
-    return acc;
-  }, {});
-
+// Stripe webhook signature verification using Web Crypto (no SDK needed)
+async function verifyStripeSignature(payload, sigHeader, secret) {
+  const parts = Object.fromEntries(sigHeader.split(",").map(p => p.split("=")));
   const timestamp = parts.t;
-  const signatures = [parts.v1]; // Stripe uses v1 scheme
+  const sig = parts.v1;
+  if (!timestamp || !sig) return false;
 
-  if (!timestamp) {
-    return { valid: false, error: "Missing timestamp" };
-  }
+  // Reject webhooks older than 5 minutes
+  if (Math.abs(Date.now() / 1000 - Number(timestamp)) > 300) return false;
 
-  // Check timestamp is recent (5 minutes tolerance)
-  const currentTime = Math.floor(Date.now() / 1000);
-  if (Math.abs(currentTime - parseInt(timestamp)) > 300) {
-    return { valid: false, error: "Timestamp too old" };
-  }
-
-  // Compute expected signature
-  const signedPayload = `${timestamp}.${payload}`;
-  const encoder = new TextEncoder();
   const key = await crypto.subtle.importKey(
     "raw",
-    encoder.encode(secret),
+    new TextEncoder().encode(secret),
     { name: "HMAC", hash: "SHA-256" },
     false,
     ["sign"]
   );
-  const signature_bytes = await crypto.subtle.sign(
+  const signature = await crypto.subtle.sign(
     "HMAC",
     key,
-    encoder.encode(signedPayload)
+    new TextEncoder().encode(`${timestamp}.${payload}`)
   );
-  const expectedSignature = Array.from(new Uint8Array(signature_bytes))
-    .map((b) => b.toString(16).padStart(2, "0"))
+  const expected = Array.from(new Uint8Array(signature))
+    .map(b => b.toString(16).padStart(2, "0"))
     .join("");
-
-  // Compare signatures
-  if (!signatures.includes(expectedSignature)) {
-    return { valid: false, error: "Signature mismatch" };
-  }
-
-  return { valid: true, payload: JSON.parse(payload) };
+  return expected === sig;
 }
 
-// ============================================================================
-// Email Delivery (Resend API)
-// ============================================================================
-
-async function sendDownloadEmail(email, purchaseId, originUrl, env) {
-  const downloadBaseUrl = `${originUrl}/api/download/${purchaseId}`;
-
-  const emailBody = `Thanks for your purchase! Download your SimpleSight installers below:
-
-SERVER INSTALLER (~130MB)
-${downloadBaseUrl}/server
-
-AGENT INSTALLER (~20-25MB)
-${downloadBaseUrl}/agent
-
-DOCUMENTATION
-- README: https://arbinquiry.com/docs/README.txt
-- Deployment Guide: https://arbinquiry.com/docs/DEPLOYMENT_GUIDE.txt
-- Network Configuration: https://arbinquiry.com/docs/NETWORK_CONFIGURATION.txt
-- Troubleshooting: https://arbinquiry.com/docs/TROUBLESHOOTING.txt
-
-These links will work for ${DOWNLOAD_WINDOW_DAYS} days. Need new links?
-Email support@arbinquiry.com with your purchase confirmation.
-
-- The ArbInq Team`;
-
-  const response = await fetch("https://api.resend.com/emails", {
+// Send email via Fastmail JMAP API
+// Requires env: FASTMAIL_API_TOKEN, FASTMAIL_ACCOUNT_ID, FASTMAIL_SENT_MAILBOX_ID, FASTMAIL_FROM_EMAIL
+async function sendEmail(env, { to, subject, text }) {
+  const res = await fetch("https://api.fastmail.com/jmap/api/", {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+      Authorization: `Bearer ${env.FASTMAIL_API_TOKEN}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "ArbInq <no-reply@arbinquiry.com>",
-      to: email,
-      subject: "Your SimpleSight Download Links",
-      text: emailBody,
+      using: [
+        "urn:ietf:params:jmap:core",
+        "urn:ietf:params:jmap:mail",
+        "urn:ietf:params:jmap:submission",
+      ],
+      methodCalls: [
+        ["Email/set", {
+          accountId: env.FASTMAIL_ACCOUNT_ID,
+          create: {
+            e1: {
+              mailboxIds: { [env.FASTMAIL_SENT_MAILBOX_ID]: true },
+              from: [{ email: env.FASTMAIL_FROM_EMAIL, name: "ArbInq" }],
+              to: [{ email: to }],
+              subject,
+              bodyValues: { body: { value: text, charset: "utf-8" } },
+              textBody: [{ partId: "body", type: "text/plain" }],
+            },
+          },
+        }, "m1"],
+        ["EmailSubmission/set", {
+          accountId: env.FASTMAIL_ACCOUNT_ID,
+          create: {
+            s1: { emailId: "#e1" },
+          },
+        }, "m2"],
+      ],
     }),
   });
 
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Resend API error: ${error}`);
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Fastmail JMAP error ${res.status}: ${body}`);
   }
-
-  return await response.json();
+  return res.json();
 }
 
-// ============================================================================
-// R2 Presigned URL Generation
-// ============================================================================
-
-async function generatePresignedUrl(fileKey, expireSeconds, env) {
-  // R2 endpoint format: https://<account_id>.r2.cloudflarestorage.com
-  // We need to construct this from the bucket binding
-  const accountId = env.R2_ACCOUNT_ID || "your-account-id"; // Set this as env var
-  const bucketName = "arbinq-downloads";
-  const endpoint = `https://${accountId}.r2.cloudflarestorage.com`;
-
-  const client = new AwsClient({
-    accessKeyId: env.R2_ACCESS_KEY_ID,
-    secretAccessKey: env.R2_SECRET_ACCESS_KEY,
-    service: "s3",
-    region: "auto",
-  });
-
-  const url = new URL(`${endpoint}/${bucketName}/${fileKey}`);
-  url.searchParams.set("X-Amz-Expires", expireSeconds.toString());
-
-  const signed = await client.sign(url.toString(), {
-    method: "GET",
-    aws: { signQuery: true },
-  });
-
-  return signed.url;
+// SHA-256 hex of lower-cased email — stable key for future account linking
+async function hashEmail(email) {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(email.trim().toLowerCase())
+  );
+  return Array.from(new Uint8Array(digest))
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
-// ============================================================================
-// Database Operations
-// ============================================================================
+function buildDeliveryEmail(productName, downloadUrl) {
+  return `Thank you for purchasing ${productName}!
 
-async function storePurchase(sessionId, email, productId, amount, icpSlug, env) {
-  await env.DB.prepare(
-    `INSERT INTO purchases (id, email, product_id, amount, icp_slug, created_at)
-     VALUES (?, ?, ?, ?, ?, ?)`
-  )
-    .bind(sessionId, email, productId, amount, icpSlug, getCurrentTimestamp())
-    .run();
+Your download link is ready:
+
+  ${downloadUrl}
+
+This link is valid for 72 hours and allows up to 5 downloads. Save the file
+somewhere safe — you own it forever.
+
+If you have any trouble, reply to this email or reach us at andrew@arbinquiry.com.
+
+— The ArbInq Team`;
 }
 
-async function markDownloadEmailSent(purchaseId, env) {
-  await env.DB.prepare(
-    `UPDATE purchases SET download_urls_sent_at = ? WHERE id = ?`
-  )
-    .bind(getCurrentTimestamp(), purchaseId)
-    .run();
-}
-
-async function getPurchase(purchaseId, env) {
-  const result = await env.DB.prepare(
-    `SELECT * FROM purchases WHERE id = ?`
-  )
-    .bind(purchaseId)
-    .first();
-
-  return result;
-}
-
-async function logDownload(purchaseId, fileKey, request, env) {
-  const ip = request.headers.get("cf-connecting-ip") || "unknown";
-  const userAgent = request.headers.get("user-agent") || "unknown";
-
-  await env.DB.prepare(
-    `INSERT INTO downloads (id, purchase_id, file_key, ip_address, user_agent, downloaded_at)
-     VALUES (?, ?, ?, ?, ?, ?)`
-  )
-    .bind(generateUUID(), purchaseId, fileKey, ip, userAgent, getCurrentTimestamp())
-    .run();
-}
-
-// ============================================================================
-// Route Handlers
-// ============================================================================
-
-async function handleStripeWebhook(request, env) {
-  // Verify webhook signature
-  const verification = await verifyStripeSignature(request, env.STRIPE_WEBHOOK_SECRET);
-
-  if (!verification.valid) {
-    console.error("Webhook signature verification failed:", verification.error);
-    return jsonResponse({ error: verification.error }, 400);
-  }
-
-  const event = verification.payload;
-
-  // Handle checkout.session.completed event
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-
-    try {
-      // Extract purchase details
-      const purchaseId = session.id;
-      const email = session.customer_details?.email || session.customer_email;
-      const amount = session.amount_total;
-      const productId = session.metadata?.product_id || "simplesight";
-      const icpSlug = session.metadata?.icp_slug || null;
-
-      if (!email) {
-        throw new Error("No email found in checkout session");
-      }
-
-      // Store purchase in D1
-      await storePurchase(purchaseId, email, productId, amount, icpSlug, env);
-
-      // Send download email
-      const originUrl = new URL(request.url).origin;
-      await sendDownloadEmail(email, purchaseId, originUrl, env);
-
-      // Mark email as sent
-      await markDownloadEmailSent(purchaseId, env);
-
-      console.log(`Purchase ${purchaseId} processed, email sent to ${email}`);
-
-      return jsonResponse({ received: true, purchase_id: purchaseId });
-    } catch (error) {
-      console.error("Error processing webhook:", error);
-      return jsonResponse({ error: error.message }, 500);
-    }
-  }
-
-  // Acknowledge other event types
-  return jsonResponse({ received: true });
-}
-
-async function handleDownloadRequest(request, env, purchaseId, fileType) {
-  // Validate file type
-  if (!DOWNLOAD_FILES[fileType]) {
-    return jsonResponse({ error: "Invalid file type" }, 400);
-  }
-
-  try {
-    // Get purchase record
-    const purchase = await getPurchase(purchaseId, env);
-
-    if (!purchase) {
-      return jsonResponse({ error: "Purchase not found" }, 404);
-    }
-
-    // Check if download window has expired
-    if (purchase.download_urls_sent_at) {
-      const sentDate = new Date(purchase.download_urls_sent_at);
-      const expiryDate = new Date(sentDate);
-      expiryDate.setDate(expiryDate.getDate() + DOWNLOAD_WINDOW_DAYS);
-
-      if (new Date() > expiryDate) {
-        return jsonResponse({
-          error: "Download window expired",
-          message: "Please contact support@arbinquiry.com for new download links"
-        }, 410);
-      }
-    }
-
-    // Log download event
-    await logDownload(purchaseId, fileType, request, env);
-
-    // Generate presigned URL (15 minute expiry)
-    const fileConfig = DOWNLOAD_FILES[fileType];
-    const presignedUrl = await generatePresignedUrl(fileConfig.path, 900, env);
-
-    // Redirect to R2 presigned URL
-    return Response.redirect(presignedUrl, 302);
-  } catch (error) {
-    console.error("Error handling download:", error);
-    return jsonResponse({ error: "Internal server error" }, 500);
-  }
-}
-
-async function handleAdminResendLinks(request, env) {
-  // Verify admin API key
-  const authHeader = request.headers.get("Authorization");
-  const expectedAuth = `Bearer ${env.ADMIN_API_KEY}`;
-
-  if (!authHeader || authHeader !== expectedAuth) {
-    return jsonResponse({ error: "Unauthorized" }, 401);
-  }
-
-  try {
-    const body = await request.json();
-    const { purchase_id } = body;
-
-    if (!purchase_id) {
-      return jsonResponse({ error: "Missing purchase_id" }, 400);
-    }
-
-    // Verify purchase exists
-    const purchase = await getPurchase(purchase_id, env);
-
-    if (!purchase) {
-      return jsonResponse({ error: "Purchase not found" }, 404);
-    }
-
-    // Send new download email
-    const originUrl = new URL(request.url).origin;
-    await sendDownloadEmail(purchase.email, purchase_id, originUrl, env);
-
-    // Update timestamp
-    await markDownloadEmailSent(purchase_id, env);
-
-    console.log(`Download links resent for purchase ${purchase_id} to ${purchase.email}`);
-
-    return jsonResponse({
-      success: true,
-      purchase_id,
-      email: purchase.email,
-      sent_at: getCurrentTimestamp()
-    });
-  } catch (error) {
-    console.error("Error resending links:", error);
-    return jsonResponse({ error: error.message }, 500);
-  }
-}
-
-// ============================================================================
-// Main Request Handler
-// ============================================================================
+// --- Main handler ---
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    const { method, pathname } = { method: request.method, pathname: url.pathname };
+    const { method } = request;
+    const { pathname } = url;
 
-    // CORS preflight
     if (method === "OPTIONS") {
       return new Response(null, { status: 204, headers: CORS_HEADERS });
     }
 
     // --- GitHub OAuth (Decap CMS) ---
 
-    // GET /auth — start OAuth flow
     if (method === "GET" && pathname === "/auth") {
       const params = new URLSearchParams({
         client_id: env.GITHUB_CLIENT_ID,
@@ -401,7 +170,6 @@ export default {
       );
     }
 
-    // GET /callback — exchange code for token, hand off to Decap CMS
     if (method === "GET" && pathname === "/callback") {
       const code = url.searchParams.get("code");
       if (!code) {
@@ -457,33 +225,179 @@ export default {
 
     // --- API routes ---
 
-    // GET /api/health
     if (method === "GET" && pathname === "/api/health") {
       return jsonResponse({ status: "ok" });
     }
 
-    // POST /api/checkout
+    // POST /api/checkout — create a Stripe Checkout Session and return its URL
     if (method === "POST" && pathname === "/api/checkout") {
-      // TODO: Stripe checkout — create a Checkout Session and return the URL
-      // Needs: STRIPE_SECRET_KEY env var, stripe_price_id from products.yaml
-      return jsonResponse({ error: "Not implemented" }, 501);
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return jsonResponse({ error: "Invalid JSON" }, 400);
+      }
+
+      const { product_id = "simplesight", icp_slug = "" } = body;
+
+      const product = PRODUCTS[product_id];
+      if (!product) return jsonResponse({ error: "Unknown product" }, 400);
+
+      // Price ID is stored as an env secret, e.g. SIMPLESIGHT_PRICE_ID
+      const priceId = env[`${product_id.toUpperCase()}_PRICE_ID`];
+      if (!priceId) {
+        return jsonResponse({ error: "Product not yet configured for purchase" }, 503);
+      }
+
+      const siteUrl = env.SITE_URL || "https://arbinquiry.com";
+
+      const session = await stripeRequest(env, "POST", "/checkout/sessions", {
+        "line_items[0][price]": priceId,
+        "line_items[0][quantity]": "1",
+        mode: "payment",
+        success_url: `${siteUrl}/products/device-inventory/success/`,
+        cancel_url: `${siteUrl}/products/device-inventory/`,
+        customer_creation: "always",
+        "metadata[product_id]": product_id,
+        "metadata[icp_slug]": icp_slug,
+      });
+
+      if (session.error) {
+        console.error("Stripe error:", session.error);
+        return jsonResponse({ error: session.error.message }, 502);
+      }
+
+      return jsonResponse({ url: session.url });
     }
 
-    // POST /api/webhooks/stripe
+    // POST /api/webhooks/stripe — verify signature, store purchase, email download link
     if (method === "POST" && pathname === "/api/webhooks/stripe") {
-      return handleStripeWebhook(request, env);
+      const payload = await request.text();
+      const sig = request.headers.get("stripe-signature");
+
+      if (!sig || !env.STRIPE_WEBHOOK_SECRET) {
+        return jsonResponse({ error: "Missing signature" }, 400);
+      }
+
+      const valid = await verifyStripeSignature(payload, sig, env.STRIPE_WEBHOOK_SECRET);
+      if (!valid) {
+        return jsonResponse({ error: "Invalid signature" }, 401);
+      }
+
+      const event = JSON.parse(payload);
+
+      if (event.type === "checkout.session.completed") {
+        const session = event.data.object;
+        const email = session.customer_details?.email;
+        const productId = session.metadata?.product_id || "simplesight";
+        const icpSlug = session.metadata?.icp_slug || null;
+        const amount = session.amount_total;
+
+        if (!email) {
+          console.error("checkout.session.completed missing email, session:", session.id);
+          return jsonResponse({ received: true });
+        }
+
+        const customerHash = await hashEmail(email);
+        const now = new Date().toISOString();
+
+        // Upsert customer record — grandfathers this buyer into a future account system.
+        // The email_hash is a stable, account-system-agnostic identity key.
+        await env.DB.prepare(
+          `INSERT OR IGNORE INTO customers (email_hash, created_at) VALUES (?, ?)`
+        ).bind(customerHash, now).run();
+
+        // Record the purchase (idempotent — session ID is the primary key)
+        await env.DB.prepare(
+          `INSERT OR IGNORE INTO purchases (id, customer_hash, email, product_id, amount, icp_slug, created_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?)`
+        ).bind(session.id, customerHash, email, productId, amount, icpSlug, now).run();
+
+        // Generate a unique download token valid for 72 hours
+        const token = crypto.randomUUID();
+        const expiresAt = new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString();
+
+        await env.DB.prepare(
+          `INSERT INTO download_tokens (token, purchase_id, product_id, email, expires_at, download_count, max_downloads)
+           VALUES (?, ?, ?, ?, ?, 0, 5)`
+        ).bind(token, session.id, productId, email, expiresAt).run();
+
+        // Build the download URL (points to this worker)
+        const workerUrl = env.WORKER_URL || url.origin;
+        const downloadUrl = `${workerUrl}/api/download?token=${token}`;
+
+        const product = PRODUCTS[productId];
+        try {
+          await sendEmail(env, {
+            to: email,
+            subject: `Your ${product?.name || productId} download is ready`,
+            text: buildDeliveryEmail(product?.name || productId, downloadUrl),
+          });
+        } catch (err) {
+          // Log but don't return a non-2xx — Stripe retries on failure, which
+          // would create duplicate tokens. Email failures need manual follow-up.
+          console.error("Failed to send delivery email:", err.message);
+        }
+      }
+
+      return jsonResponse({ received: true });
     }
 
-    // GET /api/download/:purchase_id/:file_type
-    const downloadMatch = pathname.match(/^\/api\/download\/([^/]+)\/([^/]+)$/);
-    if (method === "GET" && downloadMatch) {
-      const [, purchaseId, fileType] = downloadMatch;
-      return handleDownloadRequest(request, env, purchaseId, fileType);
-    }
+    // GET /api/download?token=UUID — validate token and stream software from R2
+    if (method === "GET" && pathname === "/api/download") {
+      const token = url.searchParams.get("token");
+      if (!token) {
+        return corsResponse("Missing token parameter", { status: 400 });
+      }
 
-    // POST /api/admin/resend-download-links
-    if (method === "POST" && pathname === "/api/admin/resend-download-links") {
-      return handleAdminResendLinks(request, env);
+      const row = await env.DB.prepare(
+        "SELECT * FROM download_tokens WHERE token = ?"
+      ).bind(token).first();
+
+      if (!row) {
+        return corsResponse("Download link not found. It may have already been used up or never existed.", { status: 404 });
+      }
+
+      if (new Date(row.expires_at) < new Date()) {
+        return corsResponse(
+          "This download link has expired (72-hour window). Contact andrew@arbinquiry.com with your order email and we'll send a new one.",
+          { status: 410 }
+        );
+      }
+
+      if (row.download_count >= row.max_downloads) {
+        return corsResponse(
+          "Download limit reached (5 downloads). Contact andrew@arbinquiry.com if you need additional downloads.",
+          { status: 410 }
+        );
+      }
+
+      const product = PRODUCTS[row.product_id];
+      if (!product) {
+        return corsResponse("Unknown product", { status: 400 });
+      }
+
+      // Increment download counter before serving — prevents race-condition overuse
+      await env.DB.prepare(
+        "UPDATE download_tokens SET download_count = download_count + 1 WHERE token = ?"
+      ).bind(token).run();
+
+      const object = await env.SOFTWARE.get(product.file);
+      if (!object) {
+        return corsResponse(
+          "File temporarily unavailable. Contact andrew@arbinquiry.com and we'll get it to you right away.",
+          { status: 503 }
+        );
+      }
+
+      return new Response(object.body, {
+        headers: {
+          "Content-Type": "application/octet-stream",
+          "Content-Disposition": `attachment; filename="${product.filename}"`,
+          "Content-Length": object.size?.toString() ?? "",
+          "Cache-Control": "no-store",
+        },
+      });
     }
 
     return corsResponse("Not found", { status: 404 });

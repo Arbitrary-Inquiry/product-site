@@ -14,3 +14,5 @@ src/blog/posts/the-real-cost-of-vibe-coded-code.md
 
 # Local tooling
 .claude/
+worker/set-secrets.sh
+worker/.wrangler/
