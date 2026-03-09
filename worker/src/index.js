@@ -73,7 +73,7 @@ async function verifyStripeSignature(payload, sigHeader, secret) {
 }
 
 // Send email via Fastmail JMAP API
-// Requires env: FASTMAIL_API_TOKEN, FASTMAIL_ACCOUNT_ID, FASTMAIL_SENT_MAILBOX_ID, FASTMAIL_FROM_EMAIL
+// Requires env: FASTMAIL_API_TOKEN, FASTMAIL_ACCOUNT_ID, FASTMAIL_SENT_MAILBOX_ID, FASTMAIL_FROM_EMAIL, FASTMAIL_IDENTITY_ID
 async function sendEmail(env, { to, subject, text }) {
   const res = await fetch("https://api.fastmail.com/jmap/api/", {
     method: "POST",
@@ -104,7 +104,7 @@ async function sendEmail(env, { to, subject, text }) {
         ["EmailSubmission/set", {
           accountId: env.FASTMAIL_ACCOUNT_ID,
           create: {
-            s1: { emailId: "#e1" },
+            s1: { emailId: "#e1", identityId: env.FASTMAIL_IDENTITY_ID },
           },
         }, "m2"],
       ],
@@ -255,8 +255,8 @@ export default {
         "line_items[0][price]": priceId,
         "line_items[0][quantity]": "1",
         mode: "payment",
-        success_url: `${siteUrl}/products/device-inventory/success/`,
-        cancel_url: `${siteUrl}/products/device-inventory/`,
+        success_url: `${siteUrl}/products/simplesight/success/`,
+        cancel_url: `${siteUrl}/products/simplesight/`,
         customer_creation: "always",
         "metadata[product_id]": product_id,
         "metadata[icp_slug]": icp_slug,
@@ -312,6 +312,12 @@ export default {
           `INSERT OR IGNORE INTO purchases (id, customer_hash, email, product_id, amount, icp_slug, created_at)
            VALUES (?, ?, ?, ?, ?, ?, ?)`
         ).bind(session.id, customerHash, email, productId, amount, icpSlug, now).run();
+
+        // Skip if already fulfilled — makes the handler idempotent against Stripe retries
+        const existing = await env.DB.prepare(
+          "SELECT token FROM download_tokens WHERE purchase_id = ? LIMIT 1"
+        ).bind(session.id).first();
+        if (existing) return jsonResponse({ received: true });
 
         // Generate a unique download token valid for 72 hours
         const token = crypto.randomUUID();

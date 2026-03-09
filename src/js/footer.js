@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="footer-col">
                     <h4>Products</h4>
                     <ul>
-                        <li><a data-link="products/device-inventory">Device Inventory</a></li>
+                        <li><a data-link="products/simplesight">Device Inventory</a></li>
                         <li><a data-link="code-audit">Code Audit</a></li>
                         <li><a data-link="security-review">Security Review</a></li>
                         <li><a data-link="ai-classes">AI Classes</a></li>

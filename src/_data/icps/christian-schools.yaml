@@ -8,7 +8,7 @@ meta:
 
 nav:
   cta_text: "Get Free Quote"
-  cta_href: "/products/device-inventory/#pricing"
+  cta_href: "/products/simplesight/#pricing"
 
 landing:
   hero:
@@ -112,7 +112,7 @@ device_inventory:
     p: "Enterprise-quality asset tracking at a price that respects your ministry's budget. Steward your technology resources wisely."
     show_cta: true
     cta_text: "See Our Pricing"
-    cta_href: "/products/device-inventory/#pricing"
+    cta_href: "/products/simplesight/#pricing"
   benefits:
     title: "Built for Faith-Based Education"
     subtitle: "Powerful tools without the enterprise price tag"
@@ -158,5 +158,5 @@ device_inventory:
     h2: "Good Stewardship Starts Here"
     p: "See why Christian schools trust ArbInq with their technology assets"
     button_text: "Start Your Free Trial"
-    button_href: "/products/device-inventory/#pricing"
+    button_href: "/products/simplesight/#pricing"
   include_config_js: true

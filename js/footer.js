@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="footer-col">
                     <h4>Products</h4>
                     <ul>
-                        <li><a data-link="products/device-inventory">Device Inventory</a></li>
+                        <li><a data-link="products/simplesight">Device Inventory</a></li>
                         <li><a href="#">Security Review</a></li>
                         <li><a href="#">AI Classes</a></li>
                     </ul>
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let prefix = '';
 
     // Two levels deep: products/device-inventory or subdomain/device-inventory
-    if (path.includes('/products/device-inventory/') ||
+    if (path.includes('/products/simplesight/') ||
         path.includes('/public-schools/device-inventory/') ||
         path.includes('/christian-schools/device-inventory/') ||
         path.includes('/small-business/device-inventory/') ||

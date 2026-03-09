@@ -8,7 +8,7 @@ meta:
 
 nav:
   cta_text: "Sign Up Free"
-  cta_href: "/products/device-inventory/#pricing"
+  cta_href: "/products/simplesight/#pricing"
 
 landing:
   hero:
@@ -89,7 +89,7 @@ landing:
     h2: "Start Tracking Your Devices Today"
     p: "Free trials available"
     button_text: "See What SimpleSight's About"
-    button_href: "/products/device-inventory/"
+    button_href: "/products/simplesight/"
   include_config_js: true
 
 device_inventory:
@@ -98,7 +98,7 @@ device_inventory:
     p: "Keep track of all your laptops, phones, smart watches, and more in one place. Know what you own and what's running on it."
     show_cta: true
     cta_text: "Start Free"
-    cta_href: "/products/device-inventory/#pricing"
+    cta_href: "/products/simplesight/#pricing"
   benefits:
     title: "Finally, Organization for Your Tech"
     subtitle: "Simple tools to track your devices"
@@ -132,5 +132,5 @@ device_inventory:
     h2: "Start Tracking Your Devices Today"
     p: "Free trials available!"
     button_text: "See What SimpleSight's About"
-    button_href: "/products/device-inventory/"
+    button_href: "/products/simplesight/"
   include_config_js: false

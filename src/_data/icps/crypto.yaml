@@ -8,7 +8,7 @@ meta:
 
 nav:
   cta_text: "Start Free Trial"
-  cta_href: "/products/device-inventory/#pricing"
+  cta_href: "/products/simplesight/#pricing"
 
 landing:
   hero:
@@ -89,7 +89,7 @@ landing:
     h2: "Document Your Hardware Stack Today"
     p: "Free trials available"
     button_text: "Start Free Trial"
-    button_href: "/products/device-inventory/#pricing"
+    button_href: "/products/simplesight/#pricing"
   include_config_js: true
 
 device_inventory:
@@ -98,7 +98,7 @@ device_inventory:
     p: "Document every device that touches your crypto—hardware wallets, trading machines, nodes, and signing devices. Know exactly what's on each one."
     show_cta: true
     cta_text: "Start Free Trial"
-    cta_href: "/products/device-inventory/#pricing"
+    cta_href: "/products/simplesight/#pricing"
   benefits:
     title: "Total Visibility Over Your Hardware"
     subtitle: "Because \"not your keys, not your coins\" starts with knowing what's on your devices"
@@ -134,5 +134,5 @@ device_inventory:
     h2: "Document Your Hardware Stack Today"
     p: "Free trials available. One-time payment, no subscriptions."
     button_text: "Start Free Trial"
-    button_href: "/products/device-inventory/#pricing"
+    button_href: "/products/simplesight/#pricing"
   include_config_js: true
